@@ -11,10 +11,11 @@
     <link rel="stylesheet" href="css/ledger.css" />
 </head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
-    <div class="container">
-        <h1>Dashboard</h1>
-    </div>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Add Bet</h1>
+    <div th:replace="fragments/forms :: bet-form"></div>
+</div>
 
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>

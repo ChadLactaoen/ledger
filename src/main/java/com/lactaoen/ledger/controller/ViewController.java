@@ -9,8 +9,18 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class ViewController {
 
-    @RequestMapping(value = "home", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String getHome() {
         return "home";
+    }
+
+    @RequestMapping(value = "/transaction", method = RequestMethod.GET)
+    public String getTransactionView() {
+        return "transaction";
+    }
+
+    @RequestMapping(value = "/bet", method = RequestMethod.GET)
+    public String getBetView() {
+        return "bet";
     }
 }

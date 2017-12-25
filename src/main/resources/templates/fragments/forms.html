@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<form th:fragment="transaction-form">
+    <div class="form-group">
+        <label for="transactionDate">Date</label>
+        <input type="date" class="form-control" id="transactionDate" name="date" />
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" />
+    </div>
+    <div class="form-group">
+        <label for="category">Category</label>
+        <input type="text" class="form-control" id="category" name="category" />
+    </div>
+    <div class="form-group">
+        <label for="subcategory">Subcategory</label>
+        <input type="text" class="form-control" id="subcategory" name="subcategory" />
+    </div>
+    <div class="form-group">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price" name="price" />
+    </div>
+    <div class="form-group">
+        <label for="transaction-memo">Memo</label>
+        <input type="text" class="form-control" id="transaction-memo" name="memo" />
+    </div>
+    <button type="submit" class="btn btn-warning">Submit</button>
+</form>
+
+<form th:fragment="bet-form">
+    <div class="form-group">
+        <label for="transactionDate">Date</label>
+        <input type="date" class="form-control" id="betDate" name="date" />
+    </div>
+    <div class="form-group">
+        <label for="game">Game</label>
+        <input type="text" class="form-control" id="game" name="game" />
+    </div>
+    <div class="form-group">
+        <label for="casino">Casino</label>
+        <input type="text" class="form-control" id="casino" name="casino" />
+    </div>
+    <div class="form-group">
+        <label for="wager">Wager</label>
+        <input type="number" class="form-control" id="wager" name="wager" />
+    </div>
+    <div class="form-group">
+        <label for="profit">Profit</label>
+        <input type="number" class="form-control" id="profit" name="profit" />
+    </div>
+    <div class="form-group">
+        <label for="bet-memo">Memo</label>
+        <input type="text" class="form-control" id="bet-memo" name="memo" />
+    </div>
+    <button type="submit" class="btn btn-warning">Submit</button>
+</form>
+
+</body>
+</html>

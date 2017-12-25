@@ -10,6 +10,7 @@ public class Transaction {
     private Double price;
     private String memo;
     private Category category;
+    private Category subcategory;
 
     public Transaction() {
     }
@@ -62,6 +63,14 @@ public class Transaction {
         this.category = category;
     }
 
+    public Category getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(Category subcategory) {
+        this.subcategory = subcategory;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
@@ -71,6 +80,7 @@ public class Transaction {
                 ", price=" + price +
                 ", memo='" + memo + '\'' +
                 ", category=" + category +
+                ", subcategory=" + subcategory +
                 '}';
     }
 }
