@@ -4,7 +4,28 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
     <div class="container-fluid">
-        <h1>Dashboard</h1>
+        <h1>Dashboard <small class="text-muted" th:text="|${#calendars.format(period.startDate, 'MMM d')} - ${#calendars.format(period.endDate, 'MMM d')}|"></small></h1>
+        <div class="card">
+            <div class="card-body">
+                <h3 th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|"></h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Category</th>
+                            <th scope="col">Allocated</th>
+                            <th scope="col">Spent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="allocation : ${period.allocationList}">
+                            <td th:text="${allocation.category.name}"></td>
+                            <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|"></td>
+                            <td th:text="|$${#numbers.formatDecimal(allocation.spent,1,'COMMA',2,'POINT')}|"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div th:replace="fragments/scripts :: scripts"></div>
 </body>

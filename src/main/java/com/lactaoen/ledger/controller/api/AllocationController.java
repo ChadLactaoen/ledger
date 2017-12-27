@@ -13,14 +13,9 @@ public class AllocationController {
 
     private AllocationMapper allocationMapper;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Allocation> getAllAllocations() {
-        return allocationMapper.getAllAllocations();
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Allocation getAllocation(@PathVariable("id") int id) {
-        return allocationMapper.getAllocationById(id);
+    @RequestMapping(value = "/period/{periodId}", method = RequestMethod.GET)
+    public List<Allocation> getAllocationsByPeriodId(@PathVariable("periodId") int periodId) {
+        return allocationMapper.getAllocationsByPeriodId(periodId);
     }
 
     @RequestMapping(method = RequestMethod.POST)

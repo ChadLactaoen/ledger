@@ -8,19 +8,30 @@
         <id property="allocationId" column="allocation_id" />
         <result property="total" column="total" />
         <association property="category" column="category_id" select="CategoryMapper.getCategoryById" />
+        <collection property="transactionList" column="{periodId=period_id,categoryId=category_id}" select="TransactionMapper.getTransactionsByCategoryIdAndPeriodId" />
+    </resultMap>
+
+    <resultMap id="AllocationWithPeriod" type="com.lactaoen.ledger.model.Allocation" extends="Allocation">
         <association property="period" column="period_id" select="PeriodMapper.getPeriodById" />
     </resultMap>
 
-    <select id="getAllAllocations" resultMap="Allocation">
+    <select id="getAllAllocations" resultMap="AllocationWithPeriod">
         SELECT /* AllocationMapper.getAllAllocations */
             allocation_id, period_id, category_id, total
         FROM allocation
     </select>
 
-    <select id="getAllocationById" resultMap="Allocation">
+    <select id="getAllocationById" resultMap="AllocationWithPeriod">
         SELECT /* AllocationMapper.getAllocationById */
             allocation_id, period_id, category_id, total
         FROM allocation
         WHERE allocation_id = #{id}
+    </select>
+
+    <select id="getAllocationsByPeriodId" resultMap="Allocation">
+        SELECT /* AllocationMapper.getAllocationByPeriod */
+            allocation_id, period_id, category_id, total
+        FROM allocation
+        WHERE period_id = #{id}
     </select>
 </mapper>

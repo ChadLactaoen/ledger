@@ -53,6 +53,14 @@ public class Allocation {
         this.transactionList = transactionList;
     }
 
+    public double getSpent() {
+        if (transactionList == null || transactionList.isEmpty()) {
+            return 0D;
+        }
+
+        return transactionList.stream().mapToDouble(Transaction::getPrice).sum();
+    }
+
     @Override
     public String toString() {
         return "Allocation{" +

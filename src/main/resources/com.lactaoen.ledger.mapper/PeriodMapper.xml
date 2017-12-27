@@ -9,7 +9,7 @@
         <result property="startDate" column="start_date" />
         <result property="endDate" column="end_date" />
         <result property="total" column="total" />
-        <collection property="allocationList" column="period_id" select="AllocationMapper.getAllocationsByPeriod" />
+        <collection property="allocationList" column="period_id" select="AllocationMapper.getAllocationsByPeriodId" />
     </resultMap>
 
     <select id="getAllPeriods" resultMap="Period">

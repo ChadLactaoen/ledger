@@ -15,11 +15,7 @@ public class AllocationMapper {
         this.sqlSession = sqlSession;
     }
 
-    public List<Allocation> getAllAllocations() {
-        return sqlSession.selectList("AllocationMapper.getAllAllocations");
-    }
-
-    public Allocation getAllocationById(int id) {
-        return sqlSession.selectOne("AllocationMapper.getAllocationById", id);
+    public List<Allocation> getAllocationsByPeriodId(int id) {
+        return sqlSession.selectList("AllocationMapper.getAllocationsByPeriodId", id);
     }
 }

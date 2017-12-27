@@ -55,6 +55,14 @@ public class Period {
         this.allocationList = allocationList;
     }
 
+    public double getSpent() {
+        if (allocationList == null || allocationList.isEmpty()) {
+            return 0D;
+        }
+
+        return allocationList.stream().mapToDouble(Allocation::getSpent).sum();
+    }
+
     @Override
     public String toString() {
         return "Period{" +
