@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TransactionMapper">
+
+    <resultMap id="Transaction" type="com.lactaoen.ledger.model.Transaction">
+        <id property="transactionId" column="transaction_id" />
+        <result property="date" column="date" />
+        <result property="name" column="name" />
+        <result property="price" column="price" />
+        <result property="memo" column="memo" />
+        <association property="category" column="category_id" select="CategoryMapper.getCategoryById" />
+        <association property="subcategory" column="subcategory_id" select="CategoryMapper.getCategoryById" />
+    </resultMap>
+
+    <select id="getAllTransactions" resultMap="Transaction">
+        SELECT /*TranscationMapper.getAllTransactions*/
+            transaction_id, date, name, price, memo, category_id, subcategory_id
+        FROM transaction
+    </select>
+
+    <select id="getTransactionById" resultMap="Transaction">
+        SELECT /*TranscationMapper.getTransactionById*/
+            transaction_id, date, name, price, memo, category_id, subcategory_id
+        FROM transaction
+        WHERE transaction_id = #{id}
+    </select>
+
+</mapper>

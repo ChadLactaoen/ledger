@@ -1,25 +1,12 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Heath</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <script src="js/fontawesome-all.js"></script>
-    <link rel="stylesheet" href="css/ledger.css" />
-</head>
+<head th:replace="fragments/htmlHead :: htmlHead"></head>
 <body>
-<div th:replace="fragments/header :: header"></div>
-<div class="container">
-    <h1>Add Transaction</h1>
-    <div th:replace="fragments/forms :: transaction-form"></div>
-</div>
-
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-<script src="js/bootstrap.min.js"></script>
+    <div th:replace="fragments/header :: header"></div>
+    <div class="container">
+        <h1>Add Transaction</h1>
+        <div th:replace="fragments/forms :: transaction-form"></div>
+    </div>
+    <div th:replace="fragments/scripts :: scripts"></div>
 </body>
 </html>

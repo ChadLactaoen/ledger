@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GameMapper">
+
+    <resultMap id="Game" type="com.lactaoen.ledger.model.Game">
+        <id property="gameId" column="game_id" />
+        <result property="name" column="name" />
+        <association property="parentGame" column="parent_id" select="GameMapper.getGameById" />
+    </resultMap>
+
+    <select id="getAllGames" resultMap="Game">
+        SELECT /* GameMapper.getAllGames */
+            game_id, name, parent_id
+        FROM game
+    </select>
+
+    <select id="getGameById" resultMap="Game">
+        SELECT /* GameMapper.getGameById */
+            game_id, name, parent_id
+        FROM game
+        WHERE game_id = #{id}
+    </select>
+
+
+</mapper>

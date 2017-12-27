@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PeriodMapper">
+
+    <resultMap id="Period" type="com.lactaoen.ledger.model.Period">
+        <id property="periodId" column="period_id" />
+        <result property="startDate" column="start_date" />
+        <result property="endDate" column="end_date" />
+        <result property="total" column="total" />
+        <collection property="allocationList" column="period_id" select="AllocationMapper.getAllocationsByPeriod" />
+    </resultMap>
+
+    <select id="getAllPeriods" resultMap="Period">
+        SELECT /* PeriodMapper.getAllPeriods */
+            period_id, start_date, end_date, total
+        FROM period
+    </select>
+
+    <select id="getPeriodById" resultMap="Period">
+        SELECT /* PeriodMapper.getPeriodById */
+            period_id, start_date, end_date, total
+        FROM period
+        WHERE period_id = #{id}
+    </select>
+
+</mapper>

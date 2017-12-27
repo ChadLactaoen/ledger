@@ -1,15 +1,26 @@
-package com.lactaoen.ledger.controller;
+package com.lactaoen.ledger.controller.api;
 
+import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.model.Period;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/period")
+@RequestMapping("/api/period")
 public class PeriodController {
+
+    private PeriodMapper periodMapper;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<Period> getAllPeriods() {
+        return periodMapper.getAllPeriods();
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Period getPeriod(@PathVariable("id") int id) {
-        return null;
+        return periodMapper.getPeriodById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -25,5 +36,10 @@ public class PeriodController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePeriod(@PathVariable("id") int id) {
 
+    }
+
+    @Autowired
+    public void setPeriodMapper(PeriodMapper periodMapper) {
+        this.periodMapper = periodMapper;
     }
 }
