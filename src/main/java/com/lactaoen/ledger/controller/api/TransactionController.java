@@ -5,6 +5,8 @@ import com.lactaoen.ledger.model.Transaction;
 import com.lactaoen.ledger.model.form.TransactionForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -25,8 +27,16 @@ public class TransactionController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createTransaction(@ModelAttribute("transaction") TransactionForm transaction) {
-        return transactionMapper.createTransaction(transaction);
+    public RedirectView createTransaction(@ModelAttribute("transaction") TransactionForm transaction, RedirectAttributes model) {
+        if (transactionMapper.createTransaction(transaction) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The transaction for " + transaction.getName() + " was added successfully");
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue adding the transaction for " + transaction.getName());
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

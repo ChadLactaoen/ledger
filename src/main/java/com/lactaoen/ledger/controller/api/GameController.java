@@ -6,6 +6,8 @@ import com.lactaoen.ledger.model.form.GameForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -26,8 +28,16 @@ public class GameController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Integer createGame(@ModelAttribute("game") GameForm game) {
-        return gameMapper.createGame(game);
+    public RedirectView createGame(@ModelAttribute("game") GameForm game, RedirectAttributes model) {
+        if (gameMapper.createGame(game) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The following game was added successfully: " + game.getName());
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue adding the game: " + game.getName());
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

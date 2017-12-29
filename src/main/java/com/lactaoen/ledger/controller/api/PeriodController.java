@@ -4,6 +4,8 @@ import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.model.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -23,9 +25,15 @@ public class PeriodController {
         return periodMapper.getPeriodById(id);
     }
 
+    @RequestMapping(value = "/last", method = RequestMethod.GET)
+    public Period getLastPeriod() {
+        Integer periodId = periodMapper.getLastPeriodId();
+        return periodMapper.getPeriodById(periodId);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
-    public int createPeriod(@RequestBody Period period) {
-        return 1;
+    public RedirectView createPeriod(@RequestBody Period period, RedirectAttributes model) {
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

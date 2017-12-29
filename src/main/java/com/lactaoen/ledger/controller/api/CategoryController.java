@@ -35,7 +35,7 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createCategory(@ModelAttribute("category") CategoryForm category) {
+    public Integer createCategory(@ModelAttribute("category") CategoryForm category) {
         return categoryMapper.createCategory(category);
     }
 

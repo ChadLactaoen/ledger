@@ -19,7 +19,7 @@ public class AllocationController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createAllocation(@RequestBody Allocation allocation) {
+    public Integer createAllocation(@RequestBody Allocation allocation) {
         return 1;
     }
 

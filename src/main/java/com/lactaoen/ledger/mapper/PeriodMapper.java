@@ -23,6 +23,10 @@ public class PeriodMapper {
         return sqlSession.selectOne("PeriodMapper.getPeriodById", id);
     }
 
+    public Integer getLastPeriodId() {
+        return sqlSession.selectOne("PeriodMapper.getLastPeriodId");
+    }
+
     public void deletePeriod(int id) {
         sqlSession.delete("PeriodMapper.deletePeriod", id);
     }

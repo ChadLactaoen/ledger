@@ -25,6 +25,12 @@
         WHERE period_id = #{id}
     </select>
 
+    <select id="getLastPeriodId" resultType="java.lang.Integer">
+        SELECT /* PeriodMapper.getLastPeriodId */
+            MAX(period_id)
+        FROM period
+    </select>
+
     <delete id="deletePeriod">
         DELETE FROM /* PeriodMapper.deletePeriod */
         period

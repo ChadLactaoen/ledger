@@ -5,6 +5,8 @@ import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.form.BetForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -25,8 +27,16 @@ public class BetController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Integer createBet(@ModelAttribute("bet") BetForm bet) {
-        return betMapper.createBet(bet);
+    public RedirectView createBet(@ModelAttribute("bet") BetForm bet, RedirectAttributes model) {
+        if (betMapper.createBet(bet) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The bet was added successfully");
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue adding the bet");
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

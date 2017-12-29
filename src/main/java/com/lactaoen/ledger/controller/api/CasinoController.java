@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -26,8 +28,16 @@ public class CasinoController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createCasino(@ModelAttribute("casino") Casino casino) {
-        return casinoMapper.createCasino(casino);
+    public RedirectView createCasino(@ModelAttribute("casino") Casino casino, RedirectAttributes model) {
+        if (casinoMapper.createCasino(casino) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The following casino was added successfully: " + casino.getName());
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue adding the casino: " + casino.getName());
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
