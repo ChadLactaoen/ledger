@@ -35,7 +35,7 @@ public class PeriodController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePeriod(@PathVariable("id") int id) {
-
+        periodMapper.deletePeriod(id);
     }
 
     @Autowired

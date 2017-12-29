@@ -1,6 +1,7 @@
 package com.lactaoen.ledger.mapper;
 
 import com.lactaoen.ledger.model.Bet;
+import com.lactaoen.ledger.model.form.BetForm;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
@@ -21,5 +22,13 @@ public class BetMapper {
 
     public Bet getById(int id) {
         return sqlSession.selectOne("BetMapper.getBetById", id);
+    }
+
+    public Integer createBet(BetForm bet) {
+        return sqlSession.insert("BetMapper.createBet", bet);
+    }
+
+    public void deleteBet(int id) {
+        sqlSession.delete("BetMapper.deleteBet", id);
     }
 }

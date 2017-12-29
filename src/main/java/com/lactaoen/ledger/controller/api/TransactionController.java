@@ -2,6 +2,7 @@ package com.lactaoen.ledger.controller.api;
 
 import com.lactaoen.ledger.mapper.TransactionMapper;
 import com.lactaoen.ledger.model.Transaction;
+import com.lactaoen.ledger.model.form.TransactionForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,8 @@ public class TransactionController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createTransaction(@RequestBody Transaction transaction) {
-        return 1;
+    public int createTransaction(@ModelAttribute("transaction") TransactionForm transaction) {
+        return transactionMapper.createTransaction(transaction);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -35,7 +36,7 @@ public class TransactionController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteTransaction(@PathVariable("id") int id) {
-
+        transactionMapper.deleteTransaction(id);
     }
 
     @Autowired

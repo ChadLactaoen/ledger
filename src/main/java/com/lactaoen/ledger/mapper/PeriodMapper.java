@@ -22,4 +22,8 @@ public class PeriodMapper {
     public Period getPeriodById(int id) {
         return sqlSession.selectOne("PeriodMapper.getPeriodById", id);
     }
+
+    public void deletePeriod(int id) {
+        sqlSession.delete("PeriodMapper.deletePeriod", id);
+    }
 }

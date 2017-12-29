@@ -34,4 +34,10 @@
         FROM allocation
         WHERE period_id = #{id}
     </select>
+
+    <delete id="deleteAllocation">
+        DELETE FROM /* AllocationMapper.deleteAllocation */
+            allocation
+        WHERE allocation_id = #{id}
+    </delete>
 </mapper>

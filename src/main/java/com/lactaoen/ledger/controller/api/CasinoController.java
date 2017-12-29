@@ -3,6 +3,8 @@ package com.lactaoen.ledger.controller.api;
 import com.lactaoen.ledger.mapper.CasinoMapper;
 import com.lactaoen.ledger.model.Casino;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,8 @@ public class CasinoController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createCasino(@RequestBody Casino casino) {
-        return 1;
+    public int createCasino(@ModelAttribute("casino") Casino casino) {
+        return casinoMapper.createCasino(casino);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -35,7 +37,7 @@ public class CasinoController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteCasino(@PathVariable("id") int id) {
-
+        casinoMapper.deleteCasino(id);
     }
 
     @Autowired

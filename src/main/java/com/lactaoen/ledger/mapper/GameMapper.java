@@ -1,6 +1,7 @@
 package com.lactaoen.ledger.mapper;
 
 import com.lactaoen.ledger.model.Game;
+import com.lactaoen.ledger.model.form.GameForm;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
@@ -21,5 +22,13 @@ public class GameMapper {
 
     public Game getGameById(int id) {
         return sqlSession.selectOne("GameMapper.getGameById", id);
+    }
+
+    public Integer createGame(GameForm game) {
+        return sqlSession.insert("GameMapper.createGame", game);
+    }
+
+    public void deleteGame(int id) {
+        sqlSession.delete("GameMapper.deleteGame", id);
     }
 }

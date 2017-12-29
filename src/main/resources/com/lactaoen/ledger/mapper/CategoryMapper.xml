@@ -16,6 +16,22 @@
         FROM category
     </select>
 
+    <select id="getAllChildCategories" resultMap="Category">
+        SELECT /* CategoryMapper.getAllChildCategories */
+            category_id, name, parent_id
+        FROM category
+        WHERE parent_id IS NOT NULL
+        ORDER BY name
+    </select>
+
+    <select id="getAllParentCategories" resultMap="Category">
+        SELECT /* CategoryMapper.getAllParentCategories */
+            category_id, name, parent_id
+        FROM category
+        WHERE parent_id IS NULL
+        ORDER BY name
+    </select>
+
     <select id="getCategoryById" resultMap="Category">
         SELECT /* CategoryMapper.getCategoryById */
             category_id, name, parent_id
@@ -23,5 +39,20 @@
         WHERE category_id = #{id}
     </select>
 
+    <insert id="createCategory">
+        INSERT INTO /* CategoryMapper.createCategory */
+            category
+        (name, parent_id)
+        VALUES (
+            #{name},
+            #{parentId}
+        )
+    </insert>
+
+    <delete id="deleteCategory">
+        DELETE FROM /* CategoryMapper.deleteCategory */
+        category
+        WHERE category_id = #{id}
+    </delete>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.lactaoen.ledger.controller.api;
 
 import com.lactaoen.ledger.mapper.BetMapper;
 import com.lactaoen.ledger.model.Bet;
+import com.lactaoen.ledger.model.form.BetForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,8 @@ public class BetController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createBet(@RequestBody Bet bet) {
-        return 1;
+    public Integer createBet(@ModelAttribute("bet") BetForm bet) {
+        return betMapper.createBet(bet);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -35,7 +36,7 @@ public class BetController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteBet(@PathVariable("id") int id) {
-
+        betMapper.deleteBet(id);
     }
 
     @Autowired

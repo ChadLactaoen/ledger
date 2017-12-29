@@ -18,4 +18,8 @@ public class AllocationMapper {
     public List<Allocation> getAllocationsByPeriodId(int id) {
         return sqlSession.selectList("AllocationMapper.getAllocationsByPeriodId", id);
     }
+
+    public void deleteAllocation(int id) {
+        sqlSession.delete("AllocationMapper.deleteAllocation", id);
+    }
 }

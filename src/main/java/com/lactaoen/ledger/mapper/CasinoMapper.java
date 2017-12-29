@@ -22,4 +22,12 @@ public class CasinoMapper {
     public Casino selectCasinoById(int id) {
         return sqlSession.selectOne("CasinoMapper.getCasinoById", id);
     }
+
+    public Integer createCasino(Casino casino) {
+        return sqlSession.insert("CasinoMapper.createCasino", casino);
+    }
+
+    public void deleteCasino(int id) {
+        sqlSession.delete("CasinoMapper.deleteCasino", id);
+    }
 }

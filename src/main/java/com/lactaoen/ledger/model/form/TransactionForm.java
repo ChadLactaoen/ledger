@@ -1,20 +1,19 @@
-package com.lactaoen.ledger.model;
+package com.lactaoen.ledger.model.form;
 
 import java.sql.Date;
 
-public class Transaction {
+public class TransactionForm {
 
     private Integer transactionId;
     private Date date;
     private String name;
     private Double price;
     private String memo;
-    private Category category;
-    private Category subcategory;
+    private Integer categoryId;
+    private Integer subcategoryId;
 
-    public Transaction() {
+    public TransactionForm() {
     }
-
 
     public Integer getTransactionId() {
         return transactionId;
@@ -56,32 +55,19 @@ public class Transaction {
         this.memo = memo;
     }
 
-    public Category getCategory() {
-        return category;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Category getSubcategory() {
-        return subcategory;
+    public Integer getSubcategoryId() {
+        return subcategoryId;
     }
 
-    public void setSubcategory(Category subcategory) {
-        this.subcategory = subcategory;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "transactionId=" + transactionId +
-                ", date=" + date +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", memo='" + memo + '\'' +
-                ", category=" + category +
-                ", subcategory=" + subcategory +
-                '}';
+    public void setSubcategoryId(Integer subcategoryId) {
+        this.subcategoryId = subcategoryId;
     }
 }

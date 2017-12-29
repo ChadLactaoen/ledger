@@ -27,4 +27,24 @@
         WHERE bet_id = #{id}
     </select>
 
+    <insert id="createBet">
+        INSERT INTO /* BetMapper.createBet */
+            bet
+        (date, memo, wager, profit, game_id, casino_id)
+        VALUES (
+            #{date},
+            #{memo},
+            #{wager},
+            #{profit},
+            #{gameId},
+            #{casinoId}
+        )
+    </insert>
+
+    <delete id="deleteBet">
+        DELETE FROM /* BetMapper.deleteBet */
+            bet
+        WHERE bet_id = #{id}
+    </delete>
+
 </mapper>

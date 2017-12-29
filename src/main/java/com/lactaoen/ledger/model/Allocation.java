@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Allocation {
 
-    private int allocationId;
+    private Integer allocationId;
     private Category category;
     private Period period;
     private Double total;
@@ -13,11 +13,11 @@ public class Allocation {
     public Allocation() {
     }
 
-    public int getAllocationId() {
+    public Integer getAllocationId() {
         return allocationId;
     }
 
-    public void setAllocationId(int allocationId) {
+    public void setAllocationId(Integer allocationId) {
         this.allocationId = allocationId;
     }
 

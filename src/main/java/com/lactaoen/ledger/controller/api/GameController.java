@@ -2,7 +2,9 @@ package com.lactaoen.ledger.controller.api;
 
 import com.lactaoen.ledger.mapper.GameMapper;
 import com.lactaoen.ledger.model.Game;
+import com.lactaoen.ledger.model.form.GameForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,8 @@ public class GameController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createGame(@RequestBody Game game) {
-        return 1;
+    public Integer createGame(@ModelAttribute("game") GameForm game) {
+        return gameMapper.createGame(game);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -35,7 +37,7 @@ public class GameController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteGame(@PathVariable("id") int id) {
-
+        gameMapper.deleteGame(id);
     }
 
     @Autowired

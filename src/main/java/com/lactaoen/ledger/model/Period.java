@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Period {
 
-    private int periodId;
+    private Integer periodId;
     private Date startDate;
     private Date endDate;
     private Double total;
@@ -15,11 +15,11 @@ public class Period {
     public Period() {
     }
 
-    public int getPeriodId() {
+    public Integer getPeriodId() {
         return periodId;
     }
 
-    public void setPeriodId(int periodId) {
+    public void setPeriodId(Integer periodId) {
         this.periodId = periodId;
     }
 

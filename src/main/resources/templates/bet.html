@@ -5,7 +5,39 @@
     <div th:replace="fragments/header :: header"></div>
     <div class="container">
         <h1>Add Bet</h1>
-        <div th:replace="fragments/forms :: bet-form"></div>
+        <form action="#" th:action="@{/api/bet}" th:object="${bet}" method="post">
+            <div class="form-group">
+                <label>Date</label>
+                <input th:field="*{date}" th:required="true" type="date" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Game</label>
+                <select th:field="*{gameId}" th:required="true" class="form-control">
+                    <option th:value="''"></option>
+                    <option th:each="game : ${games}" th:value="${game.gameId}" th:text="${game.name}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Casino</label>
+                <select th:field="*{casinoId}" th:required="true" class="form-control">
+                    <option th:value="''"></option>
+                    <option th:each="casino : ${casinos}" th:value="${casino.casinoId}" th:text="${casino.name}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Wager</label>
+                <input th:field="*{wager}" th:required="true" type="number" step="any" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Profit</label>
+                <input th:field="*{profit}" type="number" step="any" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Memo</label>
+                <input th:field="*{memo}" type="text" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-warning">Submit</button>
+        </form>
     </div>
     <div th:replace="fragments/scripts :: scripts"></div>
 </body>

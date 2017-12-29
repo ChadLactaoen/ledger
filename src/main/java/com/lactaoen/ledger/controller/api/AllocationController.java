@@ -30,7 +30,7 @@ public class AllocationController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteAllocation(@PathVariable("id") int id) {
-
+        allocationMapper.deleteAllocation(id);
     }
 
     @Autowired

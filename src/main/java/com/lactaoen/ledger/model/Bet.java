@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Bet {
 
-    private int betId;
+    private Integer betId;
     private Date date;
     private Game game;
     private Casino casino;
@@ -15,11 +15,11 @@ public class Bet {
     public Bet() {
     }
 
-    public int getBetId() {
+    public Integer getBetId() {
         return betId;
     }
 
-    public void setBetId(int betId) {
+    public void setBetId(Integer betId) {
         this.betId = betId;
     }
 

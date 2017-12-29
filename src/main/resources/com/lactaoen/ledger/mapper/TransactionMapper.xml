@@ -42,4 +42,24 @@
         AND a.category_id = #{categoryId}
     </select>
 
+    <insert id="createTransaction">
+        INSERT INTO /* TransactionMapper.createTransaction */
+            transaction
+        (date, name, price, memo, category_id, subcategory_id)
+        VALUES (
+            #{date},
+            #{name},
+            #{price},
+            #{memo},
+            #{categoryId},
+            #{subcategoryId}
+        )
+    </insert>
+
+    <delete id="deleteTransaction">
+        DELETE FROM /* TransactionMapper.deleteTransaction */
+        transaction
+        WHERE transaction_id = #{id}
+    </delete>
+
 </mapper>

@@ -2,18 +2,18 @@ package com.lactaoen.ledger.model;
 
 public class Game {
 
-    private int gameId;
+    private Integer gameId;
     private String name;
     private Game parentGame;
 
     public Game() {
     }
 
-    public int getGameId() {
+    public Integer getGameId() {
         return gameId;
     }
 
-    public void setGameId(int gameId) {
+    public void setGameId(Integer gameId) {
         this.gameId = gameId;
     }
 

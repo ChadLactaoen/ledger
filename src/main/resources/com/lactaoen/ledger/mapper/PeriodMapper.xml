@@ -25,4 +25,10 @@
         WHERE period_id = #{id}
     </select>
 
+    <delete id="deletePeriod">
+        DELETE FROM /* PeriodMapper.deletePeriod */
+        period
+        WHERE period_id = #{id}
+    </delete>
+
 </mapper>

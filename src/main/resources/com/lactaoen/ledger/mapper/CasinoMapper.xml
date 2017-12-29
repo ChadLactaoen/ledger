@@ -21,4 +21,20 @@
         FROM casino
         WHERE casino_id = #{id}
     </select>
+
+    <insert id="createCasino">
+        INSERT INTO /* CasinoMapper.createCasino */
+            casino
+        (name)
+        VALUES (
+            #{name}
+        )
+    </insert>
+
+    <delete id="deleteCasino">
+        DELETE FROM /* CasinoMapper.deleteCasino */
+        casino
+        WHERE casino_id = #{id}
+    </delete>
+
 </mapper>

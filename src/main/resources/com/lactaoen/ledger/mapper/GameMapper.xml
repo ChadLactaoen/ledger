@@ -23,5 +23,20 @@
         WHERE game_id = #{id}
     </select>
 
+    <insert id="createGame">
+        INSERT INTO /* GameMapper.createGame */
+            game
+        (name, parent_id)
+        VALUES (
+            #{name},
+            #{parentId}
+        )
+    </insert>
+
+    <delete id="deleteGame">
+        DELETE FROM /* GameMapper.deleteGame */
+        game
+        WHERE game_id = #{id}
+    </delete>
 
 </mapper>

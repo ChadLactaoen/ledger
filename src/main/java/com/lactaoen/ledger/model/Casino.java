@@ -2,17 +2,17 @@ package com.lactaoen.ledger.model;
 
 public class Casino {
 
-    private int casinoId;
+    private Integer casinoId;
     private String name;
 
     public Casino() {
     }
 
-    public int getCasinoId() {
+    public Integer getCasinoId() {
         return casinoId;
     }
 
-    public void setCasinoId(int casinoId) {
+    public void setCasinoId(Integer casinoId) {
         this.casinoId = casinoId;
     }
 
