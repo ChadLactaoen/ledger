@@ -39,7 +39,9 @@
                         <tbody>
                         <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.total} - ${allocation.spent}">
                             <td th:text="${allocation.category.name}" th:class="font-weight-bold"></td>
-                            <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|"></td>
+                            <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|">
+                                <span>Hello</span>
+                            </td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.spent,1,'COMMA',2,'POINT')}|"></td>
                             <td th:text="${remaining} >= 0 ? |$${#numbers.formatDecimal(remaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((remaining * -1),1,'COMMA',2,'POINT')}|" th:class="${remaining} >= 0 ? (${remaining == 0} ? 'font-weight-bold text-muted' : 'font-weight-bold') : 'font-weight-bold text-danger'"></td>
                         </tr>
@@ -76,7 +78,7 @@
                         <td th:text="${transaction.name}"></td>
                         <td th:text="${transaction.category.name}" th:class="font-weight-bold"></td>
                         <td th:text="${transaction.subcategory} ? ${transaction.subcategory.name} : ''"></td>
-                        <td th:text="|$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}|"></td>
+                        <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
                         <td th:text="${transaction.memo}"></td>
                     </tr>
                 </tbody>

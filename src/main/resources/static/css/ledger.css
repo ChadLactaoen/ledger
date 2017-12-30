@@ -2,6 +2,10 @@
     padding-top: 75px;
 }
 
+#navbar {
+    font-size: 1.2rem;
+}
+
 .dashboard-table {
     font-size: 0.9rem;
     margin-bottom: 2.5rem;

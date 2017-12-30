@@ -9,6 +9,7 @@
         <mapper resource="com/lactaoen/ledger/mapper/BetMapper.xml"/>
         <mapper resource="com/lactaoen/ledger/mapper/CasinoMapper.xml"/>
         <mapper resource="com/lactaoen/ledger/mapper/CategoryMapper.xml"/>
+        <mapper resource="com/lactaoen/ledger/mapper/DashboardMapper.xml"/>
         <mapper resource="com/lactaoen/ledger/mapper/GameMapper.xml"/>
         <mapper resource="com/lactaoen/ledger/mapper/PeriodMapper.xml"/>
         <mapper resource="com/lactaoen/ledger/mapper/TransactionMapper.xml"/>

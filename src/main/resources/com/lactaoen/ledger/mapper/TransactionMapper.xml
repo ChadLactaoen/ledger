@@ -20,13 +20,13 @@
     <select id="getAllTransactions" resultMap="RichTransaction">
         SELECT /*TranscationMapper.getAllTransactions*/
             transaction_id, date, name, price, memo, category_id, subcategory_id
-        FROM transaction
+        FROM `transaction`
     </select>
 
     <select id="getTransactionById" resultMap="RichTransaction">
         SELECT /*TranscationMapper.getTransactionById*/
             transaction_id, date, name, price, memo, category_id, subcategory_id
-        FROM transaction
+        FROM `transaction`
         WHERE transaction_id = #{id}
     </select>
 
@@ -45,7 +45,7 @@
         FROM period AS p
         JOIN allocation AS a ON p.period_id = a.period_id
         JOIN category AS c ON a.category_id = c.category_id
-        JOIN transaction AS t ON c.category_id = t.category_id
+        JOIN `transaction` AS t ON c.category_id = t.category_id
             AND t.date &gt;= p.start_date AND t.date &lt;= p.end_date
         WHERE p.period_id = #{periodId}
         AND a.category_id = #{categoryId}
@@ -57,7 +57,7 @@
 
     <insert id="createTransaction">
         INSERT INTO /* TransactionMapper.createTransaction */
-            transaction
+            `transaction`
         (date, name, price, memo, category_id, subcategory_id)
         VALUES (
             #{date},
@@ -71,7 +71,7 @@
 
     <delete id="deleteTransaction">
         DELETE FROM /* TransactionMapper.deleteTransaction */
-        transaction
+            `transaction`
         WHERE transaction_id = #{id}
     </delete>
 
