@@ -5,10 +5,7 @@ import com.lactaoen.ledger.mapper.CategoryMapper;
 import com.lactaoen.ledger.mapper.GameMapper;
 import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.model.Casino;
-import com.lactaoen.ledger.model.form.BetForm;
-import com.lactaoen.ledger.model.form.CategoryForm;
-import com.lactaoen.ledger.model.form.GameForm;
-import com.lactaoen.ledger.model.form.TransactionForm;
+import com.lactaoen.ledger.model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,6 +63,14 @@ public class ViewController {
         model.addAttribute("games", gameMapper.getAllGames());
 
         return "game";
+    }
+
+    @RequestMapping(value = "/period", method = RequestMethod.GET)
+    public String getPeriodView(Model model) {
+        model.addAttribute("period", new PeriodForm());
+        model.addAttribute("categories", categoryMapper.getAllChildCategories());
+
+        return "period";
     }
 
     @RequestMapping(value = "/transaction", method = RequestMethod.GET)

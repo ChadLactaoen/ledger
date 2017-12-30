@@ -13,6 +13,7 @@
         SELECT /* CasinoMapper.getAllCasinos */
             casino_id, name
         FROM casino
+        ORDER BY name
     </select>
 
     <select id="getCasinoById" resultMap="Casino">

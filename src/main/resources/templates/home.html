@@ -4,8 +4,8 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
     <div class="container-fluid">
-        <h1>Dashboard <small class="text-muted" th:text="|${#calendars.format(period.startDate, 'MMM d')} - ${#calendars.format(period.endDate, 'MMM d')}|"></small></h1>
 
+        <!-- Error/Success Message -->
         <div th:if="${msg != null}" th:class="|alert alert-${msgClass} alert-dismissible fade show|" role="alert">
             <strong th:text="${msg}"></strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -13,28 +13,121 @@
             </button>
         </div>
 
-        <div class="card">
-            <div class="card-body">
-                <h3 th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|"></h3>
-                <table class="table table-sm">
-                    <thead>
+        <!-- Header -->
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Dashboard <small class="text-muted" th:text="|${#calendars.format(period.startDate, 'MMM d')} - ${#calendars.format(period.endDate, 'MMM d')}|"></small></h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1 th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|"></h1>
+            </div>
+        </div>
+
+        <!-- Period -->
+        <div id="period-dashboard">
+            <div class="row">
+                <div class="col-md-8">
+                    <table class="dashboard-table table table-sm">
+                        <thead>
                         <tr>
                             <th scope="col">Category</th>
                             <th scope="col">Allocated</th>
                             <th scope="col">Spent</th>
+                            <th scope="col">Remaining</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="allocation : ${period.allocationList}">
-                            <td th:text="${allocation.category.name}"></td>
+                        </thead>
+                        <tbody>
+                        <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.total} - ${allocation.spent}">
+                            <td th:text="${allocation.category.name}" th:class="font-weight-bold"></td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|"></td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.spent,1,'COMMA',2,'POINT')}|"></td>
+                            <td th:text="${remaining} >= 0 ? |$${#numbers.formatDecimal(remaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((remaining * -1),1,'COMMA',2,'POINT')}|" th:class="${remaining} >= 0 ? (${remaining == 0} ? 'font-weight-bold text-muted' : 'font-weight-bold') : 'font-weight-bold text-danger'"></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:with="spentPercent = (${period.spent} / ${period.total}) * 100" class="col-md-4">
+                    <h5 th:text="|Spent this period: ${#numbers.formatDecimal(spentPercent,1,'COMMA',2,'POINT')}%|"></h5>
+                    <div class="progress">
+                        <div th:style="|width:${spentPercent}%|" th:attr="aria-valuenow=${spentPercent}" class="progress-bar bg-info" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <canvas id="myChart" width="200px" height="200px"></canvas>
+                </div>
             </div>
         </div>
+
+        <!-- Transactions -->
+        <div id="transaction-dashboard">
+            <h3>Transactions</h3>
+            <table class="dashboard-table table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Subcategory</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Memo</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="transaction : ${period.transactionList}" th:with="date = ${transaction.date}">
+                        <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
+                        <td th:text="${transaction.name}"></td>
+                        <td th:text="${transaction.category.name}" th:class="font-weight-bold"></td>
+                        <td th:text="${transaction.subcategory} ? ${transaction.subcategory.name} : ''"></td>
+                        <td th:text="|$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}|"></td>
+                        <td th:text="${transaction.memo}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
     <div th:replace="fragments/scripts :: scripts"></div>
+    <script>
+        var data = {
+            datasets: [{
+                data: [10, 20, 5, 15, 30],
+                backgroundColor: [
+                    'rgba(112, 193, 179, 0.7)',
+                    'rgba(255, 224, 102, 0.7)',
+                    'rgba(242, 95, 92, 0.7)',
+                    'rgba(36, 123, 160, 0.7)',
+                    'rgba(118, 70, 143, 0.7)'
+                ]
+            }]
+        };
+
+        var ctx = document.getElementById('myChart');
+        var myDoughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                cutoutPercentage: 60,
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                          //get the concerned dataset
+                          var dataset = data.datasets[tooltipItem.datasetIndex];
+
+                          //calculate the total of this data set
+                          var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                            return previousValue + currentValue;
+                          });
+
+                          //get the current items value
+                          var currentValue = dataset.data[tooltipItem.index];
+
+                          //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
+                          var precentage = ((currentValue/total) * 100).toFixed(2);
+
+                          return precentage + "%";
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

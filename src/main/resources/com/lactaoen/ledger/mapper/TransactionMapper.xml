@@ -30,6 +30,15 @@
         WHERE transaction_id = #{id}
     </select>
 
+    <select id="getTransactionsByPeriodId" resultMap="RichTransaction">
+        SELECT /*TransactionMapper.getTransactionsByPeriodId*/
+            t.transaction_id, t.date, t.name, t.price, t.memo, t.category_id, t.subcategory_id
+        FROM allocation a
+        JOIN transaction t ON a.category_id = t.category_id
+        WHERE a.period_id = #{id}
+        ORDER BY t.date DESC, t.transaction_id DESC
+    </select>
+
     <select id="getTransactionsByCategoryIdAndPeriodId" resultMap="Transaction">
         SELECT /*TransactionMapper.getTransactionsByCategoryIdAndPeriodId*/
             t.transaction_id, t.date, t.name, t.price, t.memo
@@ -40,6 +49,10 @@
             AND t.date &gt;= p.start_date AND t.date &lt;= p.end_date
         WHERE p.period_id = #{periodId}
         AND a.category_id = #{categoryId}
+    </select>
+
+    <select id="searchTransactions" resultMap="RichTransaction">
+
     </select>
 
     <insert id="createTransaction">

@@ -1,6 +1,9 @@
 package com.lactaoen.ledger.model;
 
+import org.springframework.util.CollectionUtils;
+
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +14,7 @@ public class Period {
     private Date endDate;
     private Double total;
     private List<Allocation> allocationList;
+    private List<Transaction> transactionList;
 
     public Period() {
     }
@@ -55,6 +59,14 @@ public class Period {
         this.allocationList = allocationList;
     }
 
+    public List<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
+    }
+
     public double getSpent() {
         if (allocationList == null || allocationList.isEmpty()) {
             return 0D;
@@ -71,6 +83,7 @@ public class Period {
                 ", endDate=" + endDate +
                 ", total=" + total +
                 ", allocationList=" + allocationList +
+                ", transactionList=" + transactionList +
                 '}';
     }
 }
