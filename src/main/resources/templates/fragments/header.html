@@ -25,13 +25,13 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/transaction' ? 'active':''}" href="/transaction">Add Transaction</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/form/transaction' ? 'active':''}" href="/form/transaction">Add Transaction</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/bet' ? 'active':''}" href="/bet">Add Bet</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/form/bet' ? 'active':''}" href="/form/bet">Add Bet</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/period' ? 'active':''}" href="/period">Add Period</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/form/period' ? 'active':''}" href="/form/period">Add Period</a>
                 </li>
             </ul>
         </div>

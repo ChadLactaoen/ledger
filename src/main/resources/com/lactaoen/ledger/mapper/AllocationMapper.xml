@@ -21,6 +21,16 @@
         FROM allocation
     </select>
 
+    <select id="getAllocationByDateAndCategoryId" resultMap="Allocation">
+        SELECT /* AllocationMapper.getAllocationByDateAndCategoryId */
+            a.allocation_id, a.period_id, a.category_id, a.total
+        FROM period p
+        JOIN allocation a ON p.period_id = a.period_id
+        WHERE a.category_id = #{categoryId}
+        AND p.start_date &lt;= #{date}
+        AND p.end_date &gt;= #{date}
+    </select>
+
     <select id="getAllocationById" resultMap="AllocationWithPeriod">
         SELECT /* AllocationMapper.getAllocationById */
             allocation_id, period_id, category_id, total
