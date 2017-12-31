@@ -3,15 +3,9 @@
 <head th:replace="fragments/htmlHead :: htmlHead"></head>
 <body>
     <div th:replace="fragments/header :: header"></div>
-    <div class="container-fluid">
+    <div class="container-fluid" th:attr="data-period-id=${period.periodId}">
 
-        <!-- Error/Success Message -->
-        <div th:if="${msg != null}" th:class="|alert alert-${msgClass} alert-dismissible fade show|" role="alert">
-            <strong th:text="${msg}"></strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+        <div th:replace="fragments/flash :: flash"></div>
 
         <!-- Header -->
         <div class="row">
@@ -38,7 +32,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.total} - ${allocation.spent}" th:attr="data-parent-cat-id=${allocation.category.parentCategory.categoryId}">
-                            <td th:text="${allocation.category.name}" th:class="font-weight-bold"></td>
+                            <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.parentCategory.color}|"></td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|">
                                 <span>Hello</span>
                             </td>
@@ -76,7 +70,7 @@
                     <tr th:each="transaction : ${period.transactionList}" th:with="date = ${transaction.date}">
                         <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
                         <td th:text="${transaction.name}"></td>
-                        <td th:text="${transaction.category.name}" th:class="font-weight-bold"></td>
+                        <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.parentCategory.color}|"></td>
                         <td th:text="${transaction.subcategory} ? ${transaction.subcategory.name} : ''"></td>
                         <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
                         <td th:text="${transaction.memo}"></td>
@@ -88,48 +82,70 @@
     </div>
     <div th:replace="fragments/scripts :: scripts"></div>
     <script>
-        var data = {
-            datasets: [{
-                data: [10, 20, 5, 15, 30],
-                backgroundColor: [
-                    'rgba(112, 193, 179, 0.7)',
-                    'rgba(255, 224, 102, 0.7)',
-                    'rgba(242, 95, 92, 0.7)',
-                    'rgba(36, 123, 160, 0.7)',
-                    'rgba(118, 70, 143, 0.7)'
-                ]
-            }]
-        };
 
-        var ctx = document.getElementById('myChart');
-        var myDoughnutChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: data,
-            options: {
-                cutoutPercentage: 60,
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                          //get the concerned dataset
-                          var dataset = data.datasets[tooltipItem.datasetIndex];
+        $.ajax({
+            url: '/api/dashboard/period/' + $('.container-fluid').attr('data-period-id'),
+            dataType: 'json',
+            method: 'GET',
+            success: function(map) {
+                initializeDoughnut(map);
+            }
+        });
 
-                          //calculate the total of this data set
-                          var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
-                            return previousValue + currentValue;
-                          });
+        function initializeDoughnut(map) {
+            var dataVals = [];
+            var dataNames = [];
 
-                          //get the current items value
-                          var currentValue = dataset.data[tooltipItem.index];
+            map.forEach(function(entry) {
+                dataVals.push(entry.total);
+                dataNames.push(entry.name);
+            });
 
-                          //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
-                          var precentage = ((currentValue/total) * 100).toFixed(2);
+            var data = {
+                datasets: [{
+                    data: dataVals,
+                    backgroundColor: [
+                        '#76468f',
+                        '#fc4a1a',
+                        '#f7b733',
+                        '#4abdac',
+                        '#173a92'
+                    ]
+                }],
+                labels: dataNames
+            };
 
-                          return precentage + "%";
+            var ctx = document.getElementById('myChart');
+            var myDoughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    cutoutPercentage: 60,
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                //get the concerned dataset
+                                var dataset = data.datasets[tooltipItem.datasetIndex];
+
+                                //calculate the total of this data set
+                                var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                                    return previousValue + currentValue;
+                                });
+
+                                //get the current items value
+                                var currentValue = dataset.data[tooltipItem.index];
+                                var percentage = ((currentValue/total) * 100).toFixed(2);
+
+                                return data.labels[tooltipItem.index] + ': $' + currentValue + ' (' + percentage + '%)';
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
     </script>
 </body>
 </html>

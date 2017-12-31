@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getCategoryExpensesByYear" resultMap="CategoryExpenseMapper">
-        SELECT
+        SELECT  /*DashboardMapper.getCategoryExpensesByYear */
             c.category_id,
             pc.name AS parent_category_name,
             c.name AS category_name,
@@ -27,6 +27,19 @@
         WHERE c.parent_id IS NOT NULL
         GROUP BY c.category_id
         ORDER BY c.parent_id, c.category_id
+    </select>
+
+    <select id="getParentCategorySpendingByPeriodId" resultType="java.util.HashMap">
+        SELECT /* DashboardMapper.getCategoryExpensesByYear */
+            pc.name, pc.name, COALESCE(ROUND(SUM(a.total), 2), 0) AS total
+        FROM
+        period p
+        JOIN allocation a ON p.period_id = a.period_id
+        JOIN category c ON a.category_id = c.category_id
+        JOIN category pc ON c.parent_id = pc.category_id
+        WHERE p.period_id = #{id}
+        GROUP BY pc.category_id
+        ORDER BY pc.category_id
     </select>
 
 </mapper>

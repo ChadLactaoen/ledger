@@ -7,18 +7,19 @@
     <resultMap id="Category" type="com.lactaoen.ledger.model.Category">
         <id property="categoryId" column="category_id" />
         <result property="name" column="name" />
+        <result property="color" column="color" />
         <association property="parentCategory" column="parent_id" select="CategoryMapper.getCategoryById" />
     </resultMap>
 
     <select id="getAllCategories" resultMap="Category">
         SELECT /* CategoryMapper.getAllCategories */
-            category_id, name, parent_id
+            category_id, name, parent_id, color
         FROM category
     </select>
 
     <select id="getAllChildCategories" resultMap="Category">
         SELECT /* CategoryMapper.getAllChildCategories */
-            category_id, name, parent_id
+            category_id, name, parent_id, color
         FROM category
         WHERE parent_id IS NOT NULL
         ORDER BY name
@@ -26,7 +27,7 @@
 
     <select id="getAllParentCategories" resultMap="Category">
         SELECT /* CategoryMapper.getAllParentCategories */
-            category_id, name, parent_id
+            category_id, name, parent_id, color
         FROM category
         WHERE parent_id IS NULL
         ORDER BY name
@@ -34,7 +35,7 @@
 
     <select id="getCategoryById" resultMap="Category">
         SELECT /* CategoryMapper.getCategoryById */
-            category_id, name, parent_id
+            category_id, name, parent_id, color
         FROM category
         WHERE category_id = #{id}
     </select>
@@ -42,10 +43,11 @@
     <insert id="createCategory">
         INSERT INTO /* CategoryMapper.createCategory */
             category
-        (name, parent_id)
+        (name, parent_id, color)
         VALUES (
             #{name},
-            #{parentId}
+            #{parentId},
+            #{color}
         )
     </insert>
 

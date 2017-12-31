@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -25,6 +27,11 @@ public class DashboardController {
     @RequestMapping(value = "/category/{year}", method = RequestMethod.GET)
     public List<CategoryExpenseMapper> getCategoryExpensesByYear(@PathVariable("year") Integer year) {
         return dashboardMapper.getCategoryExpensesByYear(year);
+    }
+
+    @RequestMapping(value = "/period/{periodId}", method = RequestMethod.GET)
+    public List<Map<String, BigDecimal>> getParentCategorySpendingByPeriodId(@PathVariable("periodId") Integer periodId) {
+        return dashboardMapper.getParentCategorySpendingByPeriodId(periodId);
     }
 
     @Autowired

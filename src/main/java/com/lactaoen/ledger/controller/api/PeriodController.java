@@ -31,6 +31,11 @@ public class PeriodController {
         return periodMapper.getPeriodById(periodId);
     }
 
+    @RequestMapping(value = "/current", method = RequestMethod.GET)
+    public Period getCurrentPeriod() {
+        return periodMapper.getCurrentPeriod();
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public RedirectView createPeriod(@RequestBody Period period, RedirectAttributes model) {
         return new RedirectView("/");

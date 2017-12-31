@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <!-- Error/Success Message -->
+    <div th:fragment="flash" th:if="${msg != null}" th:class="|alert alert-${msgClass} alert-dismissible fade show|" role="alert">
+        <strong th:text="${msg}"></strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</body>
+</html>

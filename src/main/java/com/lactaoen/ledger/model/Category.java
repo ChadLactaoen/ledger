@@ -5,6 +5,7 @@ public class Category {
     private Integer categoryId;
     private String name;
     private Category parentCategory;
+    private String color;
 
     public Category() {
     }
@@ -33,12 +34,21 @@ public class Category {
         this.parentCategory = parentCategory;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
                 "categoryId=" + categoryId +
                 ", name='" + name + '\'' +
                 ", parentCategory=" + parentCategory +
+                ", color='" + color + '\'' +
                 '}';
     }
 }

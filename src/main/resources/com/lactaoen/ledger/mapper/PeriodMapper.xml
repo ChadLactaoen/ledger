@@ -26,6 +26,15 @@
         WHERE period_id = #{id}
     </select>
 
+    <select id="getCurrentPeriod" resultMap="Period">
+        SELECT /* PeriodMapper.getCurrentPeriod */
+            period_id, start_date, end_date, total
+        FROM period
+        WHERE start_date &gt;= CURDATE()
+        AND end_date &lt;= CURDATE()
+        LIMIT 1
+    </select>
+
     <select id="getLastPeriodId" resultType="java.lang.Integer">
         SELECT /* PeriodMapper.getLastPeriodId */
             MAX(period_id)

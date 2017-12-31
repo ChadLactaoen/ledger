@@ -23,6 +23,10 @@ public class PeriodMapper {
         return sqlSession.selectOne("PeriodMapper.getPeriodById", id);
     }
 
+    public Period getCurrentPeriod() {
+        return sqlSession.selectOne("PeriodMapper.getCurrentPeriod");
+    }
+
     public Integer getLastPeriodId() {
         return sqlSession.selectOne("PeriodMapper.getLastPeriodId");
     }

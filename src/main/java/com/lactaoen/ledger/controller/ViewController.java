@@ -5,6 +5,7 @@ import com.lactaoen.ledger.mapper.CategoryMapper;
 import com.lactaoen.ledger.mapper.GameMapper;
 import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.model.Casino;
+import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,15 @@ public class ViewController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String getHome(Model model) {
-        model.addAttribute("period", periodMapper.getPeriodById(1));
+        Period period = periodMapper.getCurrentPeriod();
+
+        if (period == null) {
+            period = periodMapper.getPeriodById(periodMapper.getLastPeriodId());
+            model.addAttribute("msgClass", "danger");
+            model.addAttribute("msg", "You are viewing an out-of-date period. Please create a new period as soon as possible.");
+        }
+
+        model.addAttribute("period", period);
         return "home";
     }
 
