@@ -30,13 +30,13 @@
         WHERE transaction_id = #{id}
     </select>
 
-    <select id="getTransactionsByPeriodId" resultMap="RichTransaction">
-        SELECT /*TransactionMapper.getTransactionsByPeriodId*/
-            t.transaction_id, t.date, t.name, t.price, t.memo, t.category_id, t.subcategory_id
-        FROM allocation a
-        JOIN transaction t ON a.category_id = t.category_id
-        WHERE a.period_id = #{id}
-        ORDER BY t.date DESC, t.transaction_id DESC
+    <select id="getTransactionsByDateRange" resultMap="RichTransaction">
+        SELECT /*TransactionMapper.getTransactionsByDateRange*/
+            transaction_id, date, name, price, memo, category_id, subcategory_id
+        FROM `transaction`
+        WHERE date &lt;= #{endDate}
+        AND date &gt;= #{startDate}
+        ORDER BY date, transaction_id
     </select>
 
     <select id="getTransactionsByCategoryIdAndPeriodId" resultMap="Transaction">

@@ -5,25 +5,25 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 :root {
-  --blue: #247ba0;  /* Custom change for Heath */
+  --blue: #173a92;  /* Custom change for Heath */
   --indigo: #6610f2;
   --purple: #76468f;    /* Custom change for Heath */
   --pink: #e83e8c;
-  --red: #f25f5c;   /* Custom change for Heath */
+  --red: #fc4a1a;   /* Custom change for Heath */
   --orange: #fd7e14;
-  --yellow: #ffe066;    /* Custom change for Heath */
+  --yellow: #f7b733;    /* Custom change for Heath */
   --green: #28a745;
   --teal: #20c997;
-  --cyan: #70c1b3;  /* Custom change for Heath */
+  --cyan: #4abdac;  /* Custom change for Heath */
   --white: #fff;
   --gray: #868e96;
   --gray-dark: #343a40;
-  --primary: #247ba0;   /* Custom change for Heath */
+  --primary: #173a92;   /* Custom change for Heath */
   --secondary: #868e96;
   --success: #28a745;
-  --info: #70c1b3;  /* Custom change for Heath */
-  --warning: #ffe066;   /* Custom change for Heath */
-  --danger: #f25f5c;    /* Custom change for Heath */
+  --info: #4abdac;  /* Custom change for Heath */
+  --warning: #f7b733;   /* Custom change for Heath */
+  --danger: #fc4a1a;    /* Custom change for Heath */
   --text-color: #50514f;
   --light: #f8f9fa;
   --dark: #343a40;
@@ -2781,7 +2781,7 @@ fieldset[disabled] a.btn {
 
 .btn-link {
   font-weight: 400;
-  color: var(--primary);
+  color: var(--info);
   background-color: transparent;
 }
 
@@ -2955,7 +2955,7 @@ tbody.collapse.show {
 .dropdown-item.active, .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: var(--primary);
+  background-color: var(--info);
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
@@ -3314,7 +3314,7 @@ tbody.collapse.show {
 
 .custom-control-input:checked ~ .custom-control-indicator {
   color: #fff;
-  background-color: var(--primary);
+  background-color: var(--info);
 }
 
 .custom-control-input:focus ~ .custom-control-indicator {
@@ -3361,7 +3361,7 @@ tbody.collapse.show {
 }
 
 .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-indicator {
-  background-color: var(--primary);
+  background-color: var(--info);
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='%23fff' d='M0 2h4'/%3E%3C/svg%3E");
 }
 
@@ -3453,7 +3453,7 @@ tbody.collapse.show {
 }
 
 .custom-file-input:focus ~ .custom-file-control {
-  box-shadow: 0 0 0 0.075rem #fff, 0 0 0 0.2rem var(--primary);
+  box-shadow: 0 0 0 0.075rem #fff, 0 0 0 0.2rem var(--info);
 }
 
 .custom-file-control {
@@ -3567,7 +3567,7 @@ tbody.collapse.show {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: var(--primary);
+  background-color: var(--info);
 }
 
 .nav-fill .nav-item {
@@ -4325,8 +4325,8 @@ tbody.collapse.show {
 .page-item.active .page-link {
   z-index: 2;
   color: #fff;
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--info);
+  border-color: var(--info);
 }
 
 .page-item.disabled .page-link {
@@ -4342,7 +4342,7 @@ tbody.collapse.show {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: var(--primary);
+  color: var(--info);
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -4415,7 +4415,7 @@ tbody.collapse.show {
 
 .badge-primary {
   color: #fff;
-  background-color: var(--primary);
+  background-color: var(--info);
 }
 
 .badge-primary[href]:focus, .badge-primary[href]:hover {
@@ -4692,7 +4692,7 @@ tbody.collapse.show {
   -ms-flex-pack: center;
       justify-content: center;
   color: #fff;
-  background-color: var(--primary);
+  background-color: var(--info);
 }
 
 .progress-bar-striped {
@@ -4775,8 +4775,8 @@ tbody.collapse.show {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--info);
+  border-color: var(--info);
 }
 
 .list-group-flush .list-group-item {
@@ -5666,7 +5666,7 @@ button.close {
 }
 
 .bg-primary {
-  background-color: var(--primary) !important;
+  background-color: var(--info) !important;
 }
 
 a.bg-primary:focus, a.bg-primary:hover {

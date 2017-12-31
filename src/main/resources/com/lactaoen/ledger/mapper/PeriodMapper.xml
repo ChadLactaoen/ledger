@@ -10,7 +10,7 @@
         <result property="endDate" column="end_date" />
         <result property="total" column="total" />
         <collection property="allocationList" column="period_id" select="AllocationMapper.getAllocationsByPeriodId" />
-        <collection property="transactionList" column="period_id" select="TransactionMapper.getTransactionsByPeriodId" />
+        <collection property="transactionList" column="{startDate=start_date, endDate=end_date}" select="TransactionMapper.getTransactionsByDateRange" />
     </resultMap>
 
     <select id="getAllPeriods" resultMap="Period">

@@ -14,11 +14,32 @@
                 return local.toJSON().slice(0,10);
             });
 
+            var colors = ['var(--purple)', 'var(--danger)', 'var(--warning)', 'var(--info)', 'var(--blue)'];
+
             $('document').ready(function() {
                 $('#date').val(new Date().toDateInputValue());
 
-
+                addDividersAndColorToDashboardTables();
             });
+
+            /*<![CDATA[*/
+            function addDividersAndColorToDashboardTables() {
+                var rows = $('#period-dashboard .dashboard-table tbody tr');
+                var lastParentCatId = '1';
+
+                for (var i = 0; i < rows.length; i++) {
+                    var currentParentCatId = $(rows[i]).attr('data-parent-cat-id');
+
+                    $($(rows[i]).find('td')[0]).css('color', colors[currentParentCatId - 1]);
+
+                    if (lastParentCatId !== currentParentCatId) {
+                        $(rows[i]).find('td').css('border-top', '2px solid #e9ecef');
+                    }
+
+                    lastParentCatId = currentParentCatId;
+                }
+            }
+            /*]]>*/
         </script>
     </div>
 </body>

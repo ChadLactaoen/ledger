@@ -27,7 +27,7 @@
         <div id="period-dashboard">
             <div class="row">
                 <div class="col-md-8">
-                    <table class="dashboard-table table table-sm">
+                    <table class="dashboard-table table table-sm table-hover">
                         <thead>
                         <tr>
                             <th scope="col">Category</th>
@@ -37,7 +37,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.total} - ${allocation.spent}">
+                        <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.total} - ${allocation.spent}" th:attr="data-parent-cat-id=${allocation.category.parentCategory.categoryId}">
                             <td th:text="${allocation.category.name}" th:class="font-weight-bold"></td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|">
                                 <span>Hello</span>
@@ -61,7 +61,7 @@
         <!-- Transactions -->
         <div id="transaction-dashboard">
             <h3>Transactions</h3>
-            <table class="dashboard-table table table-sm">
+            <table class="dashboard-table table table-sm table-hover">
                 <thead>
                 <tr>
                     <th scope="col">Date</th>

@@ -13,14 +13,25 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}"  href="/">Dashboard</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dashboard-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dashboards
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dashboard-dropdown">
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}" class="dropdown-item" href="/">Period Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/gambling' ? 'active':''}" class="dropdown-item" href="/gambling">Gambling Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/year' ? 'active':''}" class="dropdown-item" href="/year">Year Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/misc' ? 'active':''}" class="dropdown-item" href="/misc">Misc Dashboard</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/transaction' ? 'active':''}" href="/transaction">Add Transaction</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/bet' ? 'active':''}" href="/bet">Add Bet</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/period' ? 'active':''}" href="/bet">Add Period</a>
                 </li>
             </ul>
         </div>
