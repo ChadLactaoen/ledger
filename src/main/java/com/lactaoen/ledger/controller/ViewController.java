@@ -10,6 +10,8 @@ import com.lactaoen.ledger.model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -55,6 +57,13 @@ public class ViewController {
     @RequestMapping(value = "/casino", method = RequestMethod.GET)
     public String getCasinoView(Model model) {
         model.addAttribute("casino", new Casino());
+        return "casino";
+    }
+
+    @RequestMapping(value = "/casino/{casinoId}", method = RequestMethod.GET)
+    public String getUpdateCasinoView(@PathVariable("casinoId") int casinoId, Model model) {
+        model.addAttribute("casino", casinoMapper.getCasinoById(casinoId));
+
         return "casino";
     }
 

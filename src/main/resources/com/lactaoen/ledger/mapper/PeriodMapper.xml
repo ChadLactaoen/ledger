@@ -30,8 +30,8 @@
         SELECT /* PeriodMapper.getCurrentPeriod */
             period_id, start_date, end_date, total
         FROM period
-        WHERE start_date &gt;= CURDATE()
-        AND end_date &lt;= CURDATE()
+        WHERE start_date &lt;= CURDATE()
+        AND end_date &gt;= CURDATE()
         LIMIT 1
     </select>
 

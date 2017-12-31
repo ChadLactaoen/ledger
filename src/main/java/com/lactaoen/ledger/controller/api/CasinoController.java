@@ -24,7 +24,7 @@ public class CasinoController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Casino getCasino(@PathVariable("id") int id) {
-        return casinoMapper.selectCasinoById(id);
+        return casinoMapper.getCasinoById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -40,9 +40,10 @@ public class CasinoController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public int updateCasino(@PathVariable("id") int id, @RequestBody Casino casino) {
-        return 1;
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public Integer updateCasino(@PathVariable("id") int id, @ModelAttribute("casino") Casino casino) {
+        casino.setCasinoId(id);
+        return casinoMapper.updateCasino(casino);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

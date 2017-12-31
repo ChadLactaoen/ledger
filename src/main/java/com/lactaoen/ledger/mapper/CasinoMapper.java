@@ -19,12 +19,16 @@ public class CasinoMapper {
         return sqlSession.selectList("CasinoMapper.getAllCasinos");
     }
 
-    public Casino selectCasinoById(int id) {
+    public Casino getCasinoById(int id) {
         return sqlSession.selectOne("CasinoMapper.getCasinoById", id);
     }
 
     public Integer createCasino(Casino casino) {
         return sqlSession.insert("CasinoMapper.createCasino", casino);
+    }
+
+    public Integer updateCasino(Casino casino) {
+        return sqlSession.update("CasinoMapper.updateCasino", casino);
     }
 
     public void deleteCasino(int id) {

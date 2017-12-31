@@ -43,7 +43,7 @@
                     </table>
                 </div>
                 <div th:with="spentPercent = (${period.spent} / ${period.total}) * 100" class="col-md-4">
-                    <h5 th:text="|Spent this period: ${#numbers.formatDecimal(spentPercent,1,'COMMA',2,'POINT')}%|"></h5>
+                    <h5 th:text="|Spent this period: $${#numbers.formatDecimal(period.spent,1,'COMMA',2,'POINT')} (${#numbers.formatDecimal(spentPercent,1,'COMMA',2,'POINT')}%)|"></h5>
                     <div class="progress">
                         <div th:style="|width:${spentPercent}%|" th:attr="aria-valuenow=${spentPercent}" class="progress-bar bg-info" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>

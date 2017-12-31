@@ -32,6 +32,13 @@
         )
     </insert>
 
+    <update id="updateCasino">
+        UPDATE /* CasinoMapper.updateCasino */
+            casino
+        SET name = #{name}
+        WHERE casino_id = #{casinoId}
+    </update>
+
     <delete id="deleteCasino">
         DELETE FROM /* CasinoMapper.deleteCasino */
         casino
