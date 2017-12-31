@@ -1,5 +1,8 @@
 package com.lactaoen.ledger.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lactaoen.ledger.model.form.TransactionForm;
+
 import java.sql.Date;
 
 public class Transaction {
@@ -70,6 +73,21 @@ public class Transaction {
 
     public void setSubcategory(Category subcategory) {
         this.subcategory = subcategory;
+    }
+
+    @JsonIgnore
+    public TransactionForm toTransactionForm() {
+        TransactionForm form = new TransactionForm();
+        form.setTransactionId(transactionId);
+        form.setDate(date);
+        form.setName(name);
+        form.setPrice(price);
+        form.setMemo(memo);
+        form.setCategoryId(category.getCategoryId());
+        if (subcategory != null) {
+            form.setSubcategoryId(subcategory.getCategoryId());
+        }
+        return form;
     }
 
     @Override

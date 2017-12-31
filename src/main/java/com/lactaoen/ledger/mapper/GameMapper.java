@@ -28,6 +28,10 @@ public class GameMapper {
         return sqlSession.insert("GameMapper.createGame", game);
     }
 
+    public Integer updateGame(GameForm game) {
+        return sqlSession.update("GameMapper.updateGame", game);
+    }
+
     public void deleteGame(int id) {
         sqlSession.delete("GameMapper.deleteGame", id);
     }

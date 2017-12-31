@@ -1,9 +1,6 @@
 package com.lactaoen.ledger.controller;
 
-import com.lactaoen.ledger.mapper.CasinoMapper;
-import com.lactaoen.ledger.mapper.CategoryMapper;
-import com.lactaoen.ledger.mapper.GameMapper;
-import com.lactaoen.ledger.mapper.PeriodMapper;
+import com.lactaoen.ledger.mapper.*;
 import com.lactaoen.ledger.model.Casino;
 import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.form.*;
@@ -20,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ViewController {
 
     @Autowired
-    private GameMapper gameMapper;
+    private BetMapper betMapper;
 
     @Autowired
     private CasinoMapper casinoMapper;
@@ -29,7 +26,13 @@ public class ViewController {
     private CategoryMapper categoryMapper;
 
     @Autowired
+    private GameMapper gameMapper;
+
+    @Autowired
     private PeriodMapper periodMapper;
+
+    @Autowired
+    private TransactionMapper transactionMapper;
 
     @RequestMapping(method = RequestMethod.GET)
     public String getHome(Model model) {
@@ -48,6 +51,15 @@ public class ViewController {
     @RequestMapping(value = "/bet", method = RequestMethod.GET)
     public String getBetView(Model model) {
         model.addAttribute("bet", new BetForm());
+        model.addAttribute("games", gameMapper.getAllGames());
+        model.addAttribute("casinos", casinoMapper.getAllCasinos());
+
+        return "bet";
+    }
+
+    @RequestMapping(value = "/bet/{betId}", method = RequestMethod.GET)
+    public String getUpdateBetView(@PathVariable("betId") int betId, Model model) {
+        model.addAttribute("bet", betMapper.getById(betId).toBetForm());
         model.addAttribute("games", gameMapper.getAllGames());
         model.addAttribute("casinos", casinoMapper.getAllCasinos());
 
@@ -75,9 +87,25 @@ public class ViewController {
         return "category";
     }
 
+    @RequestMapping(value = "/category/{categoryId}", method = RequestMethod.GET)
+    public String getUpdateCategoryView(@PathVariable("categoryId") int categoryId, Model model) {
+        model.addAttribute("category", categoryMapper.getCategoryById(categoryId).toCategoryForm());
+        model.addAttribute("categories", categoryMapper.getAllParentCategories());
+
+        return "category";
+    }
+
     @RequestMapping(value = "/game", method = RequestMethod.GET)
     public String getGameView(Model model) {
         model.addAttribute("game", new GameForm());
+        model.addAttribute("games", gameMapper.getAllGames());
+
+        return "game";
+    }
+
+    @RequestMapping(value = "/game/{gameId}", method = RequestMethod.GET)
+    public String getUpdateGameView(@PathVariable("gameId") int gameId, Model model) {
+        model.addAttribute("game", gameMapper.getGameById(gameId).toGameForm());
         model.addAttribute("games", gameMapper.getAllGames());
 
         return "game";
@@ -94,6 +122,14 @@ public class ViewController {
     @RequestMapping(value = "/transaction", method = RequestMethod.GET)
     public String getTransactionView(Model model) {
         model.addAttribute("transaction", new TransactionForm());
+        model.addAttribute("categories", categoryMapper.getAllChildCategories());
+
+        return "transaction";
+    }
+
+    @RequestMapping(value = "/transaction/{transactionId}", method = RequestMethod.GET)
+    public String getUpdateTransactionView(@PathVariable("transactionId") int transactionId, Model model) {
+        model.addAttribute("transaction", transactionMapper.getTransactionById(transactionId).toTransactionForm());
         model.addAttribute("categories", categoryMapper.getAllChildCategories());
 
         return "transaction";

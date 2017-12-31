@@ -40,9 +40,18 @@ public class GameController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public int updateGame(@PathVariable("id") int id, @RequestBody Game game) {
-        return 1;
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public RedirectView updateGame(@PathVariable("id") int id, @ModelAttribute("game") GameForm game, RedirectAttributes model) {
+        game.setGameId(id);
+        if (gameMapper.updateGame(game) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The following game was updated successfully: " + game.getName());
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue updating the game: " + game.getName());
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

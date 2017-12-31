@@ -1,5 +1,8 @@
 package com.lactaoen.ledger.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lactaoen.ledger.model.form.BetForm;
+
 import java.sql.Date;
 
 public class Bet {
@@ -69,6 +72,19 @@ public class Bet {
 
     public void setProfit(Double profit) {
         this.profit = profit;
+    }
+
+    @JsonIgnore
+    public BetForm toBetForm() {
+        BetForm form = new BetForm();
+        form.setBetId(betId);
+        form.setDate(date);
+        form.setGameId(game.getGameId());
+        form.setCasinoId(casino.getCasinoId());
+        form.setMemo(memo);
+        form.setWager(wager);
+        form.setProfit(profit);
+        return form;
     }
 
     @Override

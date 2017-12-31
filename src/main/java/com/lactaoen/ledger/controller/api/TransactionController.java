@@ -39,9 +39,18 @@ public class TransactionController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public int updateTransaction(@PathVariable("id") int id, @RequestBody Transaction transaction) {
-        return 1;
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public RedirectView updateTransaction(@PathVariable("id") int id, @ModelAttribute("transaction") TransactionForm transaction, RedirectAttributes model) {
+        transaction.setTransactionId(id);
+        if (transactionMapper.updateTransaction(transaction) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The transaction for " + transaction.getName() + " was updated successfully");
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue updating the transaction for " + transaction.getName());
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

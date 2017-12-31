@@ -33,6 +33,15 @@
         )
     </insert>
 
+    <update id="updateGame">
+        UPDATE /* GameMapper.updateGame */
+            game
+        SET
+            name = #{name},
+            parent_id = #{parentId}
+        WHERE game_id = #{gameId}
+    </update>
+
     <delete id="deleteGame">
         DELETE FROM /* GameMapper.deleteGame */
         game

@@ -28,6 +28,10 @@ public class BetMapper {
         return sqlSession.insert("BetMapper.createBet", bet);
     }
 
+    public Integer updateBet(BetForm bet) {
+        return sqlSession.update("BetMapper.updateBet", bet);
+    }
+
     public void deleteBet(int id) {
         sqlSession.delete("BetMapper.deleteBet", id);
     }

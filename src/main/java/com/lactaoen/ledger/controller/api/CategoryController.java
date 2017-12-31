@@ -5,6 +5,8 @@ import com.lactaoen.ledger.model.Category;
 import com.lactaoen.ledger.model.form.CategoryForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -35,13 +37,30 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Integer createCategory(@ModelAttribute("category") CategoryForm category) {
-        return categoryMapper.createCategory(category);
+    public RedirectView createCategory(@ModelAttribute("category") CategoryForm category, RedirectAttributes model) {
+        if (categoryMapper.createCategory(category) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The following category was added successfully: " + category.getName());
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue adding the category: " + category.getName());
+        }
+
+        return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public int updateCategory(@PathVariable("id") int id, @RequestBody Category category) {
-        return 1;
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public RedirectView updateCategory(@PathVariable("id") int id, @ModelAttribute CategoryForm category, RedirectAttributes model) {
+        category.setCategoryId(id);
+        if (categoryMapper.updateCategory(category) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The following category was updated successfully: " + category.getName());
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue updating the category: " + category.getName());
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

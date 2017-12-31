@@ -36,6 +36,10 @@ public class CategoryMapper {
         return sqlSession.insert("CategoryMapper.createCategory", category);
     }
 
+    public Integer updateCategory(CategoryForm category) {
+        return sqlSession.update("CategoryMapper.updateCategory", category);
+    }
+
     public void deleteCategory(int id) {
         sqlSession.delete("CategoryMapper.deleteCategory", id);
     }

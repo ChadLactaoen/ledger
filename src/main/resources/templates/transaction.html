@@ -4,8 +4,8 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
     <div class="container">
-        <h1>Add Transaction</h1>
-        <form action="#" th:action="@{/api/transaction}" th:object="${transaction}" method="post">
+        <h1 th:text="${transaction.transactionId} ? 'Edit Transaction' : 'Add Transaction'"></h1>
+        <form action="#" th:action="${transaction.transactionId} ? @{'/api/transaction/' + ${transaction.transactionId}} : @{/api/transaction}" th:object="${transaction}" method="post">
             <div class="form-group">
                 <label>Date</label>
                 <input th:field="*{date}" th:required="true" type="date" class="form-control" />

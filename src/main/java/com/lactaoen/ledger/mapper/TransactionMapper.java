@@ -28,6 +28,10 @@ public class TransactionMapper {
         return sqlSession.insert("TransactionMapper.createTransaction", transaction);
     }
 
+    public Integer updateTransaction(TransactionForm transaction) {
+        return sqlSession.update("TransactionMapper.updateTransaction", transaction);
+    }
+
     public void deleteTransaction(int id) {
         sqlSession.delete("TransactionMapper.deleteTransaction", id);
     }

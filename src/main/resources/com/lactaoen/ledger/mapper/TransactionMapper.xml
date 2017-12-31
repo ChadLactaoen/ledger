@@ -69,6 +69,19 @@
         )
     </insert>
 
+    <update id="updateTransaction">
+        UPDATE /* TransactionMapper.updateTransaction */
+            transaction
+        SET
+            date = #{date},
+            name = #{name},
+            price = #{price},
+            memo = #{memo},
+            category_id = #{categoryId},
+            subcategory_id = #{subcategoryId}
+        WHERE transaction_id = #{transactionId}
+    </update>
+
     <delete id="deleteTransaction">
         DELETE FROM /* TransactionMapper.deleteTransaction */
             `transaction`

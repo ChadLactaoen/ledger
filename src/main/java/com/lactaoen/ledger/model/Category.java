@@ -1,5 +1,8 @@
 package com.lactaoen.ledger.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lactaoen.ledger.model.form.CategoryForm;
+
 public class Category {
 
     private Integer categoryId;
@@ -40,6 +43,18 @@ public class Category {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @JsonIgnore
+    public CategoryForm toCategoryForm() {
+        CategoryForm form = new CategoryForm();
+        form.setCategoryId(categoryId);
+        form.setName(name);
+        form.setColor(color);
+        if (parentCategory != null) {
+            form.setParentId(parentCategory.getCategoryId());
+        }
+        return form;
     }
 
     @Override

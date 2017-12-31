@@ -39,9 +39,18 @@ public class BetController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public int updateBet(@PathVariable("id") int id, @RequestBody Bet bet) {
-        return 1;
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public RedirectView updateBet(@PathVariable("id") int id, @ModelAttribute BetForm bet, RedirectAttributes model) {
+        bet.setBetId(id);
+        if (betMapper.updateBet(bet) != 0) {
+            model.addFlashAttribute("msgClass", "success");
+            model.addFlashAttribute("msg", "The bet was updated successfully");
+        } else {
+            model.addFlashAttribute("msgClass", "danger");
+            model.addFlashAttribute("msg", "There was an issue updating the bet");
+        }
+
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

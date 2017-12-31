@@ -5,6 +5,7 @@ public class CategoryForm {
     private Integer categoryId;
     private String name;
     private Integer parentId;
+    private String color;
 
     public CategoryForm() {
     }
@@ -31,5 +32,13 @@ public class CategoryForm {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

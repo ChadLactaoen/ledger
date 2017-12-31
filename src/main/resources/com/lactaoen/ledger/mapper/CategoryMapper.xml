@@ -51,6 +51,16 @@
         )
     </insert>
 
+    <update id="updateCategory">
+        UPDATE /* CategoryMapper.updateCategory */
+            category
+        SET
+            name = #{name},
+            color = #{color},
+            parent_id = #{parentId}
+        WHERE category_id = #{categoryId}
+    </update>
+
     <delete id="deleteCategory">
         DELETE FROM /* CategoryMapper.deleteCategory */
         category

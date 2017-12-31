@@ -41,6 +41,19 @@
         )
     </insert>
 
+    <update id="updateBet">
+        UPDATE /* BetMapper.updateBet */
+            bet
+        SET
+            date = #{date},
+            memo = #{memo},
+            wager = #{wager},
+            profit = #{profit},
+            game_id = #{gameId},
+            casino_id = #{casinoId}
+        WHERE bet_id = #{betId}
+    </update>
+
     <delete id="deleteBet">
         DELETE FROM /* BetMapper.deleteBet */
             bet

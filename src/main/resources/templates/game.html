@@ -4,8 +4,8 @@
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
-    <h1>Add Game</h1>
-    <form action="#" th:action="@{/api/game}" th:object="${game}" method="post">
+    <h1 th:text="${game.gameId} ? 'Edit Game' : 'Add Game'"></h1>
+    <form action="#" th:action="${game.gameId} ? @{'/api/game/' + ${game.gameId}} : @{/api/game}" th:object="${game}" method="post">
         <div class="form-group">
             <label>Name</label>
             <input type="text" th:field="*{name}" th:required="true" class="form-control" />
