@@ -21,6 +21,10 @@ public class DashboardMapper {
         return sqlSession.selectList("DashboardMapper.getCategoryExpensesByYear", year);
     }
 
+    public List<Map<String, BigDecimal>> getParentCategorySpendingByYear(Integer year) {
+        return sqlSession.selectList("DashboardMapper.getParentCategorySpendingByYear", year);
+    }
+
     public List<Map<String, BigDecimal>> getParentCategorySpendingByPeriodId(Integer periodId) {
         return sqlSession.selectList("DashboardMapper.getParentCategorySpendingByPeriodId", periodId);
     }

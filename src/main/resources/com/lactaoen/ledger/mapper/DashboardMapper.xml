@@ -30,13 +30,23 @@
 
     <select id="getParentCategorySpendingByPeriodId" resultType="java.util.HashMap">
         SELECT /* DashboardMapper.getParentCategorySpendingByPeriodId */
-            pc.name, pc.name, COALESCE(ROUND(SUM(a.total), 2), 0) AS total
-        FROM
-        period p
+            pc.name, COALESCE(ROUND(SUM(a.total), 2), 0) AS total
+        FROM period p
         JOIN allocation a ON p.period_id = a.period_id
         JOIN category c ON a.category_id = c.category_id
         JOIN category pc ON c.parent_id = pc.category_id
         WHERE p.period_id = #{id}
+        GROUP BY pc.category_id
+        ORDER BY pc.category_id
+    </select>
+
+    <select id="getParentCategorySpendingByYear" resultType="java.util.HashMap">
+        SELECT /* DashboardMapper.getParentCategorySpendingByYear */
+            pc.name, COALESCE(ROUND(SUM(t.price), 2), 0) AS total
+        FROM category pc
+        JOIN category c ON pc.category_id = c.parent_id
+        LEFT JOIN transaction t ON c.category_id = t.category_id AND YEAR(t.date) = #{id}
+        WHERE pc.parent_id IS NULL
         GROUP BY pc.category_id
         ORDER BY pc.category_id
     </select>

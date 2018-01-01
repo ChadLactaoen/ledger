@@ -3,10 +3,7 @@ package com.lactaoen.ledger.controller.api;
 import com.lactaoen.ledger.mapper.DashboardMapper;
 import com.lactaoen.ledger.model.dashboard.CategoryExpenseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -27,6 +24,14 @@ public class DashboardController {
     @RequestMapping(value = "/period/{periodId}", method = RequestMethod.GET)
     public List<Map<String, BigDecimal>> getParentCategorySpendingByPeriodId(@PathVariable("periodId") Integer periodId) {
         return dashboardMapper.getParentCategorySpendingByPeriodId(periodId);
+    }
+
+    @RequestMapping(value = "/year", method = RequestMethod.GET)
+    public List<Map<String, BigDecimal>> getParentCategorySpendingByYear(@RequestParam(name = "year", required = false) Integer year) {
+        if (year == null) {
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
+        return dashboardMapper.getParentCategorySpendingByYear(year);
     }
 
     @Autowired

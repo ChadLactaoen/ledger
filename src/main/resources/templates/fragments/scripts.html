@@ -36,6 +36,66 @@
                 }
             }
             /*]]>*/
+
+            function initializeDoughnut(map) {
+                var dataVals = [];
+                var dataNames = [];
+
+                map.forEach(function(entry) {
+                    dataVals.push(entry.total);
+                    dataNames.push(entry.name);
+                });
+
+                var data = {
+                    datasets: [{
+                        data: dataVals,
+                        backgroundColor: [
+                            '#76468f',
+                            '#fc4a1a',
+                            '#f7b733',
+                            '#4abdac',
+                            '#173a92'
+                        ]
+                    }],
+                    labels: dataNames
+                };
+
+                var ctx = document.getElementById('pieChart');
+                var myDoughnutChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        animation: {
+                            animateRotate: true
+                        },
+                        cutoutPercentage: 60,
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    //get the concerned dataset
+                                    var dataset = data.datasets[tooltipItem.datasetIndex];
+
+                                    //calculate the total of this data set
+                                    var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                                        return previousValue + currentValue;
+                                    });
+
+                                    //get the current items value
+                                    var currentValue = dataset.data[tooltipItem.index];
+                                    var percentage = ((currentValue/total) * 100).toFixed(2);
+
+                                    return data.labels[tooltipItem.index] + ': $' + currentValue.toLocaleString('EN-US') + ' (' + percentage + '%)';
+                                }
+                            },
+                            bodyFontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                            bodyFontSize: 16
+                        }
+                    }
+                });
+            }
         </script>
     </div>
 </body>
