@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
-public class CategoryController {
+public class CategoryController extends AbstractApiController {
 
     private CategoryMapper categoryMapper;
 
@@ -38,28 +38,14 @@ public class CategoryController {
 
     @RequestMapping(method = RequestMethod.POST)
     public RedirectView createCategory(@ModelAttribute("category") CategoryForm category, RedirectAttributes model) {
-        if (categoryMapper.createCategory(category) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The following category was added successfully: " + category.getName());
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue adding the category: " + category.getName());
-        }
-
-        return new RedirectView("/");
+        generateFlashAttributes(model, categoryMapper.createCategory(category), "category", PostType.ADD);
+        return new RedirectView("/form/category");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public RedirectView updateCategory(@PathVariable("id") int id, @ModelAttribute CategoryForm category, RedirectAttributes model) {
         category.setCategoryId(id);
-        if (categoryMapper.updateCategory(category) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The following category was updated successfully: " + category.getName());
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue updating the category: " + category.getName());
-        }
-
+        generateFlashAttributes(model, categoryMapper.updateCategory(category), "category", PostType.UPDATE);
         return new RedirectView("/");
     }
 

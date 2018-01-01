@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/bet")
-public class BetController {
+public class BetController extends AbstractApiController {
 
     private BetMapper betMapper;
 
@@ -28,28 +28,14 @@ public class BetController {
 
     @RequestMapping(method = RequestMethod.POST)
     public RedirectView createBet(@ModelAttribute("bet") BetForm bet, RedirectAttributes model) {
-        if (betMapper.createBet(bet) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The bet was added successfully");
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue adding the bet");
-        }
-
-        return new RedirectView("/");
+        generateFlashAttributes(model, betMapper.createBet(bet), "bet", PostType.ADD);
+        return new RedirectView("/form/bet");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public RedirectView updateBet(@PathVariable("id") int id, @ModelAttribute BetForm bet, RedirectAttributes model) {
         bet.setBetId(id);
-        if (betMapper.updateBet(bet) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The bet was updated successfully");
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue updating the bet");
-        }
-
+        generateFlashAttributes(model, betMapper.updateBet(bet), "bet", PostType.UPDATE);
         return new RedirectView("/");
     }
 

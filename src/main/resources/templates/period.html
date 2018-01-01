@@ -4,6 +4,7 @@
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
+    <div th:replace="fragments/flash :: flash"></div>
     <h1>Add Period</h1>
     <form action="#" th:action="@{/api/period}" th:object="${period}" method="post">
         <div class="form-group">

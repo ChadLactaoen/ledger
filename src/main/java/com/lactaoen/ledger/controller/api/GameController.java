@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/game")
-public class GameController {
+public class GameController extends AbstractApiController {
 
     private GameMapper gameMapper;
 
@@ -29,28 +29,14 @@ public class GameController {
 
     @RequestMapping(method = RequestMethod.POST)
     public RedirectView createGame(@ModelAttribute("game") GameForm game, RedirectAttributes model) {
-        if (gameMapper.createGame(game) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The following game was added successfully: " + game.getName());
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue adding the game: " + game.getName());
-        }
-
-        return new RedirectView("/");
+        generateFlashAttributes(model, gameMapper.createGame(game), "game", PostType.ADD);
+        return new RedirectView("/form/game");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public RedirectView updateGame(@PathVariable("id") int id, @ModelAttribute("game") GameForm game, RedirectAttributes model) {
         game.setGameId(id);
-        if (gameMapper.updateGame(game) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The following game was updated successfully: " + game.getName());
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue updating the game: " + game.getName());
-        }
-
+        generateFlashAttributes(model, gameMapper.updateGame(game), "game", PostType.UPDATE);
         return new RedirectView("/");
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transaction")
-public class TransactionController {
+public class TransactionController extends AbstractApiController {
 
     private AllocationMapper allocationMapper;
 
@@ -44,18 +44,11 @@ public class TransactionController {
             model.addFlashAttribute("msg", "The transaction for " + transaction.getName()+ " was not added. " +
                     "Please add an allocation for its category to the respective period first.");
 
-            return new RedirectView("/");
+            return new RedirectView("/form/transaction");
         }
 
-        if (transactionMapper.createTransaction(transaction) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The transaction for " + transaction.getName() + " was added successfully");
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue adding the transaction for " + transaction.getName());
-        }
-
-        return new RedirectView("/");
+        generateFlashAttributes(model, transactionMapper.createTransaction(transaction), "transaction", PostType.ADD);
+        return new RedirectView("/form/transaction");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
@@ -67,18 +60,11 @@ public class TransactionController {
             model.addFlashAttribute("msg", "The transaction for " + transaction.getName()+ " was not updated. " +
                     "Please add an allocation for its category to the respective period first.");
 
-            return new RedirectView("/");
+            return new RedirectView("/form/transaction/" + id);
         }
 
         transaction.setTransactionId(id);
-        if (transactionMapper.updateTransaction(transaction) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The transaction for " + transaction.getName() + " was updated successfully");
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue updating the transaction for " + transaction.getName());
-        }
-
+        generateFlashAttributes(model, transactionMapper.updateTransaction(transaction), "transaction", PostType.UPDATE);
         return new RedirectView("/");
     }
 

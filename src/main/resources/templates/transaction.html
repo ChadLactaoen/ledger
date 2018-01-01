@@ -4,6 +4,7 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
     <div class="container">
+        <div th:replace="fragments/flash :: flash"></div>
         <h1 th:text="${transaction.transactionId} ? 'Edit Transaction' : 'Add Transaction'"></h1>
         <form action="#" th:action="${transaction.transactionId} ? @{'/api/transaction/' + ${transaction.transactionId}} : @{/api/transaction}" th:object="${transaction}" method="post">
             <div class="form-group">

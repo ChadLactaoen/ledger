@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/allocation")
-public class AllocationController {
+public class AllocationController extends AbstractApiController {
 
     private AllocationMapper allocationMapper;
 

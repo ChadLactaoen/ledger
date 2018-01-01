@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/casino")
-public class CasinoController {
+public class CasinoController extends AbstractApiController {
 
     private CasinoMapper casinoMapper;
 
@@ -29,21 +29,15 @@ public class CasinoController {
 
     @RequestMapping(method = RequestMethod.POST)
     public RedirectView createCasino(@ModelAttribute("casino") Casino casino, RedirectAttributes model) {
-        if (casinoMapper.createCasino(casino) != 0) {
-            model.addFlashAttribute("msgClass", "success");
-            model.addFlashAttribute("msg", "The following casino was added successfully: " + casino.getName());
-        } else {
-            model.addFlashAttribute("msgClass", "danger");
-            model.addFlashAttribute("msg", "There was an issue adding the casino: " + casino.getName());
-        }
-
-        return new RedirectView("/");
+        generateFlashAttributes(model, casinoMapper.createCasino(casino), "casino", PostType.ADD);
+        return new RedirectView("/form/casino");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public Integer updateCasino(@PathVariable("id") int id, @ModelAttribute("casino") Casino casino) {
+    public RedirectView updateCasino(@PathVariable("id") int id, @ModelAttribute("casino") Casino casino, RedirectAttributes model) {
         casino.setCasinoId(id);
-        return casinoMapper.updateCasino(casino);
+        generateFlashAttributes(model, casinoMapper.updateCasino(casino), "casino", PostType.UPDATE);
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/period")
-public class PeriodController {
+public class PeriodController extends AbstractApiController {
 
     private PeriodMapper periodMapper;
 

@@ -4,6 +4,7 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
     <div class="container">
+        <div th:replace="fragments/flash :: flash"></div>
         <h1 th:text="${bet.betId} ? 'Edit Bet' : 'Add Bet'"></h1>
         <form action="#" th:action="${bet.betId} ? @{'/api/bet/' + ${bet.betId}} : @{/api/bet}" th:object="${bet}" method="post">
             <div class="form-group">

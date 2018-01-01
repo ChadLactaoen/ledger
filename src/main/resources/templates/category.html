@@ -4,6 +4,7 @@
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
+    <div th:replace="fragments/flash :: flash"></div>
     <h1 th:text="${category.categoryId} ? 'Edit Category' : 'Add Category'"></h1>
     <form action="#" th:action="${category.categoryId} ? @{'/api/category/' + ${category.categoryId}} : @{/api/category}" th:object="${category}" method="post">
         <div class="form-group">
