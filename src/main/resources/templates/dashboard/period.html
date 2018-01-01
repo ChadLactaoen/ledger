@@ -9,11 +9,8 @@
 
         <!-- Header -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h1>Dashboard <small class="text-muted" th:text="|${#calendars.format(period.startDate, 'MMM d')} - ${#calendars.format(period.endDate, 'MMM d')}|"></small></h1>
-            </div>
-            <div class="col-md-6 text-right">
-                <h1 th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|"></h1>
             </div>
         </div>
 
@@ -32,18 +29,22 @@
                         </thead>
                         <tbody>
                         <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.total} - ${allocation.spent}" th:attr="data-parent-cat-id=${allocation.category.parentCategory.categoryId}">
-                            <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.parentCategory.color}|"></td>
-                            <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|">
-                                <span>Hello</span>
-                            </td>
+                            <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.parentCategory.color}|" th:attr="data-category-id=${allocation.category.categoryId}"></td>
+                            <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|"></td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.spent,1,'COMMA',2,'POINT')}|"></td>
-                            <td th:text="${remaining} >= 0 ? |$${#numbers.formatDecimal(remaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((remaining * -1),1,'COMMA',2,'POINT')}|" th:class="${remaining} >= 0 ? (${remaining == 0} ? 'font-weight-bold text-muted' : 'font-weight-bold') : 'font-weight-bold text-danger'"></td>
+                            <td th:text="${remaining} >= 0 ? |$${#numbers.formatDecimal(remaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((remaining * -1),1,'COMMA',2,'POINT')}|" th:classappend="${remaining} >= 0 ? (${remaining} == 0 ? 'text-muted' : '') : 'text-danger'" class="font-weight-bold"></td>
+                        </tr>
+                        <tr th:with="totalRemaining = ${period.total} - ${period.spent}" class="font-weight-bold">
+                            <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
+                            <td th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|"></td>
+                            <td th:text="|$${#numbers.formatDecimal(period.spent,1,'COMMA',2,'POINT')}|"></td>
+                            <td th:text="${totalRemaining} >= 0 ? |$${#numbers.formatDecimal(totalRemaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((totalRemaining * -1),1,'COMMA',2,'POINT')}|" th:class="${totalRemaining} >= 0 ? '' : 'text-danger'"></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div th:with="spentPercent = (${period.spent} / ${period.total}) * 100" class="col-md-4">
-                    <h5 th:text="|Spent this period: $${#numbers.formatDecimal(period.spent,1,'COMMA',2,'POINT')} (${#numbers.formatDecimal(spentPercent,1,'COMMA',2,'POINT')}%)|"></h5>
+                    <h5 th:text="|Spent this period: ${#numbers.formatDecimal(spentPercent,1,'COMMA',2,'POINT')}%|"></h5>
                     <div class="progress">
                         <div th:style="|width:${spentPercent}%|" th:attr="aria-valuenow=${spentPercent}" class="progress-bar bg-info" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
@@ -54,7 +55,7 @@
 
         <!-- Transactions -->
         <div id="transaction-dashboard">
-            <h3>Transactions</h3>
+            <h3 id="transaction-header">All Transactions</h3>
             <table class="dashboard-table table table-sm table-hover">
                 <thead>
                 <tr>
@@ -67,7 +68,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="transaction : ${period.transactionList}" th:with="date = ${transaction.date}">
+                    <tr th:each="transaction : ${period.transactionList}" th:with="date = ${transaction.date}" th:attr="data-category-id=${transaction.category.categoryId}">
                         <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
                         <td th:text="${transaction.name}"></td>
                         <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.parentCategory.color}|"></td>
@@ -82,6 +83,23 @@
     </div>
     <div th:replace="fragments/scripts :: scripts"></div>
     <script>
+
+        $(document).ready(function() {
+
+            // Click listener for filtering transactions by category
+            $('#period-dashboard td[data-category-id]').on('click', function(e) {
+                var categoryId = $(this).attr('data-category-id');
+
+                if (categoryId === '0') {
+                    $('#transaction-header').text('All Transactions');
+                    $('#transaction-dashboard tbody tr').show();
+                } else {
+                    $('#transaction-header').text($(this).text() + ' Transactions');
+                    $('#transaction-dashboard tbody tr').hide();
+                    $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
+                }
+            });
+        });
 
         $.ajax({
             url: '/api/dashboard/period/' + $('.container-fluid').attr('data-period-id'),

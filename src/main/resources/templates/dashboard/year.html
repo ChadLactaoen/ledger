@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid">
+
+    <div th:replace="fragments/flash :: flash"></div>
+
+    <!-- Header -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Dashboard <small class="text-muted" th:text="${year}"></small></h1>
+        </div>
+    </div>
+
+    <!-- Period -->
+    <div id="year-dashboard">
+        <div class="row">
+            <div class="col-md-8">
+                <table class="dashboard-table table table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">Count</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Average</th>
+                        <th scope="col">%</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="category : ${categories}" th:attr="data-parent-cat-id=${category.parentCategory.categoryId}">
+                        <td th:text="${category.categoryName}" th:class="font-weight-bold" th:style="|color:${category.parentCategory.color}|" th:attr="data-category-id=${category.categoryId}"></td>
+                        <td th:text="${category.transactionCount}"></td>
+                        <td th:text="|$${#numbers.formatDecimal(category.total,1,'COMMA',2,'POINT')}|"></td>
+                        <td th:text="|$${#numbers.formatDecimal(category.averageSpent,1,'COMMA',2,'POINT')}|"></td>
+                        <td th:text="|${#numbers.formatDecimal((category.total / totalSpent) * 100,1,'COMMA',2,'POINT')}%|"></td>
+                    </tr>
+                    <tr class="font-weight-bold">
+                        <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
+                        <td th:text="${#lists.size(transactions)}"></td>
+                        <td th:text="|$${#numbers.formatDecimal(totalSpent,1,'COMMA',2,'POINT')}|"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions -->
+    <div id="transaction-dashboard">
+        <h3 id="transaction-header">All Transactions</h3>
+        <table class="dashboard-table table table-sm table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Subcategory</th>
+                <th scope="col">Price</th>
+                <th scope="col">Memo</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transaction : ${transactions}" th:with="date = ${transaction.date}" th:attr="data-category-id=${transaction.category.categoryId}">
+                <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
+                <td th:text="${transaction.name}"></td>
+                <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.parentCategory.color}|"></td>
+                <td th:text="${transaction.subcategory} ? ${transaction.subcategory.name} : ''"></td>
+                <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
+                <td th:text="${transaction.memo}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+<script>
+
+        $(document).ready(function() {
+
+            // Click listener for filtering transactions by category
+            $('#year-dashboard td[data-category-id]').on('click', function(e) {
+                var categoryId = $(this).attr('data-category-id');
+
+                if (categoryId === '0') {
+                    $('#transaction-header').text('All Transactions');
+                    $('#transaction-dashboard tbody tr').show();
+                } else {
+                    $('#transaction-header').text($(this).text() + ' Transactions');
+                    $('#transaction-dashboard tbody tr').hide();
+                    $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

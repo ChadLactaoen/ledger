@@ -19,11 +19,6 @@ public class DashboardController {
 
     private DashboardMapper dashboardMapper;
 
-    @RequestMapping(value = "/category", method = RequestMethod.GET)
-    public List<CategoryExpenseMapper> getCategoryExpensesFromCurrentYear() {
-        return dashboardMapper.getCategoryExpensesByYear(Calendar.getInstance().get(Calendar.YEAR));
-    }
-
     @RequestMapping(value = "/category/{year}", method = RequestMethod.GET)
     public List<CategoryExpenseMapper> getCategoryExpensesByYear(@PathVariable("year") Integer year) {
         return dashboardMapper.getCategoryExpensesByYear(year);

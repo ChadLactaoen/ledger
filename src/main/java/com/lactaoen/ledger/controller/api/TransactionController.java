@@ -24,6 +24,12 @@ public class TransactionController {
         return transactionMapper.getAllTransactions();
     }
 
+    @RequestMapping(value = "/year/{year}", method = RequestMethod.GET)
+    public List<Transaction> getTransactionsByYear(@PathVariable("year") Integer year) {
+        return transactionMapper.getTransactionsByYear(year);
+    }
+
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Transaction getTransaction(@PathVariable("id") int id) {
         return transactionMapper.getTransactionById(id);

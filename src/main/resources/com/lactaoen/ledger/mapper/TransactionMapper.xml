@@ -30,6 +30,13 @@
         WHERE transaction_id = #{id}
     </select>
 
+    <select id="getTransactionsByYear" resultMap="RichTransaction">
+        SELECT /*TranscationMapper.getTransactionById*/
+            transaction_id, date, name, price, memo, category_id, subcategory_id
+        FROM `transaction`
+        WHERE YEAR(date) = #{year}
+    </select>
+
     <select id="getTransactionsByDateRange" resultMap="RichTransaction">
         SELECT /*TransactionMapper.getTransactionsByDateRange*/
             transaction_id, date, name, price, memo, category_id, subcategory_id

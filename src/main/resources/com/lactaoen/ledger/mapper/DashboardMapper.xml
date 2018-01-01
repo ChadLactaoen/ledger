@@ -6,23 +6,22 @@
 
     <resultMap id="CategoryExpenseMapper" type="com.lactaoen.ledger.model.dashboard.CategoryExpenseMapper">
         <id property="categoryId" column="category_id" />
-        <result property="parentCategoryName" column="parent_category_name" />
         <result property="categoryName" column="category_name" />
         <result property="transactionCount" column="transaction_count" />
         <result property="total" column="total" />
         <result property="averageSpent" column="average_spent" />
+        <association property="parentCategory" column="parent_id" select="CategoryMapper.getCategoryById" />
     </resultMap>
 
     <select id="getCategoryExpensesByYear" resultMap="CategoryExpenseMapper">
         SELECT  /*DashboardMapper.getCategoryExpensesByYear */
             c.category_id,
-            pc.name AS parent_category_name,
             c.name AS category_name,
             COUNT(t.transaction_id) AS transaction_count,
             COALESCE(ROUND(SUM(t.price), 2), 0) AS total,
-            COALESCE(ROUND(AVG(t.price), 2), 0) AS average_spent
+            COALESCE(ROUND(AVG(t.price), 2), 0) AS average_spent,
+            c.parent_id
         FROM category c
-        JOIN category pc ON c.parent_id = pc.category_id
         LEFT JOIN `transaction` t ON c.category_id = t.category_id AND YEAR(t.date) = #{id}
         WHERE c.parent_id IS NOT NULL
         GROUP BY c.category_id
@@ -30,7 +29,7 @@
     </select>
 
     <select id="getParentCategorySpendingByPeriodId" resultType="java.util.HashMap">
-        SELECT /* DashboardMapper.getCategoryExpensesByYear */
+        SELECT /* DashboardMapper.getParentCategorySpendingByPeriodId */
             pc.name, pc.name, COALESCE(ROUND(SUM(a.total), 2), 0) AS total
         FROM
         period p

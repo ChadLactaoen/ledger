@@ -24,6 +24,10 @@ public class TransactionMapper {
         return sqlSession.selectOne("TransactionMapper.getTransactionById", id);
     }
 
+    public List<Transaction> getTransactionsByYear(Integer year) {
+        return sqlSession.selectList("TransactionMapper.getTransactionsByYear", year);
+    }
+
     public Integer createTransaction(TransactionForm transaction) {
         return sqlSession.insert("TransactionMapper.createTransaction", transaction);
     }

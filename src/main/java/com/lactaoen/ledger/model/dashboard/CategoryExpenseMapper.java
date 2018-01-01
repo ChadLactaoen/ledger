@@ -1,13 +1,15 @@
 package com.lactaoen.ledger.model.dashboard;
 
+import com.lactaoen.ledger.model.Category;
+
 public class CategoryExpenseMapper {
 
     private Integer categoryId;
     private String categoryName;
-    private String parentCategoryName;
     private Integer transactionCount;
     private Double total;
     private Double averageSpent;
+    private Category parentCategory;
 
     public CategoryExpenseMapper() {
     }
@@ -26,14 +28,6 @@ public class CategoryExpenseMapper {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public String getParentCategoryName() {
-        return parentCategoryName;
-    }
-
-    public void setParentCategoryName(String parentCategoryName) {
-        this.parentCategoryName = parentCategoryName;
     }
 
     public Integer getTransactionCount() {
@@ -58,5 +52,13 @@ public class CategoryExpenseMapper {
 
     public void setAverageSpent(Double averageSpent) {
         this.averageSpent = averageSpent;
+    }
+
+    public Category getParentCategory() {
+        return parentCategory;
+    }
+
+    public void setParentCategory(Category parentCategory) {
+        this.parentCategory = parentCategory;
     }
 }
