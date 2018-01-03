@@ -41,6 +41,27 @@
         FROM period
     </select>
 
+    <insert id="createPeriod">
+        INSERT INTO /* PeriodMapper.createPeriod */
+            period
+        (start_date, end_date, total)
+        VALUES (
+            #{startDate},
+            #{endDate},
+            #{total}
+        )
+    </insert>
+
+    <update id="updatePeriod">
+        UPDATE /* PeriodMapper.updatePeriod */
+            period
+        SET
+            start_date = #{startDate},
+            end_date = #{endDate},
+            total = #{total}
+        WHERE period_id = #{periodId}
+    </update>
+
     <delete id="deletePeriod">
         DELETE FROM /* PeriodMapper.deletePeriod */
         period

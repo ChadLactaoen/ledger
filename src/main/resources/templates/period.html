@@ -6,7 +6,7 @@
 <div class="container">
     <div th:replace="fragments/flash :: flash"></div>
     <h1>Add Period</h1>
-    <form action="#" th:action="@{/api/period}" th:object="${period}" method="post">
+    <form action="#" th:action="${period.periodId} ? @{'/api/period/' + ${period.periodId}} : @{/api/period}" th:object="${period}" method="post">
         <div class="form-group">
             <label>Start Date</label>
             <input th:field="*{startDate}" th:required="true" type="date" class="form-control" />
@@ -17,11 +17,76 @@
         </div>
         <div class="form-group">
             <label>Total</label>
-            <input th:field="*{total}" th:required="true" type="number" step="any" class="form-control" />
+            <input th:field="*{total}" th:required="true" type="number" step=".01" class="form-control" />
         </div>
-        <button type="submit" class="btn btn-lg btn-warning">Submit</button>
+        <table id="category-fields" class="table dashboard-table table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Delete?</th>
+                <th scope="col">Category Name</th>
+                <th scope="col">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${period.periodId}" th:each="category,rowstat : ${categories}" th:attr="data-parent-cat-id=${category.parentCategory.categoryId}" th:style="*{amounts[__${rowstat.index}__]} == '-1' ? 'display:none' : ''">
+                <td><i class="fas fa-trash delete-category-btn"></i></td>
+                <td th:text="${category.name}" th:class="font-weight-bold" th:style="|color:${category.parentCategory.color}|"></td>
+                <td>
+                    <input th:name="|categoryIds[__${rowstat.index}__]|" th:value="${category.categoryId}" th:required="true" type="hidden" />
+                    <input th:name="|amounts[__${rowstat.index}__]|" th:value="*{amounts[__${rowstat.index}__]} ?: ''" th:required="true" type="number" step=".01" class="form-control form-control-sm amount" />
+                </td>
+            </tr>
+            <tr th:unless="${period.periodId}" th:each="category,rowstat : ${categories}" th:attr="data-parent-cat-id=${category.parentCategory.categoryId}">
+                <td><i class="fas fa-trash delete-category-btn"></i></td>
+                <td th:text="${category.name}" th:class="font-weight-bold" th:style="|color:${category.parentCategory.color}|"></td>
+                <td>
+                    <input th:name="|categoryIds[__${rowstat.index}__]|" th:value="${category.categoryId}" th:required="true" type="hidden" />
+                    <input th:field="*{amounts[__${rowstat.index}__]}" th:required="true" type="number" step=".01" class="form-control form-control-sm amount" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button th:attrappend="disabled=${period.periodId == null}?disabled" type="submit" class="btn btn-lg btn-warning">Submit</button>
+        <span class="font-weight-bold">Total Remaining: <span th:text="${period.periodId}?'$0'" id="remaining"></span></span>
     </form>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>
+<script>
+    function recalculateRemaining() {
+        var total = $('#total').val();
+        var amounts = $('.amount');
+
+        if (total === '') {
+            total = 0;
+        }
+
+        for (var i = 0; amounts.length > i; i++) {
+            var amount = amounts[i].value;
+            if (amount !== '') {
+                if (amount !== '-1') {
+                    total -= amount;
+                }
+            }
+        }
+
+        if (total === 0) {
+            $('button[type="submit"]').prop('disabled', false);
+        } else {
+            $('button[type="submit"]').prop('disabled', true);
+        }
+
+        $('#remaining').text('$' + total.toLocaleString('EN-US'));
+    }
+
+    $(document).ready(function() {
+        $('input[type=number]').on('input', function(e) {
+            recalculateRemaining();
+        });
+
+        $('.delete-category-btn').on('click', function(e) {
+            recalculateRemaining();
+        });
+    });
+</script>
 </body>
 </html>

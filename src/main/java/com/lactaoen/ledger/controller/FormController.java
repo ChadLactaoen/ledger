@@ -1,7 +1,9 @@
 package com.lactaoen.ledger.controller;
 
 import com.lactaoen.ledger.mapper.*;
+import com.lactaoen.ledger.model.Allocation;
 import com.lactaoen.ledger.model.Casino;
+import com.lactaoen.ledger.model.Category;
 import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/form")
 public class FormController {
+
+    @Autowired
+    private AllocationMapper allocationMapper;
 
     @Autowired
     private BetMapper betMapper;
@@ -100,7 +108,39 @@ public class FormController {
     @RequestMapping(value = "/period", method = RequestMethod.GET)
     public String getPeriodView(Model model) {
         model.addAttribute("period", new PeriodForm());
-        model.addAttribute("categories", categoryMapper.getAllChildCategories());
+        model.addAttribute("categories", categoryMapper.getAllChildCategories().stream().sorted(byParentCategory.thenComparing(byCategoryName)).collect(Collectors.toList()));
+
+        return "period";
+    }
+
+    @RequestMapping(value = "/period/{periodId}", method = RequestMethod.GET)
+    public String getUpdatePeriodView(@PathVariable("periodId") int periodId, Model model) {
+        Period period = periodMapper.getPeriodById(periodId);
+        List<Allocation> allocations = allocationMapper.getAllocationsByPeriodId(periodId);
+        Map<Integer, Double> categoryTotalMap = allocations.stream().collect(Collectors.toMap(allocation -> allocation.getCategory().getCategoryId(), Allocation::getTotal));
+        List<Category> categories = categoryMapper.getAllChildCategories().stream().sorted(byParentCategory.thenComparing(byCategoryName)).collect(Collectors.toList());
+
+        List<String> categoryIds = new ArrayList<>();
+        List<String> amounts = new ArrayList<>();
+        for (Category category : categories) {
+            categoryIds.add(category.getCategoryId().toString());
+            if (categoryTotalMap.containsKey(category.getCategoryId())) {
+                amounts.add(categoryTotalMap.get(category.getCategoryId()).toString());
+            } else {
+                amounts.add("-1");
+            }
+        }
+
+        PeriodForm form = new PeriodForm();
+        form.setPeriodId(periodId);
+        form.setTotal(period.getTotal());
+        form.setStartDate(period.getStartDate());
+        form.setEndDate(period.getEndDate());
+        form.setCategoryIds(categoryIds);
+        form.setAmounts(amounts);
+
+        model.addAttribute("period", form);
+        model.addAttribute("categories", categories);
 
         return "period";
     }
@@ -120,4 +160,8 @@ public class FormController {
 
         return "transaction";
     }
+
+    private Comparator<Category> byParentCategory = Comparator.comparing(category -> category.getParentCategory().getCategoryId());
+
+    private Comparator<Category> byCategoryName = Comparator.comparing(Category::getName);
 }

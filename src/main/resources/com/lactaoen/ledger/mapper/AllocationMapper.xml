@@ -45,9 +45,31 @@
         WHERE period_id = #{id}
     </select>
 
+    <insert id="createAllocation">
+        INSERT INTO /* AllocationMapper.createAllocation */
+            allocation
+        (total, category_id, period_id)
+        VALUES (
+            #{total},
+            #{categoryId},
+            #{periodId}
+        )
+    </insert>
+
+    <update id="updateAllocation">
+        UPDATE /* AllocationMapper.updateAllocation */
+            allocation
+        SET
+            total = #{total}
+        WHERE
+            period_id = #{periodId}
+        AND category_id = #{categoryId}
+    </update>
+
     <delete id="deleteAllocation">
         DELETE FROM /* AllocationMapper.deleteAllocation */
             allocation
-        WHERE allocation_id = #{id}
+        WHERE category_id = #{categoryId}
+        AND period_id = #{periodId}
     </delete>
 </mapper>

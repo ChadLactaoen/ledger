@@ -1,6 +1,7 @@
 package com.lactaoen.ledger.mapper;
 
 import com.lactaoen.ledger.model.Allocation;
+import com.lactaoen.ledger.model.form.AllocationForm;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,15 @@ public class AllocationMapper {
         return sqlSession.selectOne("AllocationMapper.getAllocationByDateAndCategoryId", map);
     }
 
-    public void deleteAllocation(int id) {
-        sqlSession.delete("AllocationMapper.deleteAllocation", id);
+    public Integer createAllocation(AllocationForm allocation) {
+        return sqlSession.insert("AllocationMapper.createAllocation", allocation);
+    }
+
+    public Integer updateAllocation(AllocationForm allocation) {
+        return sqlSession.update("AllocationMapper.updateAllocation", allocation);
+    }
+
+    public void deleteAllocation(Map<String, Integer> map) {
+        sqlSession.delete("AllocationMapper.deleteAllocation", map);
     }
 }

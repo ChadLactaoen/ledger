@@ -28,11 +28,6 @@ public class AllocationController extends AbstractApiController {
         return 1;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteAllocation(@PathVariable("id") int id) {
-        allocationMapper.deleteAllocation(id);
-    }
-
     @Autowired
     public void setAllocationMapper(AllocationMapper allocationMapper) {
         this.allocationMapper = allocationMapper;

@@ -18,11 +18,12 @@
                 $('#date').val(new Date().toDateInputValue());
 
                 addDividersToDashboardTables();
+                alterPeriodForm();
             });
 
             /*<![CDATA[*/
             function addDividersToDashboardTables() {
-                var rows = $('#period-dashboard .dashboard-table tbody tr, #year-dashboard .dashboard-table tbody tr');
+                var rows = $('#period-dashboard .dashboard-table tbody tr, #year-dashboard .dashboard-table tbody tr, #category-fields tbody tr');
                 var lastParentCatId = '1';
 
                 for (var i = 0; i < rows.length; i++) {
@@ -36,6 +37,15 @@
                 }
             }
             /*]]>*/
+
+            function alterPeriodForm() {
+                $('#category-fields .delete-category-btn').click(function() {
+                    var parentTr = $(this).parent().parent();
+                    console.log($(parentTr));
+                    $(parentTr).find('input[type="number"]').attr('value', '-1').val(-1);
+                    $(parentTr).hide();
+                });
+            }
 
             function initializeDoughnut(map) {
                 var dataVals = [];

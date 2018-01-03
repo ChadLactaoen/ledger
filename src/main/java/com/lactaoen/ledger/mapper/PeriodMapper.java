@@ -31,6 +31,14 @@ public class PeriodMapper {
         return sqlSession.selectOne("PeriodMapper.getLastPeriodId");
     }
 
+    public Integer createPeriod(Period period) {
+        return sqlSession.insert("PeriodMapper.createPeriod", period);
+    }
+
+    public Integer updatePeriod(Period period) {
+        return sqlSession.update("PeriodMapper.updatePeriod", period);
+    }
+
     public void deletePeriod(int id) {
         sqlSession.delete("PeriodMapper.deletePeriod", id);
     }
