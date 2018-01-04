@@ -19,6 +19,13 @@
             <label>Total</label>
             <input th:field="*{total}" th:required="true" type="number" step=".01" class="form-control" />
         </div>
+
+        <div class="sticky-top">
+            <button th:attrappend="disabled=${period.periodId == null}?disabled" type="submit" class="btn btn-lg btn-warning">Submit</button>
+            <button id="zero-btn" class="btn btn-lg btn-info">Populate</button>
+            <span class="font-weight-bold">Total Remaining: <span th:text="${period.periodId}?'$0'" id="remaining"></span></span>
+        </div>
+
         <table id="category-fields" class="table dashboard-table table-sm">
             <thead>
             <tr>
@@ -46,8 +53,6 @@
             </tr>
             </tbody>
         </table>
-        <button th:attrappend="disabled=${period.periodId == null}?disabled" type="submit" class="btn btn-lg btn-warning">Submit</button>
-        <span class="font-weight-bold">Total Remaining: <span th:text="${period.periodId}?'$0'" id="remaining"></span></span>
     </form>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>
