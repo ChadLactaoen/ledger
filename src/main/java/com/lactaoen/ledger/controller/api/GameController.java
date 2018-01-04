@@ -22,6 +22,11 @@ public class GameController extends AbstractApiController {
         return gameMapper.getAllGames();
     }
 
+    @RequestMapping(value = "/permissible", method = RequestMethod.GET)
+    public List<Game> getPermissibleGames() {
+        return gameMapper.getPermissibleGames();
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Game getGame(@PathVariable("id") int id) {
         return gameMapper.getGameById(id);

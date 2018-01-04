@@ -5,7 +5,7 @@
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div th:replace="fragments/flash :: flash"></div>
-    <h1>Add Period</h1>
+    <h1 th:text="${period.periodId} ? 'Edit Period' : 'Add Period'"></h1>
     <form action="#" th:action="${period.periodId} ? @{'/api/period/' + ${period.periodId}} : @{/api/period}" th:object="${period}" method="post">
         <div class="form-group">
             <label>Start Date</label>

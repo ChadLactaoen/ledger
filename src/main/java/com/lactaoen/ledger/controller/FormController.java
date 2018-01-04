@@ -45,7 +45,7 @@ public class FormController {
     @RequestMapping(value = "/bet", method = RequestMethod.GET)
     public String getBetView(Model model) {
         model.addAttribute("bet", new BetForm());
-        model.addAttribute("games", gameMapper.getAllGames());
+        model.addAttribute("games", gameMapper.getPermissibleGames());
         model.addAttribute("casinos", casinoMapper.getAllCasinos());
 
         return "bet";
@@ -54,7 +54,7 @@ public class FormController {
     @RequestMapping(value = "/bet/{betId}", method = RequestMethod.GET)
     public String getUpdateBetView(@PathVariable("betId") int betId, Model model) {
         model.addAttribute("bet", betMapper.getById(betId).toBetForm());
-        model.addAttribute("games", gameMapper.getAllGames());
+        model.addAttribute("games", gameMapper.getPermissibleGames());
         model.addAttribute("casinos", casinoMapper.getAllCasinos());
 
         return "bet";

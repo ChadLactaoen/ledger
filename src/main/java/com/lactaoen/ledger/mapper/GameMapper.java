@@ -20,6 +20,10 @@ public class GameMapper {
         return sqlSession.selectList("GameMapper.getAllGames");
     }
 
+    public List<Game> getPermissibleGames() {
+        return sqlSession.selectList("GameMapper.getPermissibleGames");
+    }
+
     public Game getGameById(int id) {
         return sqlSession.selectOne("GameMapper.getGameById", id);
     }

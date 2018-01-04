@@ -16,6 +16,16 @@
         FROM game
     </select>
 
+    <select id="getPermissibleGames" resultMap="Game">
+        SELECT /* GameMapper.getPermissibleGames */
+            g.game_id, IF(g.parent_id IS NULL, g.name, CONCAT(COALESCE(pg.name,''), ' > ', g.name)) AS name
+        FROM game g
+        LEFT JOIN game lg ON g.game_id = lg.parent_id
+        LEFT JOIN game pg ON g.parent_id = pg.game_id
+        GROUP BY g.game_id HAVING COUNT(lg.game_id) = 0
+        ORDER BY name
+    </select>
+
     <select id="getGameById" resultMap="Game">
         SELECT /* GameMapper.getGameById */
             game_id, name, parent_id
