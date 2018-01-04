@@ -10,7 +10,7 @@
         <!-- Header -->
         <div class="row">
             <div class="col-md-12">
-                <h1>Dashboard <small class="text-muted" th:text="|${#calendars.format(period.startDate, 'MMM d')} - ${#calendars.format(period.endDate, 'MMM d')}|"></small></h1>
+                <h1>Dashboard <small class="text-muted" th:text="|${#calendars.format(period.startDate, 'MMM d')} - ${#calendars.format(period.endDate, 'MMM d')}|"></small> <button th:attr="data-period-id=${period.periodId}" id="edit-period-btn" type="button" class="btn btn-warning">Edit</button></h1>
             </div>
         </div>
 
@@ -84,6 +84,10 @@
     <script>
 
         $(document).ready(function() {
+
+            $('#edit-period-btn').click(function(e) {
+                window.location = '/form/period/' + $(this).attr('data-period-id');
+            });
 
             // Click listener for filtering transactions by category
             $('#period-dashboard td[data-category-id]').on('click', function(e) {

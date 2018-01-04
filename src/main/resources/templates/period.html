@@ -91,6 +91,11 @@
         $('.delete-category-btn').on('click', function(e) {
             recalculateRemaining();
         });
+
+        $('#zero-btn').click(function(e) {
+            e.preventDefault();
+            $('input.amount').filter(function() { return this.value == '' }).attr('value', 0).val(0);
+        });
     });
 </script>
 </body>

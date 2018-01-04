@@ -16,6 +16,12 @@
     padding: .2rem;
 }
 
+#year-dashboard td[data-category-id]:hover,
+#period-dashboard td[data-category-id]:hover,
+tr[data-transaction-id]:hover {
+    cursor: pointer;
+}
+
 .progress {
     height: 25px !important;
     margin-bottom: 1.2rem;
