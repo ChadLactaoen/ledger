@@ -74,7 +74,7 @@
             }
         }
 
-        if (total === 0) {
+        if (Math.round(total * 100) / 100 === 0) {
             $('button[type="submit"]').prop('disabled', false);
         } else {
             $('button[type="submit"]').prop('disabled', true);
