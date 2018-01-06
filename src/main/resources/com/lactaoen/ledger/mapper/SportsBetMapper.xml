@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SportsBetMapper">
+
+    <resultMap id="BetType" type="com.lactaoen.ledger.model.BetType">
+        <id property="betTypeId" column="bet_type_id" />
+        <result property="name" column="name" />
+    </resultMap>
+
+    <resultMap id="GameType" type="com.lactaoen.ledger.model.GameType">
+        <id property="gameTypeId" column="game_type_id" />
+        <result property="name" column="name" />
+    </resultMap>
+
+    <select id="getAllBetTypes" resultMap="BetType">
+        SELECT /* SportsBetMapper.getAllBetTypes */
+            bet_type_id, name
+        FROM bet_type
+    </select>
+
+    <select id="getAllGameTypes" resultMap="GameType">
+        SELECT /* SportsBetMapper.getAllGameTypes */
+            game_type_id, name
+        FROM game_type
+    </select>
+
+</mapper>

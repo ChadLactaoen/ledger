@@ -39,6 +39,9 @@ public class FormController {
     private PeriodMapper periodMapper;
 
     @Autowired
+    private SportsBetMapper sportsBetMapper;
+
+    @Autowired
     private TeamMapper teamMapper;
 
     @Autowired
@@ -49,6 +52,8 @@ public class FormController {
         model.addAttribute("bet", new BetForm());
         model.addAttribute("games", gameMapper.getPermissibleGames());
         model.addAttribute("casinos", casinoMapper.getAllCasinos());
+        model.addAttribute("gameTypes", sportsBetMapper.getAllGameTypes());
+        model.addAttribute("betTypes", sportsBetMapper.getAllBetTypes());
 
         return "bet";
     }
@@ -58,6 +63,8 @@ public class FormController {
         model.addAttribute("bet", betMapper.getById(betId).toBetForm());
         model.addAttribute("games", gameMapper.getPermissibleGames());
         model.addAttribute("casinos", casinoMapper.getAllCasinos());
+        model.addAttribute("gameTypes", sportsBetMapper.getAllGameTypes());
+        model.addAttribute("betTypes", sportsBetMapper.getAllBetTypes());
 
         return "bet";
     }

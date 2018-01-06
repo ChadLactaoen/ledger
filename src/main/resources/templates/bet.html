@@ -38,34 +38,48 @@
                 <input th:field="*{memo}" type="text" class="form-control" />
             </div>
             <div id="sports-fields" hidden="hidden">
-                <div class="form-group">
-                    <label>Odds</label>
-                    <input th:field="*{odds}" type="number" step="1" class="form-control sports-bet-field" />
+                <div class="row">
+                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
+                        <label>Odds</label>
+                        <input th:field="*{odds}" type="number" step="1" class="form-control sports-bet-field" />
+                    </div>
+                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
+                        <label>Line</label>
+                        <input th:field="*{line}" type="number" step="0.5" class="form-control sports-bet-field" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>For Team</label>
+                        <select th:field="*{forTeamId}" th:required="true" class="form-control sports-bet-field">
+                            <option th:value="''"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Against Team</label>
+                        <select th:field="*{againstTeamId}" th:required="true" class="form-control sports-bet-field">
+                            <option th:value="''"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
+                        <label>Sports Bet Type</label>
+                        <select th:field="*{betTypeId}" th:required="true" class="form-control sports-bet-field">
+                            <option th:value="''"></option>
+                            <option th:each="betType : ${betTypes}" th:value="${betType.betTypeId}" th:text="${betType.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
+                        <label>Game Type</label>
+                        <select th:field="*{gameTypeId}" th:required="true" class="form-control sports-bet-field">
+                            <option th:value="''"></option>
+                            <option th:each="gameType : ${gameTypes}" th:value="${gameType.gameTypeId}" th:text="${gameType.name}"></option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Spread</label>
-                    <input th:field="*{spread}" type="number" step="0.5" class="form-control sports-bet-field" />
-                </div>
-                <div class="form-group">
-                    <label>For Team</label>
-                    <select th:field="*{forTeamId}" th:required="true" class="form-control sports-bet-field">
-                        <option th:value="''"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>For Team</label>
-                    <select th:field="*{againstTeamId}" th:required="true" class="form-control sports-bet-field">
-                        <option th:value="''"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Sports Bet Type</label>
-                    <select th:field="*{sportsBetType}" th:required="true" class="form-control sports-bet-field">
-                        <option th:value="''"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <input th:field="*{inGame}" class="form-check-input sports-bet-field" type="checkbox" />
+                    <input th:field="*{live}" class="form-check-input sports-bet-field" type="checkbox" />
                     <label class="form-check-label">In-Game</label>
                 </div>
             </div>
@@ -78,12 +92,34 @@
         $(document).ready(function() {
             $('#gameId').on('change', function(e) {
                 var game = $('#gameId option:selected').text();
+                var gameId = $('#gameId option:selected').val();
+
                 if (game.startsWith('Sports Betting')) {
-                    $('.sports-bet-field').removeAttr('disabled').attr('required','true');
-                    $('#sports-fields').removeAttr('hidden');
+
+                    var fields = $('#forTeamId, #againstTeamId');
+
+                    $.ajax({
+                        url: '/api/team/game/' + gameId,
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+
+                            $(fields).children('option').remove();
+                            $(fields).append('<option></option>');
+
+                            $.each(data, function(index, team) {
+                                $(fields).append($('<option></option>', { value : team.teamId })
+                                    .text(team.abbreviation + ' - ' + team.location + ' ' + team.mascot));
+                            });
+
+                            $('.sports-bet-field').removeAttr('disabled').attr('required','true');
+                            $('#sports-fields').removeAttr('hidden');
+                        }
+                    });
                 } else {
                     $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
                     $('#sports-fields').attr('hidden', 'hidden');
+                    $(fields).children('option').remove();
                 }
             });
         });

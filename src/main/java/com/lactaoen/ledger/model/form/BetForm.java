@@ -14,11 +14,12 @@ public class BetForm {
 
     /* Only for sports bets */
     private Double odds;
-    private Double spread;
+    private Double line;
     private Integer forTeamId;
     private Integer againstTeamId;
-    private String sportsBetType;
-    private Boolean isInGame;
+    private Integer betTypeId;
+    private Integer gameTypeId;
+    private Boolean isLive;
 
     public BetForm() {
     }
@@ -87,12 +88,12 @@ public class BetForm {
         this.odds = odds;
     }
 
-    public Double getSpread() {
-        return spread;
+    public Double getLine() {
+        return line;
     }
 
-    public void setSpread(Double spread) {
-        this.spread = spread;
+    public void setLine(Double line) {
+        this.line = line;
     }
 
     public Integer getForTeamId() {
@@ -111,19 +112,27 @@ public class BetForm {
         this.againstTeamId = againstTeamId;
     }
 
-    public String getSportsBetType() {
-        return sportsBetType;
+    public Integer getBetTypeId() {
+        return betTypeId;
     }
 
-    public void setSportsBetType(String sportsBetType) {
-        this.sportsBetType = sportsBetType;
+    public void setBetTypeId(Integer betTypeId) {
+        this.betTypeId = betTypeId;
     }
 
-    public Boolean getInGame() {
-        return isInGame;
+    public Integer getGameTypeId() {
+        return gameTypeId;
     }
 
-    public void setInGame(Boolean inGame) {
-        isInGame = inGame;
+    public void setGameTypeId(Integer gameTypeId) {
+        this.gameTypeId = gameTypeId;
+    }
+
+    public Boolean getLive() {
+        return isLive;
+    }
+
+    public void setLive(Boolean live) {
+        isLive = live;
     }
 }

@@ -7,6 +7,7 @@ public class SportsBet extends Bet {
     private Team againstTeam;
     private Integer line;
     private BetType betType;
+    private GameType gameType;
     private boolean isLive;
 
     public SportsBet() {
@@ -50,6 +51,14 @@ public class SportsBet extends Bet {
 
     public void setBetType(BetType betType) {
         this.betType = betType;
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 
     public boolean isLive() {
