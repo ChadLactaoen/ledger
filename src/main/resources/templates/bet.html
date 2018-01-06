@@ -37,9 +37,56 @@
                 <label>Memo</label>
                 <input th:field="*{memo}" type="text" class="form-control" />
             </div>
+            <div id="sports-fields" hidden="hidden">
+                <div class="form-group">
+                    <label>Odds</label>
+                    <input th:field="*{odds}" type="number" step="1" class="form-control sports-bet-field" />
+                </div>
+                <div class="form-group">
+                    <label>Spread</label>
+                    <input th:field="*{spread}" type="number" step="0.5" class="form-control sports-bet-field" />
+                </div>
+                <div class="form-group">
+                    <label>For Team</label>
+                    <select th:field="*{forTeamId}" th:required="true" class="form-control sports-bet-field">
+                        <option th:value="''"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>For Team</label>
+                    <select th:field="*{againstTeamId}" th:required="true" class="form-control sports-bet-field">
+                        <option th:value="''"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Sports Bet Type</label>
+                    <select th:field="*{sportsBetType}" th:required="true" class="form-control sports-bet-field">
+                        <option th:value="''"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input th:field="*{inGame}" class="form-check-input sports-bet-field" type="checkbox" />
+                    <label class="form-check-label">In-Game</label>
+                </div>
+            </div>
             <button type="submit" class="btn btn-lg btn-warning">Submit</button>
         </form>
     </div>
     <div th:replace="fragments/scripts :: scripts"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#gameId').on('change', function(e) {
+                var game = $('#gameId option:selected').text();
+                if (game.startsWith('Sports Betting')) {
+                    $('.sports-bet-field').removeAttr('disabled').attr('required','true');
+                    $('#sports-fields').removeAttr('hidden');
+                } else {
+                    $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
+                    $('#sports-fields').attr('hidden', 'hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

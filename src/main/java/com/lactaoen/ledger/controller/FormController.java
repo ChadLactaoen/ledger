@@ -1,21 +1,20 @@
 package com.lactaoen.ledger.controller;
 
 import com.lactaoen.ledger.mapper.*;
-import com.lactaoen.ledger.model.Allocation;
-import com.lactaoen.ledger.model.Casino;
-import com.lactaoen.ledger.model.Category;
-import com.lactaoen.ledger.model.Period;
+import com.lactaoen.ledger.model.*;
 import com.lactaoen.ledger.model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Controller
 @RequestMapping("/form")
@@ -38,6 +37,9 @@ public class FormController {
 
     @Autowired
     private PeriodMapper periodMapper;
+
+    @Autowired
+    private TeamMapper teamMapper;
 
     @Autowired
     private TransactionMapper transactionMapper;
@@ -108,7 +110,7 @@ public class FormController {
     @RequestMapping(value = "/period", method = RequestMethod.GET)
     public String getPeriodView(Model model) {
         model.addAttribute("period", new PeriodForm());
-        model.addAttribute("categories", categoryMapper.getAllChildCategories().stream().sorted(byParentCategory.thenComparing(byCategoryName)).collect(Collectors.toList()));
+        model.addAttribute("categories", categoryMapper.getAllChildCategories().stream().sorted(byParentCategory.thenComparing(byCategoryName)).collect(toList()));
 
         return "period";
     }
@@ -118,7 +120,7 @@ public class FormController {
         Period period = periodMapper.getPeriodById(periodId);
         List<Allocation> allocations = allocationMapper.getAllocationsByPeriodId(periodId);
         Map<Integer, Double> categoryTotalMap = allocations.stream().collect(Collectors.toMap(allocation -> allocation.getCategory().getCategoryId(), Allocation::getTotal));
-        List<Category> categories = categoryMapper.getAllChildCategories().stream().sorted(byParentCategory.thenComparing(byCategoryName)).collect(Collectors.toList());
+        List<Category> categories = categoryMapper.getAllChildCategories().stream().sorted(byParentCategory.thenComparing(byCategoryName)).collect(toList());
 
         List<String> categoryIds = new ArrayList<>();
         List<String> amounts = new ArrayList<>();
@@ -145,6 +147,20 @@ public class FormController {
         return "period";
     }
 
+    @RequestMapping(value = "/team", method = RequestMethod.GET)
+    public String getTeamView(Model model) {
+        model.addAttribute("team", new TeamForm());
+        model.addAttribute("games", getSportsBetGames());
+        return "team";
+    }
+
+    @RequestMapping(value = "/team/{teamId}", method = RequestMethod.GET)
+    public String getUpdateTeamView(@PathVariable("teamId") int teamId, Model model) {
+        model.addAttribute("team", teamMapper.getTeamById(teamId).toTeamForm());
+        model.addAttribute("games", getSportsBetGames());
+        return "team";
+    }
+
     @RequestMapping(value = "/transaction", method = RequestMethod.GET)
     public String getTransactionView(Model model) {
         model.addAttribute("transaction", new TransactionForm());
@@ -161,7 +177,15 @@ public class FormController {
         return "transaction";
     }
 
+    private List<Game> getSportsBetGames() {
+        return gameMapper.getAllGames().stream().filter(filterSportsCategory).sorted(byGameName).collect(toList());
+    }
+
+    private Predicate<Game> filterSportsCategory = game -> game.getParentGame() != null && game.getParentGame().getName().equals("Sports Betting");
+
     private Comparator<Category> byParentCategory = Comparator.comparing(category -> category.getParentCategory().getCategoryId());
 
     private Comparator<Category> byCategoryName = Comparator.comparing(Category::getName);
+
+    private Comparator<Game> byGameName = Comparator.comparing(Game::getName);
 }

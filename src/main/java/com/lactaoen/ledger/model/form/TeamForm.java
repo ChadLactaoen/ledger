@@ -1,17 +1,14 @@
-package com.lactaoen.ledger.model;
+package com.lactaoen.ledger.model.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lactaoen.ledger.model.form.TeamForm;
-
-public class Team {
+public class TeamForm {
 
     private Integer teamId;
-    private Game game;
+    private Integer gameId;
     private String location;
     private String mascot;
     private String abbreviation;
 
-    public Team() {
+    public TeamForm() {
     }
 
     public Integer getTeamId() {
@@ -22,12 +19,12 @@ public class Team {
         this.teamId = teamId;
     }
 
-    public Game getGame() {
-        return game;
+    public Integer getGameId() {
+        return gameId;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setGameId(Integer gameId) {
+        this.gameId = gameId;
     }
 
     public String getLocation() {
@@ -52,20 +49,5 @@ public class Team {
 
     public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
-    }
-
-    @JsonIgnore
-    public TeamForm toTeamForm() {
-        TeamForm form = new TeamForm();
-        form.setTeamId(teamId);
-        form.setLocation(location);
-        form.setMascot(mascot);
-        form.setAbbreviation(abbreviation);
-
-        if (game != null) {
-            form.setGameId(game.getGameId());
-        }
-
-        return form;
     }
 }

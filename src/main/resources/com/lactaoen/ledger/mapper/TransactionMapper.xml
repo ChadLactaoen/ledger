@@ -35,6 +35,7 @@
             transaction_id, date, name, price, memo, category_id, subcategory_id
         FROM `transaction`
         WHERE YEAR(date) = #{year}
+        ORDER BY date DESC, transaction_id DESC
     </select>
 
     <select id="getTransactionsByDateRange" resultMap="RichTransaction">
@@ -43,7 +44,7 @@
         FROM `transaction`
         WHERE date &lt;= #{endDate}
         AND date &gt;= #{startDate}
-        ORDER BY date, transaction_id
+        ORDER BY date DESC, transaction_id DESC
     </select>
 
     <select id="getTransactionsByCategoryIdAndPeriodId" resultMap="Transaction">

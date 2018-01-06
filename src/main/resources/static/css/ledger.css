@@ -35,3 +35,7 @@ svg {
     top: 75px !important;
     background-color: white;
 }
+
+.form-check-input {
+    margin-left: 0;
+}
