@@ -49,8 +49,7 @@ public class ViewController {
         }
 
         model.addAttribute("year", year);
-        model.addAttribute("bets", dashboardMapper.getBetsByYear(year));
-
+        model.addAttribute("gameGambling", dashboardMapper.getGameGamblingByYear(year));
         return "dashboard/gambling";
     }
 

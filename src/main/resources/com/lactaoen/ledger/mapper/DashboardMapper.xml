@@ -13,6 +13,16 @@
         <association property="parentCategory" column="parent_id" select="CategoryMapper.getCategoryById" />
     </resultMap>
 
+    <resultMap id="GameGamblingMapper" type="com.lactaoen.ledger.model.dashboard.GameGamblingMapper">
+        <id property="gameId" column="game_id" />
+        <result property="name" column="name" />
+        <result property="wagered" column="wagered" />
+        <result property="profit" column="profit" />
+        <result property="sessions" column="sessions" />
+        <result property="wins" column="wins" />
+        <result property="ties" column="ties" />
+    </resultMap>
+
     <select id="getCategoryExpensesByYear" resultMap="CategoryExpenseMapper">
         SELECT  /*DashboardMapper.getCategoryExpensesByYear */
             c.category_id,
@@ -49,6 +59,35 @@
         WHERE pc.parent_id IS NULL
         GROUP BY pc.category_id
         ORDER BY pc.category_id
+    </select>
+
+    <select id="getGameGamblingByYear" resultMap="GameGamblingMapper">
+        SELECT
+            g.game_id, g.name,
+            COALESCE(dro.wagered, 0) AS wagered,
+            COALESCE(dro.profit, 0) AS profit,
+            COALESCE(dro.sessions, 0) AS sessions,
+            COALESCE(dro.wins, 0) AS wins,
+            COALESCE(dro.ties, 0) AS ties
+        FROM game g
+        LEFT JOIN (
+            SELECT
+            g.game_id,
+            g.name,
+            SUM(b.wager) AS wagered,
+            SUM(b.profit) AS profit,
+            COUNT(b.bet_id) AS sessions,
+            SUM(CASE WHEN profit > 0 THEN 1 ELSE 0 END) AS wins,
+            SUM(CASE WHEN profit = 0 THEN 1 ELSE 0 END) AS ties
+            FROM game g
+            LEFT JOIN game kg ON g.game_id = kg.parent_id
+            LEFT JOIN bet b ON g.game_id = b.game_id OR kg.game_id = b.game_id
+            WHERE g.parent_id IS NULL
+            AND b.profit IS NOT NULL
+            AND YEAR(b.date) = #{id}
+            GROUP BY g.game_id
+        ) AS dro ON g.game_id = dro.game_id
+        WHERE g.parent_id IS NULL
     </select>
 
     <select id="getBetsByYear" resultMap="BetMapper.Bet">
