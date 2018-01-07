@@ -50,6 +50,7 @@ public class FormController {
     @RequestMapping(value = "/bet", method = RequestMethod.GET)
     public String getBetView(Model model) {
         model.addAttribute("bet", new BetForm());
+        model.addAttribute("isSport", false);
         model.addAttribute("games", gameMapper.getPermissibleGames());
         model.addAttribute("casinos", casinoMapper.getAllCasinos());
         model.addAttribute("gameTypes", sportsBetMapper.getAllGameTypes());
@@ -60,7 +61,17 @@ public class FormController {
 
     @RequestMapping(value = "/bet/{betId}", method = RequestMethod.GET)
     public String getUpdateBetView(@PathVariable("betId") int betId, Model model) {
-        model.addAttribute("bet", betMapper.getById(betId).toBetForm());
+        BetForm betForm = betMapper.getById(betId).toBetForm();
+
+        if (gameMapper.isSportsBet(betForm.getGameId())) {
+            betForm.addSportsBet(sportsBetMapper.getSportsBetByBetId(betId));
+            model.addAttribute("teams", teamMapper.getTeamsByGameId(betForm.getGameId()));
+            model.addAttribute("isSport", true);
+        } else {
+            model.addAttribute("isSport", false);
+        }
+
+        model.addAttribute("bet", betForm);
         model.addAttribute("games", gameMapper.getPermissibleGames());
         model.addAttribute("casinos", casinoMapper.getAllCasinos());
         model.addAttribute("gameTypes", sportsBetMapper.getAllGameTypes());

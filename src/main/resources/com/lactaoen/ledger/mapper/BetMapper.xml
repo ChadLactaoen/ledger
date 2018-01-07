@@ -27,7 +27,7 @@
         WHERE bet_id = #{id}
     </select>
 
-    <insert id="createBet">
+    <insert id="createBet" useGeneratedKeys="true" keyProperty="betId">
         INSERT INTO /* BetMapper.createBet */
             bet
         (date, memo, wager, profit, game_id, casino_id)

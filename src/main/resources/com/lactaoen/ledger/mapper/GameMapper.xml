@@ -26,6 +26,15 @@
         ORDER BY name
     </select>
 
+    <select id="isSportsBet" resultType="java.lang.Boolean">
+        SELECT /* GameMapper.isSportsBet */
+            COUNT(kg.game_id) AS is_sports_bet
+        FROM game g
+        JOIN game kg ON g.game_id = kg.parent_id
+        WHERE g.name = "Sports Betting"
+        AND kg.game_id = #{id}
+    </select>
+
     <select id="getGameById" resultMap="Game">
         SELECT /* GameMapper.getGameById */
             game_id, name, parent_id

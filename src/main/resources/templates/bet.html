@@ -37,7 +37,7 @@
                 <label>Memo</label>
                 <input th:field="*{memo}" type="text" class="form-control" />
             </div>
-            <div id="sports-fields" hidden="hidden">
+            <div th:attr="hidden=${isSport == false} ? 'hidden'" id="sports-fields">
                 <div class="row">
                     <div class="form-group col-md-6 col-sm-6 col-xs-6">
                         <label>Odds</label>
@@ -51,28 +51,30 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>For Team</label>
-                        <select th:field="*{forTeamId}" th:required="true" class="form-control sports-bet-field">
+                        <select th:field="*{forTeamId}" class="form-control sports-bet-field">
                             <option th:value="''"></option>
+                            <option th:each="team : ${teams}" th:value="${team.teamId}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
                         <label>Against Team</label>
-                        <select th:field="*{againstTeamId}" th:required="true" class="form-control sports-bet-field">
+                        <select th:field="*{againstTeamId}" class="form-control sports-bet-field">
                             <option th:value="''"></option>
+                            <option th:each="team : ${teams}" th:value="${team.teamId}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6 col-sm-6 col-xs-6">
                         <label>Sports Bet Type</label>
-                        <select th:field="*{betTypeId}" th:required="true" class="form-control sports-bet-field">
+                        <select th:field="*{betTypeId}" th:required="${isSport}" class="form-control sports-bet-field">
                             <option th:value="''"></option>
                             <option th:each="betType : ${betTypes}" th:value="${betType.betTypeId}" th:text="${betType.name}"></option>
                         </select>
                     </div>
                     <div class="form-group col-md-6 col-sm-6 col-xs-6">
                         <label>Game Type</label>
-                        <select th:field="*{gameTypeId}" th:required="true" class="form-control sports-bet-field">
+                        <select th:field="*{gameTypeId}" th:required="${isSport}" class="form-control sports-bet-field">
                             <option th:value="''"></option>
                             <option th:each="gameType : ${gameTypes}" th:value="${gameType.gameTypeId}" th:text="${gameType.name}"></option>
                         </select>
@@ -112,8 +114,9 @@
                                     .text(team.abbreviation + ' - ' + team.location + ' ' + team.mascot));
                             });
 
-                            $('.sports-bet-field').removeAttr('disabled').attr('required','true');
+                            $('.sports-bet-field').removeAttr('disabled');
                             $('#sports-fields').removeAttr('hidden');
+                            $('#betTypeId, #odds').attr('required', 'required');
                         }
                     });
                 } else {
@@ -122,6 +125,8 @@
                     $(fields).children('option').remove();
                 }
             });
+
+
         });
     </script>
 </body>

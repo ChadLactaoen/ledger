@@ -51,4 +51,12 @@
         ORDER BY pc.category_id
     </select>
 
+    <select id="getBetsByYear" resultMap="BetMapper.Bet">
+        SELECT /* DashboardMapper.getBetsByYear */
+            bet_id, date, game_id, casino_id, wager, profit, memo
+        FROM bet
+        WHERE YEAR(date) = #{id}
+        ORDER BY date DESC, bet_id DESC
+    </select>
+
 </mapper>

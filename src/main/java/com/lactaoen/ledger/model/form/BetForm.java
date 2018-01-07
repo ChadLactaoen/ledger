@@ -1,5 +1,8 @@
 package com.lactaoen.ledger.model.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lactaoen.ledger.model.SportsBet;
+
 import java.sql.Date;
 
 public class BetForm {
@@ -13,7 +16,7 @@ public class BetForm {
     private String memo;
 
     /* Only for sports bets */
-    private Double odds;
+    private Integer odds;
     private Double line;
     private Integer forTeamId;
     private Integer againstTeamId;
@@ -80,11 +83,11 @@ public class BetForm {
         this.memo = memo;
     }
 
-    public Double getOdds() {
+    public Integer getOdds() {
         return odds;
     }
 
-    public void setOdds(Double odds) {
+    public void setOdds(Integer odds) {
         this.odds = odds;
     }
 
@@ -134,5 +137,16 @@ public class BetForm {
 
     public void setLive(Boolean live) {
         isLive = live;
+    }
+
+    @JsonIgnore
+    public void addSportsBet(SportsBet bet) {
+        odds = bet.getOdds();
+        line = bet.getLine();
+        forTeamId = bet.getForTeam().getTeamId();
+        againstTeamId = bet.getAgainstTeam().getTeamId();
+        betTypeId = bet.getBetType().getBetTypeId();
+        gameTypeId = bet.getGameType().getGameTypeId();
+        isLive = bet.isLive();
     }
 }

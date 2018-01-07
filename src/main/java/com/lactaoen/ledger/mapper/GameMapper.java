@@ -24,6 +24,10 @@ public class GameMapper {
         return sqlSession.selectList("GameMapper.getPermissibleGames");
     }
 
+    public Boolean isSportsBet(int id) {
+        return sqlSession.selectOne("GameMapper.isSportsBet", id);
+    }
+
     public Game getGameById(int id) {
         return sqlSession.selectOne("GameMapper.getGameById", id);
     }

@@ -2,15 +2,26 @@ package com.lactaoen.ledger.model;
 
 public class SportsBet extends Bet {
 
+    private Integer betId;
     private Integer odds;
     private Team forTeam;
     private Team againstTeam;
-    private Integer line;
+    private Double line;
     private BetType betType;
     private GameType gameType;
     private boolean isLive;
 
     public SportsBet() {
+    }
+
+    @Override
+    public Integer getBetId() {
+        return betId;
+    }
+
+    @Override
+    public void setBetId(Integer betId) {
+        this.betId = betId;
     }
 
     public Integer getOdds() {
@@ -37,11 +48,11 @@ public class SportsBet extends Bet {
         this.againstTeam = againstTeam;
     }
 
-    public Integer getLine() {
+    public Double getLine() {
         return line;
     }
 
-    public void setLine(Integer line) {
+    public void setLine(Double line) {
         this.line = line;
     }
 

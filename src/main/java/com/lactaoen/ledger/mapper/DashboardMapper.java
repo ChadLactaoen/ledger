@@ -1,5 +1,6 @@
 package com.lactaoen.ledger.mapper;
 
+import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.dashboard.CategoryExpenseMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
@@ -27,5 +28,9 @@ public class DashboardMapper {
 
     public List<Map<String, BigDecimal>> getParentCategorySpendingByPeriodId(Integer periodId) {
         return sqlSession.selectList("DashboardMapper.getParentCategorySpendingByPeriodId", periodId);
+    }
+
+    public List<Bet> getBetsByYear(Integer year) {
+        return sqlSession.selectList("DashboardMapper.getBetsByYear", year);
     }
 }

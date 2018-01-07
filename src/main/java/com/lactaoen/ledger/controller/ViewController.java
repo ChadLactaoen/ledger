@@ -42,6 +42,18 @@ public class ViewController {
         return "dashboard/period";
     }
 
+    @RequestMapping(value = "/gambling", method = RequestMethod.GET)
+    public String getGamblingDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
+        if (year == null) {
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
+
+        model.addAttribute("year", year);
+        model.addAttribute("bets", dashboardMapper.getBetsByYear(year));
+
+        return "dashboard/gambling";
+    }
+
     @RequestMapping(value = "/year", method = RequestMethod.GET)
     public String getYearDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
         if (year == null) {
