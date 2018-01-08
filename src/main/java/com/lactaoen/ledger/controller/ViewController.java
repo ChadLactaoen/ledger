@@ -53,6 +53,30 @@ public class ViewController {
         return "dashboard/gambling";
     }
 
+    @RequestMapping(value = "/sports", method = RequestMethod.GET)
+    public String getSportsBettingDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
+        if (year == null) {
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
+
+        model.addAttribute("year", year);
+        model.addAttribute("games", dashboardMapper.getGameGamblingByYearAndParentName(year, "Sports Betting"));
+
+        return "dashboard/sports";
+    }
+
+    @RequestMapping(value = "/poker", method = RequestMethod.GET)
+    public String getPokerBettingDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
+        if (year == null) {
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
+
+        model.addAttribute("year", year);
+        model.addAttribute("games", dashboardMapper.getGameGamblingByYearAndParentName(year, "Poker"));
+
+        return "dashboard/poker";
+    }
+
     @RequestMapping(value = "/year", method = RequestMethod.GET)
     public String getYearDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
         if (year == null) {

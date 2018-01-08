@@ -90,6 +90,44 @@
         WHERE g.parent_id IS NULL
     </select>
 
+    <select id="getGameGamblingByYearAndParentName" resultMap="GameGamblingMapper">
+        SELECT
+            g.game_id, g.name,
+            COALESCE(dro.wagered, 0) AS wagered,
+            COALESCE(dro.profit, 0) AS profit,
+            COALESCE(dro.sessions, 0) AS sessions,
+            COALESCE(dro.wins, 0) AS wins,
+            COALESCE(dro.ties, 0) AS ties
+        FROM game g
+        LEFT JOIN (
+            SELECT
+            g.game_id,
+            g.name,
+            SUM(b.wager) AS wagered,
+            SUM(b.profit) AS profit,
+            COUNT(b.bet_id) AS sessions,
+            SUM(CASE WHEN profit > 0 THEN 1 ELSE 0 END) AS wins,
+            SUM(CASE WHEN profit = 0 THEN 1 ELSE 0 END) AS ties
+            FROM game g
+            JOIN game pg ON g.parent_id = pg.game_id
+            LEFT JOIN bet b ON g.game_id = b.game_id
+            WHERE g.parent_id IS NOT NULL
+            AND b.profit IS NOT NULL
+            AND YEAR(b.date) = #{year}
+            AND g.parent_id IN (
+            SELECT game_id
+            FROM game
+        WHERE name = #{name}
+        )
+        GROUP BY g.game_id
+        ) AS dro ON g.game_id = dro.game_id
+        WHERE g.parent_id IN (
+        SELECT game_id
+        FROM game
+        WHERE name = #{name}
+        );
+    </select>
+
     <select id="getBetsByYear" resultMap="BetMapper.Bet">
         SELECT /* DashboardMapper.getBetsByYear */
             bet_id, date, game_id, casino_id, wager, profit, memo

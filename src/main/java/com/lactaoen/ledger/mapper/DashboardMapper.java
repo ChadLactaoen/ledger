@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,14 @@ public class DashboardMapper {
 
     public List<GameGamblingMapper> getGameGamblingByYear(Integer year) {
         return sqlSession.selectList("DashboardMapper.getGameGamblingByYear", year);
+    }
+
+    public List<GameGamblingMapper> getGameGamblingByYearAndParentName(Integer year, String name) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("year", year);
+        map.put("name", name);
+
+        return sqlSession.selectList("DashboardMapper.getGameGamblingByYearAndParentName", map);
     }
 
     public List<Bet> getBetsByYear(Integer year) {
