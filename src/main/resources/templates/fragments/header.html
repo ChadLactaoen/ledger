@@ -20,8 +20,8 @@
                     <div class="dropdown-menu" aria-labelledby="dashboard-dropdown">
                         <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}" class="dropdown-item" href="/">Period Dashboard</a>
                         <a th:classappend="${#httpServletRequest.getRequestURI() == '/gambling' ? 'active':''}" class="dropdown-item" href="/gambling">Gambling Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/sports' ? 'active':''}" class="dropdown-item" href="/sports">Gambling Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/poker' ? 'active':''}" class="dropdown-item" href="/poker">Gambling Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/sports' ? 'active':''}" class="dropdown-item" href="/sports">Sports Bet Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/poker' ? 'active':''}" class="dropdown-item" href="/poker">Poker Dashboard</a>
                         <a th:classappend="${#httpServletRequest.getRequestURI() == '/year' ? 'active':''}" class="dropdown-item" href="/year">Year Dashboard</a>
                         <a th:classappend="${#httpServletRequest.getRequestURI() == '/misc' ? 'active':''}" class="dropdown-item" href="/misc">Misc Dashboard</a>
                     </div>

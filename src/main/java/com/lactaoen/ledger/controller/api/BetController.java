@@ -27,6 +27,11 @@ public class BetController extends AbstractApiController {
         return betMapper.getAllBets();
     }
 
+    @RequestMapping(value = "/unresolved", method = RequestMethod.GET)
+    public List<Bet> getUnresolvedBets() {
+        return betMapper.getUnresolvedBets();
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Bet getBet(@PathVariable("id") int id) {
         return betMapper.getById(id);

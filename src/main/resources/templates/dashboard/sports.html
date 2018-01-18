@@ -45,6 +45,34 @@
             </div>
         </div>
     </div>
+
+    <!-- Period -->
+    <div id="unresolved-bet-dashboard">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="dashboard-table table table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Game</th>
+                        <th scope="col">Bet</th>
+                        <th scope="col">Wagered</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="bet : ${unresolved}" th:attr="data-bet-id=${bet.betId}">
+                        <td th:text="|${#dates.monthNameShort(bet.date)} ${#dates.day(bet.date)}|"></td>
+                        <td th:text="${bet.game.name}" th:class="font-weight-bold"></td>
+                        <td th:text="${bet.sportsBetDescriptor}"></td>
+                        <td th:text="|$${#numbers.formatDecimal(bet.wager,1,'COMMA',2,'POINT')}|"></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>
 <script>

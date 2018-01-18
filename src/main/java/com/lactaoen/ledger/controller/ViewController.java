@@ -1,5 +1,6 @@
 package com.lactaoen.ledger.controller;
 
+import com.lactaoen.ledger.mapper.BetMapper;
 import com.lactaoen.ledger.mapper.DashboardMapper;
 import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.mapper.TransactionMapper;
@@ -15,9 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Controller
 @RequestMapping("/")
 public class ViewController {
+
+    @Autowired
+    private BetMapper betMapper;
 
     @Autowired
     private DashboardMapper dashboardMapper;
@@ -60,6 +66,7 @@ public class ViewController {
         }
 
         model.addAttribute("year", year);
+        model.addAttribute("unresolved", betMapper.getUnresolvedBets().stream().filter(bet -> bet.getSportsBet() != null).collect(toList()));
         model.addAttribute("games", dashboardMapper.getGameGamblingByYearAndParentName(year, "Sports Betting"));
 
         return "dashboard/sports";

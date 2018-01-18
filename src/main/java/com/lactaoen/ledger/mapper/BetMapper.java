@@ -20,6 +20,10 @@ public class BetMapper {
         return sqlSession.selectList("BetMapper.getAllBets");
     }
 
+    public List<Bet> getUnresolvedBets() {
+        return sqlSession.selectList("BetMapper.getUnresolvedBets");
+    }
+
     public Bet getById(int id) {
         return sqlSession.selectOne("BetMapper.getBetById", id);
     }

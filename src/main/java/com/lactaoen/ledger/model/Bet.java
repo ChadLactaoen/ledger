@@ -1,6 +1,7 @@
 package com.lactaoen.ledger.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lactaoen.ledger.model.form.BetForm;
 
 import java.sql.Date;
@@ -14,6 +15,7 @@ public class Bet {
     private String memo;
     private Double wager;
     private Double profit;
+    private SportsBet sportsBet;
 
     public Bet() {
     }
@@ -74,6 +76,57 @@ public class Bet {
         this.profit = profit;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public SportsBet getSportsBet() {
+        return sportsBet;
+    }
+
+    public void setSportsBet(SportsBet sportsBet) {
+        this.sportsBet = sportsBet;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public String getSportsBetDescriptor() {
+        String descriptor = "";
+
+        if (sportsBet != null) {
+
+            // Odds
+            if (sportsBet.getOdds() > 0) {
+                descriptor = "+" + sportsBet.getOdds();
+            } else {
+                descriptor = sportsBet.getOdds().toString();
+            }
+
+            // Matchup
+            descriptor += " " + sportsBet.getForTeam().getAbbreviation();
+
+            // Spread/Line
+            String betType = sportsBet.getBetType().getName();
+            if (("Moneyline").equals(betType)) {
+                descriptor += " SU";
+            } else if (("Over").equals(betType) || ("Under").equals(betType)) {
+                descriptor += " " + sportsBet.getLine() + betType.toLowerCase().charAt(0);
+            } else {
+                descriptor += " " + sportsBet.getLine();
+            }
+
+            // Game Type
+//            String gameType = sportsBet.getGameType();
+//            if (!("Full").equals(gameType)) {
+//                descriptor +=
+//            }
+//
+            // Is Live
+            if (sportsBet.isLive()) {
+                descriptor += " (Live)";
+            }
+            return descriptor;
+        }
+
+        return null;
+    }
+
     @JsonIgnore
     public BetForm toBetForm() {
         BetForm form = new BetForm();
@@ -90,13 +143,14 @@ public class Bet {
     @Override
     public String toString() {
         return "Bet{" +
-                "betId=" + betId +
-                ", date=" + date +
-                ", game=" + game +
-                ", casino=" + casino +
-                ", memo='" + memo + '\'' +
-                ", wager=" + wager +
+                "sportsBet=" + sportsBet +
                 ", profit=" + profit +
+                ", wager=" + wager +
+                ", memo='" + memo + '\'' +
+                ", casino=" + casino +
+                ", game=" + game +
+                ", date=" + date +
+                ", betId=" + betId +
                 '}';
     }
 }
