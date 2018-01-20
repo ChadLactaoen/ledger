@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <!-- Period -->
+    <!-- Unresolved Bets -->
     <div id="unresolved-bet-dashboard">
         <div class="row">
             <div class="col-md-12">
@@ -66,7 +66,13 @@
                         <td th:text="${bet.game.name}" th:class="font-weight-bold"></td>
                         <td th:text="${bet.sportsBetDescriptor}"></td>
                         <td th:text="|$${#numbers.formatDecimal(bet.wager,1,'COMMA',2,'POINT')}|"></td>
-                        <td></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a th:href="|/api/bet/win/${bet.betId}|" role="button" class="btn btn-info win-btn">Win</a>
+                                <a th:href="|/api/bet/loss/${bet.betId}|" role="button" class="btn btn-danger loss-btn">Loss</a>
+                                <a th:href="|/form/bet/${bet.betId}|" role="button" class="btn btn-dark edit-btn">Edit</a>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -75,42 +81,5 @@
     </div>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>
-<script>
-
-        $(document).ready(function() {
-
-            // Click listener for filtering transactions by category
-            $('#year-dashboard td[data-category-id]').on('click', function(e) {
-                var categoryId = $(this).attr('data-category-id');
-
-                if (categoryId === '0') {
-                    $('#transaction-header').text('All Transactions');
-                    $('#transaction-dashboard tbody tr').show();
-                } else {
-                    $('#transaction-header').text($(this).text() + ' Transactions');
-                    $('#transaction-dashboard tbody tr').hide();
-                    $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
-                }
-            });
-
-            var year = new URLSearchParams(new URL(window.location.href).search).get('year');
-            var url = '/api/dashboard/year';
-
-            if (year !== null) {
-                url = url + '?year=' + year;
-            }
-
-            // Set up doughnut chart
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                method: 'GET',
-                success: function(map) {
-                    initializeDoughnut(map);
-                }
-            });
-        });
-
-    </script>
 </body>
 </html>

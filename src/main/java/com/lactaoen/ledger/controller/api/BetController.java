@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -35,6 +36,36 @@ public class BetController extends AbstractApiController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Bet getBet(@PathVariable("id") int id) {
         return betMapper.getById(id);
+    }
+
+    @RequestMapping(value = "/win/{id}", method = RequestMethod.GET)
+    public RedirectView setBetAsWin(@PathVariable("id") int id, RedirectAttributes model) {
+        Bet bet = betMapper.getById(id);
+        if (bet.getGame().getName().equals("Sports Betting")) {
+            BigDecimal odds = new BigDecimal(bet.getSportsBet().getOdds().doubleValue());
+            BigDecimal wager = new BigDecimal(bet.getWager());
+
+            if (odds.compareTo(BigDecimal.ZERO) > 0) {
+                bet.setProfit(wager.multiply(odds.divide(new BigDecimal(100))).doubleValue());
+            } else if (odds.compareTo(BigDecimal.ZERO) < 0) {
+                bet.setProfit(wager.multiply(new BigDecimal(100)).divide(odds.abs()).doubleValue());
+            }
+
+            generateFlashAttributes(model, betMapper.updateBet(bet.toBetForm()), "bet", PostType.UPDATE);
+        }
+
+        generateFlashAttributes(model, 0, "bet", PostType.UPDATE);
+        return new RedirectView("/sports");
+    }
+
+    @RequestMapping(value = "/loss/{id}", method = RequestMethod.GET)
+    public RedirectView setBetAsLoss(@PathVariable("id") int id, RedirectAttributes model) {
+        Bet bet = betMapper.getById(id);
+        BigDecimal wager = new BigDecimal(bet.getWager());
+        bet.setProfit(wager.multiply(new BigDecimal(-1)).doubleValue());
+
+        generateFlashAttributes(model, betMapper.updateBet(bet.toBetForm()), "bet", PostType.UPDATE);
+        return new RedirectView("/sports");
     }
 
     @RequestMapping(method = RequestMethod.POST)
