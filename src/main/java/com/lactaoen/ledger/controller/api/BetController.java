@@ -41,7 +41,7 @@ public class BetController extends AbstractApiController {
     @RequestMapping(value = "/win/{id}", method = RequestMethod.GET)
     public RedirectView setBetAsWin(@PathVariable("id") int id, RedirectAttributes model) {
         Bet bet = betMapper.getById(id);
-        if (bet.getGame().getName().equals("Sports Betting")) {
+        if (bet.getGame().getParentGame() != null && bet.getGame().getParentGame().getName().equals("Sports Betting")) {
             BigDecimal odds = new BigDecimal(bet.getSportsBet().getOdds().doubleValue());
             BigDecimal wager = new BigDecimal(bet.getWager());
 
