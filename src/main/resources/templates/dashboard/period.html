@@ -29,7 +29,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.total} - ${allocation.spent}" th:attr="data-parent-cat-id=${allocation.category.parentCategory.categoryId}">
+                        <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.remaining}" th:attr="data-parent-cat-id=${allocation.category.parentCategory.categoryId}">
                             <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.parentCategory.color}|" th:attr="data-category-id=${allocation.category.categoryId}"></td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|"></td>
                             <td th:text="|$${#numbers.formatDecimal(allocation.spent,1,'COMMA',2,'POINT')}|"></td>

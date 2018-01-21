@@ -1,5 +1,6 @@
 package com.lactaoen.ledger.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Allocation {
@@ -59,6 +60,10 @@ public class Allocation {
         }
 
         return transactionList.stream().mapToDouble(Transaction::getPrice).sum();
+    }
+
+    public double getRemaining() {
+        return new BigDecimal(Math.round((total - getSpent()) * 100)).divide(new BigDecimal(100)).doubleValue();
     }
 
     @Override
