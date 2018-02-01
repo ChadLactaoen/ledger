@@ -4,6 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="PeriodMapper">
 
+    <resultMap id="PeriodLight" type="com.lactaoen.ledger.model.Period">
+        <id property="periodId" column="period_id" />
+        <result property="startDate" column="start_date" />
+    </resultMap>
+
     <resultMap id="Period" type="com.lactaoen.ledger.model.Period">
         <id property="periodId" column="period_id" />
         <result property="startDate" column="start_date" />
@@ -17,6 +22,13 @@
         SELECT /* PeriodMapper.getAllPeriods */
             period_id, start_date, end_date, total
         FROM period
+    </select>
+
+    <select id="getAllPeriodsLight" resultMap="PeriodLight">
+        SELECT /* PeriodMapper.getAllPeriodsLight */
+            period_id, start_date
+        FROM period
+        ORDER BY start_date
     </select>
 
     <select id="getPeriodById" resultMap="Period">

@@ -19,6 +19,10 @@ public class PeriodMapper {
         return sqlSession.selectList("PeriodMapper.getAllPeriods");
     }
 
+    public List<Period> getAllPeriodsLight() {
+        return sqlSession.selectList("PeriodMapper.getAllPeriodsLight");
+    }
+
     public Period getPeriodById(int id) {
         return sqlSession.selectOne("PeriodMapper.getPeriodById", id);
     }

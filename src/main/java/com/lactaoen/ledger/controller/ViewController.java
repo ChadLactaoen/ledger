@@ -35,8 +35,14 @@ public class ViewController {
     private TransactionMapper transactionMapper;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getPeriodDashboard(Model model) {
-        Period period = periodMapper.getCurrentPeriod();
+    public String getPeriodDashboard(@RequestParam(value = "periodId", required = false) Integer periodId, Model model) {
+        Period period;
+
+        if (periodId != null) {
+            period = periodMapper.getPeriodById(periodId);
+        } else {
+            period = periodMapper.getCurrentPeriod();
+        }
 
         if (period == null) {
             period = periodMapper.getPeriodById(periodMapper.getLastPeriodId());
@@ -45,6 +51,7 @@ public class ViewController {
         }
 
         model.addAttribute("period", period);
+        model.addAttribute("periodMap", periodMapper.getAllPeriodsLight());
         return "dashboard/period";
     }
 
