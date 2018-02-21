@@ -20,6 +20,10 @@ public class BetMapper {
         return sqlSession.selectList("BetMapper.getAllBets");
     }
 
+    public List<Bet> getAllBetsByYear(Integer year) {
+        return sqlSession.selectList("BetMapper.getAllBetsByYear", year);
+    }
+
     public List<Bet> getUnresolvedBets() {
         return sqlSession.selectList("BetMapper.getUnresolvedBets");
     }

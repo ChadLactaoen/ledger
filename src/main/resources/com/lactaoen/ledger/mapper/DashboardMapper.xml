@@ -14,7 +14,7 @@
     </resultMap>
 
     <resultMap id="GameGamblingMapper" type="com.lactaoen.ledger.model.dashboard.GameGamblingMapper">
-        <id property="gameId" column="game_id" />
+        <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="wagered" column="wagered" />
         <result property="profit" column="profit" />
@@ -63,7 +63,7 @@
 
     <select id="getGameGamblingByYear" resultMap="GameGamblingMapper">
         SELECT
-            g.game_id, g.name,
+            g.game_id AS id, g.name,
             COALESCE(dro.wagered, 0) AS wagered,
             COALESCE(dro.profit, 0) AS profit,
             COALESCE(dro.sessions, 0) AS sessions,
@@ -92,7 +92,7 @@
 
     <select id="getGameGamblingByYearAndParentName" resultMap="GameGamblingMapper">
         SELECT
-            g.game_id, g.name,
+            g.game_id AS id, g.name,
             COALESCE(dro.wagered, 0) AS wagered,
             COALESCE(dro.profit, 0) AS profit,
             COALESCE(dro.sessions, 0) AS sessions,
@@ -101,13 +101,13 @@
         FROM game g
         LEFT JOIN (
             SELECT
-            g.game_id,
-            g.name,
-            SUM(b.wager) AS wagered,
-            SUM(b.profit) AS profit,
-            COUNT(b.bet_id) AS sessions,
-            SUM(CASE WHEN profit > 0 THEN 1 ELSE 0 END) AS wins,
-            SUM(CASE WHEN profit = 0 THEN 1 ELSE 0 END) AS ties
+                g.game_id,
+                g.name,
+                SUM(b.wager) AS wagered,
+                SUM(b.profit) AS profit,
+                COUNT(b.bet_id) AS sessions,
+                SUM(CASE WHEN profit > 0 THEN 1 ELSE 0 END) AS wins,
+                SUM(CASE WHEN profit = 0 THEN 1 ELSE 0 END) AS ties
             FROM game g
             JOIN game pg ON g.parent_id = pg.game_id
             LEFT JOIN bet b ON g.game_id = b.game_id
@@ -115,17 +115,41 @@
             AND b.profit IS NOT NULL
             AND YEAR(b.date) = #{year}
             AND g.parent_id IN (
-            SELECT game_id
-            FROM game
-        WHERE name = #{name}
-        )
+                SELECT game_id
+                FROM game
+                WHERE name = #{name}
+            )
         GROUP BY g.game_id
         ) AS dro ON g.game_id = dro.game_id
         WHERE g.parent_id IN (
-        SELECT game_id
-        FROM game
-        WHERE name = #{name}
-        );
+            SELECT game_id
+            FROM game
+            WHERE name = #{name}
+        )
+    </select>
+
+    <select id="getCasinoGamblingByYearAndParentName" resultMap="GameGamblingMapper">
+        SELECT
+            c.casino_id AS id,
+            c.name,
+            SUM(b.wager) AS wagered,
+            SUM(b.profit) AS profit,
+            COUNT(b.bet_id) AS sessions,
+            SUM(CASE WHEN profit > 0 THEN 1 ELSE 0 END) AS wins,
+            SUM(CASE WHEN profit = 0 THEN 1 ELSE 0 END) AS ties
+        FROM casino c
+        LEFT JOIN bet b ON c.casino_id = b.casino_id
+        LEFT JOIN game g ON b.game_id = g.game_id
+        LEFT JOIN game pg ON g.parent_id = pg.game_id
+        WHERE pg.game_id IN (
+            SELECT game_id
+            FROM game
+            WHERE name = #{name}
+        )
+        AND b.profit IS NOT NULL
+        AND YEAR(b.date) = #{year}
+        AND g.parent_id IS NOT NULL
+        GROUP BY c.casino_id
     </select>
 
     <select id="getBetsByYear" resultMap="BetMapper.Bet">

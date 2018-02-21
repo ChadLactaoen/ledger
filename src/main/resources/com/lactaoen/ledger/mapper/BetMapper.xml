@@ -21,6 +21,13 @@
         FROM bet
     </select>
 
+    <select id="getAllBetsByYear" resultMap="Bet">
+        SELECT /* BetMapper.getAllBetsByYear */
+            bet_id, date, game_id, casino_id, wager, profit, memo
+        FROM bet
+        WHERE YEAR(date) = #{id}
+    </select>
+
     <select id="getBetById" resultMap="Bet">
         SELECT /* BetMapper.getBetById */
             bet_id, date, game_id, casino_id, wager, profit, memo

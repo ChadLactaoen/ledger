@@ -2,7 +2,7 @@ package com.lactaoen.ledger.model.dashboard;
 
 public class GameGamblingMapper {
 
-    private Integer gameId;
+    private Integer id;
     private String name;
     private Double wagered;
     private Double profit;
@@ -13,12 +13,12 @@ public class GameGamblingMapper {
     public GameGamblingMapper() {
     }
 
-    public Integer getGameId() {
-        return gameId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setGameId(Integer gameId) {
-        this.gameId = gameId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

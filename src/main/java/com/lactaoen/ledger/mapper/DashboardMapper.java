@@ -44,6 +44,14 @@ public class DashboardMapper {
         return sqlSession.selectList("DashboardMapper.getGameGamblingByYearAndParentName", map);
     }
 
+    public List<GameGamblingMapper> getCasinoGamblingByYearAndParentName(Integer year, String name) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("year", year);
+        map.put("name", name);
+
+        return sqlSession.selectList("DashboardMapper.getCasinoGamblingByYearAndParentName", map);
+    }
+
     public List<Bet> getBetsByYear(Integer year) {
         return sqlSession.selectList("DashboardMapper.getBetsByYear", year);
     }

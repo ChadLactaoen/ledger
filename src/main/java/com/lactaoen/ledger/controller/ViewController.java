@@ -4,8 +4,10 @@ import com.lactaoen.ledger.mapper.BetMapper;
 import com.lactaoen.ledger.mapper.DashboardMapper;
 import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.mapper.TransactionMapper;
+import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.Transaction;
+import com.lactaoen.ledger.model.dashboard.GameGamblingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
 
@@ -85,8 +89,16 @@ public class ViewController {
             year = Calendar.getInstance().get(Calendar.YEAR);
         }
 
+        List<GameGamblingMapper> gameGamblingMap = dashboardMapper.getGameGamblingByYearAndParentName(year, "Poker");
+        List<GameGamblingMapper> casinoGamblingMap = dashboardMapper.getCasinoGamblingByYearAndParentName(year, "Poker");
+        List<Bet> bets = betMapper.getAllBetsByYear(year);
+        List<Bet> pokerBets = bets.stream().filter(filterPokerBets()).sorted(Comparator.comparing(Bet::getDate).reversed()).collect(toList());
+
         model.addAttribute("year", year);
-        model.addAttribute("games", dashboardMapper.getGameGamblingByYearAndParentName(year, "Poker"));
+        model.addAttribute("roi", getRoi(gameGamblingMap));
+        model.addAttribute("bets", pokerBets);
+        model.addAttribute("games", gameGamblingMap);
+        model.addAttribute("casinos", casinoGamblingMap);
 
         return "dashboard/poker";
     }
@@ -104,6 +116,16 @@ public class ViewController {
         model.addAttribute("year", year);
         model.addAttribute("totalSpent", transactions.stream().mapToDouble(Transaction::getPrice).sum());
         return "dashboard/year";
+    }
+
+    private Double getRoi(List<GameGamblingMapper> gameGamblingMap) {
+        Double wagered = gameGamblingMap.stream().mapToDouble(GameGamblingMapper::getWagered).sum();
+        Double profit = gameGamblingMap.stream().mapToDouble(GameGamblingMapper::getProfit).sum();
+        return profit / wagered;
+    }
+
+    private Predicate<Bet> filterPokerBets() {
+        return bet -> bet.getGame().getParentGame() != null && bet.getGame().getParentGame().getName().equals("Poker");
     }
 
 }

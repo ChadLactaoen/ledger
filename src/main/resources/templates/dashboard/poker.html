@@ -17,8 +17,34 @@
     <!-- Period -->
     <div id="gambling-dashboard">
         <div class="row">
-            <div class="col-md-12">
-                <table class="dashboard-table table table-sm table-hover">
+            <div class="col-xl-6 col-lg-12 col-md-12">
+                <table id="casino-table" class="dashboard-table table table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Casino</th>
+                        <th scope="col">Record</th>
+                        <th scope="col">Win%</th>
+                        <th scope="col">Wagered</th>
+                        <th scope="col" title="Wagered per Session">W/S</th>
+                        <th scope="col">Profit</th>
+                        <th scope="col" title="Profit per Session">P/S</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="casino : ${casinos}" th:with="losses=${casino.sessions - casino.wins - casino.ties},sessions=${casino.sessions > 0} ? ${casino.sessions} : 1.0,profit=${casino.profit}?:0">
+                        <td th:text="${casino.name}" th:class="font-weight-bold" th:attr="data-casino-id=${casino.id}"></td>
+                        <td th:text="|${casino.wins}-${losses}-${casino.ties}|"></td>
+                        <td th:text="|${#numbers.formatDecimal((casino.wins + (casino.ties / 2.0)) / sessions,0,'COMMA',3,'POINT')}|"></td>
+                        <td th:text="|$${#numbers.formatDecimal(casino.wagered,1,'COMMA',2,'POINT')}|"></td>
+                        <td th:text="|$${#numbers.formatDecimal(casino.wagered / sessions,1,'COMMA',2,'POINT')}|"></td>
+                        <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit * -1),1,'COMMA',2,'POINT')}|" class="font-weight-bold" th:classappend="${0 > profit} ? 'text-danger'"></td>
+                        <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit / sessions,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit / sessions * -1),1,'COMMA',2,'POINT')}|" th:classappend="${0 > profit} ? 'text-danger'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xl-6 col-lg-12 col-md-12">
+                <table id="game-table" class="dashboard-table table table-sm table-hover">
                     <thead>
                     <tr>
                         <th scope="col">Game</th>
@@ -31,8 +57,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="game : ${games}" th:attr="data-game-id=${game.gameId}" th:with="losses=${game.sessions - game.wins - game.ties},sessions=${game.sessions > 0} ? ${game.sessions} : 1.0,profit=${game.profit}?:0">
-                        <td th:text="${game.name}" th:class="font-weight-bold"></td>
+                    <tr th:each="game : ${games}" th:with="losses=${game.sessions - game.wins - game.ties},sessions=${game.sessions > 0} ? ${game.sessions} : 1.0,profit=${game.profit}?:0">
+                        <td th:text="${game.name}" th:class="font-weight-bold" th:attr="data-game-id=${game.id}"></td>
                         <td th:text="|${game.wins}-${losses}-${game.ties}|"></td>
                         <td th:text="|${#numbers.formatDecimal((game.wins + (game.ties / 2.0)) / sessions,0,'COMMA',3,'POINT')}|"></td>
                         <td th:text="|$${#numbers.formatDecimal(game.wagered,1,'COMMA',2,'POINT')}|"></td>
@@ -45,24 +71,52 @@
             </div>
         </div>
     </div>
+
+    <!-- Bets -->
+    <div id="bet-dashboard">
+        <h3 id="bet-header">All Tournaments</h3>
+        <h6 id="bet-stat-descriptor"></h6>
+        <div>
+            <button id="reset-btn" type="button" class="btn btn-warning">Reset</button>
+        </div>
+        <table class="dashboard-table table table-sm table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Game</th>
+                <th scope="col">Casino</th>
+                <th scope="col">Wagered</th>
+                <th scope="col">Profit</th>
+                <th scope="col">Memo</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bet : ${bets}" th:with="date = ${bet.date}" th:attr="data-game-id=${bet.game.gameId},data-casino-id=${bet.casino.casinoId}">
+                <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
+                <td th:text="${bet.game.name}" th:class="font-weight-bold"></td>
+                <td th:text="${bet.casino.name}"></td>
+                <td th:text="|$${#numbers.formatDecimal(bet.wager,1,'COMMA',2,'POINT')}|" th:attr="data-wager=${bet.wager}"></td>
+                <td th:text="${bet.profit} >= 0 ? |$${#numbers.formatDecimal(bet.profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((bet.profit * -1),1,'COMMA',2,'POINT')}|" th:attr="data-profit=${bet.profit}" th:class="font-weight-bold" th:classappend="${0 > bet.profit} ? 'text-danger'"></td>
+                <td th:text="${bet.memo}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>
-<script>
-
+<script>/*<![CDATA[*/
         $(document).ready(function() {
+            calculateAndDisplayStatsForCurrentSelection();
 
-            // Click listener for filtering transactions by category
-            $('#year-dashboard td[data-category-id]').on('click', function(e) {
-                var categoryId = $(this).attr('data-category-id');
+            // Click listener for filtering bets by game or casino
+            $('#gambling-dashboard td[data-game-id], #gambling-dashboard td[data-casino-id]').on('click', function(e) {
+                resetDashboardAndSelectNew($(this).parent());
+                redrawTournamentList();
+            });
 
-                if (categoryId === '0') {
-                    $('#transaction-header').text('All Transactions');
-                    $('#transaction-dashboard tbody tr').show();
-                } else {
-                    $('#transaction-header').text($(this).text() + ' Transactions');
-                    $('#transaction-dashboard tbody tr').hide();
-                    $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
-                }
+            $('#reset-btn').on('click', function(e) {
+                $('#gambling-dashboard tr').removeClass('table-secondary');
+                redrawTournamentList();
             });
 
             var year = new URLSearchParams(new URL(window.location.href).search).get('year');
@@ -71,18 +125,75 @@
             if (year !== null) {
                 url = url + '?year=' + year;
             }
-
-            // Set up doughnut chart
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                method: 'GET',
-                success: function(map) {
-                    initializeDoughnut(map);
-                }
-            });
         });
 
+        function resetDashboardAndSelectNew(parent) {
+            $(parent).siblings().removeClass('table-secondary');
+            $(parent).addClass('table-secondary');
+        }
+
+        function redrawTournamentList() {
+            var casinoId = $('#casino-table tr.table-secondary td:first').attr('data-casino-id');
+            var casinoName = $('#casino-table tr.table-secondary td:first').text();
+            var gameId = $('#game-table tr.table-secondary td:first').attr('data-game-id');
+            var gameName = $('#game-table tr.table-secondary td:first').text();
+
+            setBetHeader(casinoName, gameName);
+            $('#bet-dashboard tbody tr').hide();
+            showTournamentsMatchingCriteria(casinoId, gameId);
+            calculateAndDisplayStatsForCurrentSelection();
+        }
+
+        function calculateAndDisplayStatsForCurrentSelection() {
+            var tournaments = $('#bet-dashboard tbody tr:visible');
+
+            var played = tournaments.length;
+            var wagered = 0;
+            var profit = 0;
+
+            for (var i = 0; i < played; i++) {
+                wagered += parseFloat($(tournaments[i]).find('[data-wager]').attr('data-wager'));
+                profit += parseFloat($(tournaments[i]).find('[data-profit]').attr('data-profit'));
+            }
+
+            var roi = (profit / wagered).toFixed(3);
+
+            $('#bet-stat-descriptor').text('ROI: ' + roi + ', Tournaments Played: ' + played + ', Wagered: ' + wagered.toFixed(2) + ', Profit: ' + profit.toFixed(2));
+        }
+
+        function setBetHeader(casinoName, gameName) {
+            if (!(casinoName !== '' || gameName !== '')) {
+                $('#bet-header').text('All Tournaments');
+                return;
+            }
+
+            var descriptor = '';
+
+            if (gameName !== '') {
+                descriptor += gameName + ' ';
+            }
+
+            descriptor += 'Tournaments';
+
+            if (casinoName !== '') {
+                descriptor += ' at ' + casinoName;
+            }
+
+            $('#bet-header').text(descriptor);
+        }
+
+        function showTournamentsMatchingCriteria(casinoId, gameId) {
+            if (typeof casinoId === 'undefined' && typeof gameId === 'undefined') {
+                $('#bet-dashboard tbody tr').show();
+            } else if (typeof casinoId === 'undefined' && typeof gameId !== 'undefined') {
+                $('#bet-dashboard tr[data-game-id="' + gameId + '"]').show();
+            } else if (typeof casinoId !== 'undefined' && typeof gameId === 'undefined') {
+                $('#bet-dashboard tr[data-casino-id="' + casinoId + '"]').show();
+            } else {
+                $('#bet-dashboard tr[data-casino-id="' + casinoId + '"][data-game-id="' + gameId + '"]').show();
+            }
+        }
+        /*]]>*/
     </script>
 </body>
 </html>
