@@ -76,7 +76,7 @@
                 <tbody>
                     <tr th:each="transaction : ${period.transactionList}" th:with="date = ${transaction.date}" th:attr="data-category-id=${transaction.category.categoryId}">
                         <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
-                        <td th:text="${transaction.name}"></td>
+                        <td th:attr="data-transaction-id=${transaction.transactionId}" th:text="${transaction.name}" class="editable-transaction"></td>
                         <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.parentCategory.color}|"></td>
                         <td th:text="${transaction.subcategory} ? ${transaction.subcategory.name} : ''"></td>
                         <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
@@ -115,6 +115,11 @@
                     $('#transaction-dashboard tbody tr').hide();
                     $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
                 }
+            });
+
+            $('.editable-transaction').on('click', function(e) {
+                var transactionId = $(this).attr('data-transaction-id');
+                window.location = 'form/transaction/' + transactionId;
             });
 
             // Set up doughnut chart

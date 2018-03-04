@@ -1,6 +1,7 @@
 package com.lactaoen.ledger.controller.api;
 
 import com.lactaoen.ledger.mapper.DashboardMapper;
+import com.lactaoen.ledger.model.GraphCoordinate;
 import com.lactaoen.ledger.model.dashboard.CategoryExpenseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

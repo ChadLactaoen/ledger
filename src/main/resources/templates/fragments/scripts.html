@@ -15,7 +15,11 @@
             });
 
             $('document').ready(function() {
-                $('#date').val(new Date().toDateInputValue());
+                // change to today's date only if it's empty
+                var $date = $('#date');
+                if ($date.val() === '') {
+                    $date.val(new Date().toDateInputValue());
+                }
 
                 addDividersToDashboardTables();
                 alterPeriodForm();
@@ -41,7 +45,6 @@
             function alterPeriodForm() {
                 $('#category-fields .delete-category-btn').click(function() {
                     var parentTr = $(this).parent().parent();
-                    console.log($(parentTr));
                     $(parentTr).find('input[type="number"]').attr('value', '-1').val(-1);
                     $(parentTr).hide();
                 });

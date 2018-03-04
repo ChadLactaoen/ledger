@@ -27,7 +27,7 @@ tr[data-transaction-id]:hover {
     margin-bottom: 1.2rem;
 }
 
-svg {
+svg, .editable-transaction {
     cursor: pointer;
 }
 

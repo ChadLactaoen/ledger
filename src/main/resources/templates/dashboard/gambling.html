@@ -66,21 +66,12 @@
             });
 
             var year = new URLSearchParams(new URL(window.location.href).search).get('year');
-            var url = '/api/dashboard/year';
+            var url = '/api/graph/gambling';
 
             if (year !== null) {
                 url = url + '?year=' + year;
             }
 
-            // Set up doughnut chart
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                method: 'GET',
-                success: function(map) {
-                    initializeDoughnut(map);
-                }
-            });
         });
 
     </script>
