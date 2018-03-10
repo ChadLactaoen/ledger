@@ -65,8 +65,11 @@ public class ViewController {
             year = Calendar.getInstance().get(Calendar.YEAR);
         }
 
+        List<GameGamblingMapper> gameGambling = dashboardMapper.getGameGamblingByYear(year);
+        gameGambling.add(getGameGamblingMapperTotal(gameGambling));
+
         model.addAttribute("year", year);
-        model.addAttribute("gameGambling", dashboardMapper.getGameGamblingByYear(year));
+        model.addAttribute("gameGambling", gameGambling);
         return "dashboard/gambling";
     }
 
@@ -116,6 +119,32 @@ public class ViewController {
         model.addAttribute("year", year);
         model.addAttribute("totalSpent", transactions.stream().mapToDouble(Transaction::getPrice).sum());
         return "dashboard/year";
+    }
+
+    private GameGamblingMapper getGameGamblingMapperTotal(List<GameGamblingMapper> mapperList) {
+        GameGamblingMapper total = new GameGamblingMapper();
+
+        Double wagered = 0D;
+        Double profit = 0D;
+        Integer sessions = 0;
+        Integer wins = 0;
+        Integer ties = 0;
+
+        for (GameGamblingMapper map : mapperList) {
+            wagered += map.getWagered();
+            profit += map.getProfit();
+            sessions += map.getSessions();
+            wins += map.getWins();
+            ties += map.getTies();
+        }
+
+        total.setWagered(wagered);
+        total.setProfit(profit);
+        total.setSessions(sessions);
+        total.setWins(wins);
+        total.setTies(ties);
+        total.setName("Total");
+        return total;
     }
 
     private Double getRoi(List<GameGamblingMapper> gameGamblingMap) {

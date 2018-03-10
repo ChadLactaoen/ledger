@@ -15,6 +15,11 @@
         <association property="sportsBet" column="bet_id" select="SportsBetMapper.getSportsBetByBetId" />
     </resultMap>
 
+    <resultMap id="GraphCoordinate" type="com.lactaoen.ledger.model.GraphCoordinate">
+        <id property="x" column="x" />
+        <result property="y" column="y" />
+    </resultMap>
+
     <select id="getAllBets" resultMap="Bet">
         SELECT /* BetMapper.getAllBets */
             bet_id, date, game_id, casino_id, wager, profit, memo
@@ -41,6 +46,33 @@
         FROM bet
         WHERE profit IS NULL
         ORDER BY date
+    </select>
+
+    <select id="getBetDataPointsByYear" resultMap="GraphCoordinate">
+        SELECT /* BetMapper.getBetDataPointsByYear */
+            WEEKOFYEAR(date) AS x, SUM(profit) AS y
+        FROM bet
+        WHERE profit IS NOT NULL
+        AND YEAR(date) = #{id}
+        GROUP BY WEEKOFYEAR(date)
+        ORDER BY x
+    </select>
+
+    <select id="getCurrentWeekOfYear" resultType="Integer">
+        SELECT WEEKOFYEAR(CURDATE());
+    </select>
+
+    <select id="getBetDataPointsByYearAndGame" resultMap="GraphCoordinate">
+        SELECT /* BetMapper.getBetDataPointsByYearAndGame */
+            WEEKOFYEAR(date) AS x, SUM(profit) AS y
+        FROM bet b
+        JOIN game g ON b.game_id = g.game_id
+        JOIN game pg ON g.parent_id = pg.game_id
+        WHERE profit IS NOT NULL
+        AND YEAR(date) = #{year}
+        AND pg.name = #{name}
+        GROUP BY WEEKOFYEAR(date)
+        ORDER BY x
     </select>
 
     <insert id="createBet" useGeneratedKeys="true" keyProperty="betId">

@@ -10,6 +10,9 @@ public class GraphCoordinate<X,Y>{
         this.y = y;
     }
 
+    public GraphCoordinate() {
+    }
+
     public X getX() {
         return x;
     }

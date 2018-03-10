@@ -18,8 +18,10 @@
 
 #year-dashboard td[data-category-id]:hover,
 #period-dashboard td[data-category-id]:hover,
-tr[data-transaction-id]:hover {
+tr[data-transaction-id]:hover,
+.editable-transaction:hover {
     cursor: pointer;
+    font-weight: bold;
 }
 
 .progress {
