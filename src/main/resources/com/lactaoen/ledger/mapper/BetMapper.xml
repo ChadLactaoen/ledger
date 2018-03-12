@@ -48,7 +48,7 @@
         ORDER BY date
     </select>
 
-    <select id="getBetDataPointsByYear" resultMap="GraphCoordinate">
+    <select id="getBetDataPointsPerWeekByYear" resultMap="GraphCoordinate">
         SELECT /* BetMapper.getBetDataPointsByYear */
             WEEKOFYEAR(date) AS x, SUM(profit) AS y
         FROM bet
@@ -58,11 +58,25 @@
         ORDER BY x
     </select>
 
-    <select id="getCurrentWeekOfYear" resultType="Integer">
-        SELECT WEEKOFYEAR(CURDATE());
+    <select id="getBetDataPointsPerMonthByYear" resultMap="GraphCoordinate">
+        SELECT /* BetMapper.getBetDataPointsPerMonthByYear */
+            MONTH(date) AS x, SUM(profit) AS y
+        FROM bet
+        WHERE profit IS NOT NULL
+        AND YEAR(date) = #{id}
+        GROUP BY MONTH(date)
+        ORDER BY MONTH(date)
     </select>
 
-    <select id="getBetDataPointsByYearAndGame" resultMap="GraphCoordinate">
+    <select id="getCurrentWeekOfYear" resultType="Integer">
+        SELECT WEEKOFYEAR(CURDATE())
+    </select>
+
+    <select id="getCurrentMonthOfYear" resultType="Integer">
+        SELECT MONTH(CURDATE())
+    </select>
+
+    <select id="getBetDataPointsPerWeekByYearAndGame" resultMap="GraphCoordinate">
         SELECT /* BetMapper.getBetDataPointsByYearAndGame */
             WEEKOFYEAR(date) AS x, SUM(profit) AS y
         FROM bet b
@@ -73,6 +87,19 @@
         AND pg.name = #{name}
         GROUP BY WEEKOFYEAR(date)
         ORDER BY x
+    </select>
+
+    <select id="getBetDataPointsPerMonthByYearAndGame" resultMap="GraphCoordinate">
+        SELECT /* BetMapper.getBetDataPointsPerMonthByYearAndGame */
+        MONTH(date) AS x, SUM(profit) AS y
+        FROM bet b
+        JOIN game g ON b.game_id = g.game_id
+        JOIN game pg ON g.parent_id = pg.game_id
+        WHERE profit IS NOT NULL
+        AND YEAR(date) = #{year}
+        AND pg.name = #{name}
+        GROUP BY MONTH(date)
+        ORDER BY MONTH(date)
     </select>
 
     <insert id="createBet" useGeneratedKeys="true" keyProperty="betId">

@@ -36,20 +36,36 @@ public class BetMapper {
         return sqlSession.selectOne("BetMapper.getBetById", id);
     }
 
-    public List<GraphCoordinate<Integer, BigDecimal>> getBetDataPointsByYear(Integer year) {
-        return sqlSession.selectList("BetMapper.getBetDataPointsByYear", year);
+    public List<GraphCoordinate<Integer, BigDecimal>> getBetDataPointsPerWeekByYear(Integer year) {
+        return sqlSession.selectList("BetMapper.getBetDataPointsPerWeekByYear", year);
+    }
+
+    public List<GraphCoordinate<Integer, BigDecimal>> getBetDataPointsPerMonthByYear(Integer year) {
+        return sqlSession.selectList("BetMapper.getBetDataPointsPerMonthByYear", year);
     }
 
     public Integer getCurrentWeekOfYear() {
         return sqlSession.selectOne("BetMapper.getCurrentWeekOfYear");
     }
 
-    public List<GraphCoordinate<Integer, BigDecimal>> getBetDataPointsByYearAndGame(Integer year, String name) {
+    public Integer getCurrentMonthOfYear() {
+        return sqlSession.selectOne("BetMapper.getCurrentMonthOfYear");
+    }
+
+    public List<GraphCoordinate<Integer, BigDecimal>> getBetDataPointsPerWeekByYearAndGame(Integer year, String name) {
         Map<String, Object> map = new HashMap<>();
         map.put("year", year);
         map.put("name", name);
 
-        return sqlSession.selectList("BetMapper.getBetDataPointsByYearAndGame", map);
+        return sqlSession.selectList("BetMapper.getBetDataPointsPerWeekByYearAndGame", map);
+    }
+
+    public List<GraphCoordinate<Integer, BigDecimal>> getBetDataPointsPerMonthByYearAndGame(Integer year, String name) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("year", year);
+        map.put("name", name);
+
+        return sqlSession.selectList("BetMapper.getBetDataPointsPerMonthByYearAndGame", map);
     }
 
     public Integer createBet(BetForm bet) {

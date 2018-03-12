@@ -41,3 +41,20 @@ svg, .editable-transaction {
 .form-check-input {
     margin-left: 0;
 }
+
+.dropdown-sm {
+    width: 120px;
+}
+
+@media (max-width: 1199px) {
+    .chartable {
+        min-height: 325px;
+        height: calc(100vw * 0.5);
+    }
+}
+
+@media (min-width: 1200px) {
+    .chartable {
+        height: calc(50vw * 0.5);
+    }
+}

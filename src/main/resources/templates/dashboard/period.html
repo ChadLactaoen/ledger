@@ -13,8 +13,8 @@
                 <h1>Dashboard <small class="text-muted" th:text="|${#calendars.format(period.startDate, 'MMM d')} - ${#calendars.format(period.endDate, 'MMM d')}|"></small> <button th:attr="data-period-id=${period.periodId}" id="edit-period-btn" type="button" class="btn btn-warning">Edit</button></h1>
             </div>
             <div class="col-md-2">
-                <div class="text-right">
-                    <select id="period-select" th:with="currPeriodId = ${period.periodId}">
+                <div class="float-right dropdown-sm">
+                    <select id="period-select" class="form-control form-control-sm" th:with="currPeriodId = ${period.periodId}">
                         <option th:each="periodLight : ${periodMap}" th:text="|${#calendars.format(periodLight.startDate, 'MMM d YYYY')}|" th:selected="${currPeriodId == periodLight.periodId}" th:attr="data-period-id = ${periodLight.periodId}"></option>
                     </select>
                 </div>
@@ -25,33 +25,35 @@
         <div id="period-dashboard">
             <div class="row">
                 <div class="col-md-7 col-lg-6 col-xl-7">
-                    <table class="dashboard-table table table-sm table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">Category</th>
-                            <th scope="col">Allocated</th>
-                            <th scope="col">Spent</th>
-                            <th scope="col">Left</th>
-                            <th scope="col">S/T</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.remaining}" th:attr="data-parent-cat-id=${allocation.category.parentCategory.categoryId}">
-                            <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.parentCategory.color}|" th:attr="data-category-id=${allocation.category.categoryId}"></td>
-                            <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|"></td>
-                            <td th:text="|$${#numbers.formatDecimal(allocation.spent,1,'COMMA',2,'POINT')}|"></td>
-                            <td th:text="${remaining} >= 0 ? |$${#numbers.formatDecimal(remaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((remaining * -1),1,'COMMA',2,'POINT')}|" th:classappend="${remaining} >= 0 ? (${remaining} == 0 ? 'text-muted' : '') : 'text-danger'" class="font-weight-bold"></td>
-                            <td th:text="|${#numbers.formatDecimal((allocation.spent / period.total) * 100,1,'COMMA',2,'POINT')}%|"></td>
-                        </tr>
-                        <tr th:with="totalRemaining = ${period.total} - ${period.spent},spentPercent = (${period.spent} / ${period.total}) * 100" class="font-weight-bold">
-                            <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
-                            <td th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|"></td>
-                            <td th:text="|$${#numbers.formatDecimal(period.spent,1,'COMMA',2,'POINT')}|"></td>
-                            <td th:text="${totalRemaining} >= 0 ? |$${#numbers.formatDecimal(totalRemaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((totalRemaining * -1),1,'COMMA',2,'POINT')}|" th:class="${totalRemaining} >= 0 ? '' : 'text-danger'"></td>
-                            <td th:text="|${#numbers.formatDecimal(spentPercent,1,'COMMA',2,'POINT')}%|"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="dashboard-table table table-sm table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Category</th>
+                                <th scope="col">Allocated</th>
+                                <th scope="col">Spent</th>
+                                <th scope="col">Left</th>
+                                <th scope="col">S/T</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="allocation : ${period.allocationList}" th:with="remaining = ${allocation.remaining}" th:attr="data-parent-cat-id=${allocation.category.parentCategory.categoryId}">
+                                <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.parentCategory.color}|" th:attr="data-category-id=${allocation.category.categoryId}"></td>
+                                <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|"></td>
+                                <td th:text="|$${#numbers.formatDecimal(allocation.spent,1,'COMMA',2,'POINT')}|"></td>
+                                <td th:text="${remaining} >= 0 ? |$${#numbers.formatDecimal(remaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((remaining * -1),1,'COMMA',2,'POINT')}|" th:classappend="${remaining} >= 0 ? (${remaining} == 0 ? 'text-muted' : '') : 'text-danger'" class="font-weight-bold"></td>
+                                <td th:text="|${#numbers.formatDecimal((allocation.spent / period.total) * 100,1,'COMMA',2,'POINT')}%|"></td>
+                            </tr>
+                            <tr th:with="totalRemaining = ${period.total} - ${period.spent},spentPercent = (${period.spent} / ${period.total}) * 100" class="font-weight-bold">
+                                <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
+                                <td th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|"></td>
+                                <td th:text="|$${#numbers.formatDecimal(period.spent,1,'COMMA',2,'POINT')}|"></td>
+                                <td th:text="${totalRemaining} >= 0 ? |$${#numbers.formatDecimal(totalRemaining,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((totalRemaining * -1),1,'COMMA',2,'POINT')}|" th:class="${totalRemaining} >= 0 ? '' : 'text-danger'"></td>
+                                <td th:text="|${#numbers.formatDecimal(spentPercent,1,'COMMA',2,'POINT')}%|"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div  class="col-md-5 col-lg-6 col-xl-5">
                     <canvas id="pieChart" width="200px" height="200px"></canvas>
@@ -62,28 +64,28 @@
         <!-- Transactions -->
         <div id="transaction-dashboard">
             <h3 id="transaction-header">All Transactions</h3>
-            <table class="dashboard-table table table-sm table-hover">
-                <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Subcategory</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Memo</th>
-                </tr>
-                </thead>
-                <tbody>
+            <div class="table-responsive">
+                <table class="dashboard-table table table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Memo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     <tr th:each="transaction : ${period.transactionList}" th:with="date = ${transaction.date}" th:attr="data-category-id=${transaction.category.categoryId}">
                         <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
                         <td th:attr="data-transaction-id=${transaction.transactionId}" th:text="${transaction.name}" class="editable-transaction"></td>
                         <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.parentCategory.color}|"></td>
-                        <td th:text="${transaction.subcategory} ? ${transaction.subcategory.name} : ''"></td>
                         <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
                         <td th:text="${transaction.memo}"></td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
@@ -97,9 +99,7 @@
             });
 
             $('#period-select').on('change', function(e) {
-                console.log($(this));
                 var periodId = $(this).find('option:selected').attr('data-period-id');
-
                 window.location = '/?periodId=' + periodId;
             });
 
