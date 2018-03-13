@@ -4,6 +4,7 @@ public class GameGamblingMapper {
 
     private Integer id;
     private String name;
+    private String color;
     private Double wagered;
     private Double profit;
     private Integer sessions;
@@ -27,6 +28,14 @@ public class GameGamblingMapper {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public Double getWagered() {

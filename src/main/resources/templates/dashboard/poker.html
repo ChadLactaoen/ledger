@@ -19,6 +19,34 @@
         <div class="row">
             <div class="col-xl-6 col-lg-12 col-md-12">
                 <div class="table-responsive">
+                    <table id="game-table" class="dashboard-table table table-sm table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Game</th>
+                            <th scope="col">Record</th>
+                            <th scope="col">Win%</th>
+                            <th scope="col">Wagered</th>
+                            <th scope="col" title="Wagered per Session">W/S</th>
+                            <th scope="col">Profit</th>
+                            <th scope="col" title="Profit per Session">P/S</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="game : ${games}" th:with="losses=${game.sessions - game.wins - game.ties},sessions=${game.sessions > 0} ? ${game.sessions} : 1.0,profit=${game.profit}?:0">
+                            <td th:text="${game.name}" th:class="font-weight-bold" th:attr="data-game-id=${game.id}" th:style="|color:${game.color}|"></td>
+                            <td th:text="|${game.wins}-${losses}-${game.ties}|"></td>
+                            <td th:text="|${#numbers.formatDecimal((game.wins + (game.ties / 2.0)) / sessions,0,'COMMA',3,'POINT')}|"></td>
+                            <td th:text="|$${#numbers.formatDecimal(game.wagered,1,'COMMA',2,'POINT')}|"></td>
+                            <td th:text="|$${#numbers.formatDecimal(game.wagered / sessions,1,'COMMA',2,'POINT')}|"></td>
+                            <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit * -1),1,'COMMA',2,'POINT')}|" class="font-weight-bold" th:classappend="${0 > profit} ? 'text-danger'"></td>
+                            <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit / sessions,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit / sessions * -1),1,'COMMA',2,'POINT')}|" th:classappend="${0 > profit} ? 'text-danger'"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-12 col-md-12">
+                <div class="table-responsive">
                     <table id="casino-table" class="dashboard-table table table-sm table-hover">
                         <thead>
                         <tr>
@@ -38,34 +66,6 @@
                             <td th:text="|${#numbers.formatDecimal((casino.wins + (casino.ties / 2.0)) / sessions,0,'COMMA',3,'POINT')}|"></td>
                             <td th:text="|$${#numbers.formatDecimal(casino.wagered,1,'COMMA',2,'POINT')}|"></td>
                             <td th:text="|$${#numbers.formatDecimal(casino.wagered / sessions,1,'COMMA',2,'POINT')}|"></td>
-                            <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit * -1),1,'COMMA',2,'POINT')}|" class="font-weight-bold" th:classappend="${0 > profit} ? 'text-danger'"></td>
-                            <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit / sessions,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit / sessions * -1),1,'COMMA',2,'POINT')}|" th:classappend="${0 > profit} ? 'text-danger'"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-xl-6 col-lg-12 col-md-12">
-                <div class="table-responsive">
-                    <table id="game-table" class="dashboard-table table table-sm table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">Game</th>
-                            <th scope="col">Record</th>
-                            <th scope="col">Win%</th>
-                            <th scope="col">Wagered</th>
-                            <th scope="col" title="Wagered per Session">W/S</th>
-                            <th scope="col">Profit</th>
-                            <th scope="col" title="Profit per Session">P/S</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="game : ${games}" th:with="losses=${game.sessions - game.wins - game.ties},sessions=${game.sessions > 0} ? ${game.sessions} : 1.0,profit=${game.profit}?:0">
-                            <td th:text="${game.name}" th:class="font-weight-bold" th:attr="data-game-id=${game.id}"></td>
-                            <td th:text="|${game.wins}-${losses}-${game.ties}|"></td>
-                            <td th:text="|${#numbers.formatDecimal((game.wins + (game.ties / 2.0)) / sessions,0,'COMMA',3,'POINT')}|"></td>
-                            <td th:text="|$${#numbers.formatDecimal(game.wagered,1,'COMMA',2,'POINT')}|"></td>
-                            <td th:text="|$${#numbers.formatDecimal(game.wagered / sessions,1,'COMMA',2,'POINT')}|"></td>
                             <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit * -1),1,'COMMA',2,'POINT')}|" class="font-weight-bold" th:classappend="${0 > profit} ? 'text-danger'"></td>
                             <td th:text="${profit >= 0} ? |$${#numbers.formatDecimal(profit / sessions,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((profit / sessions * -1),1,'COMMA',2,'POINT')}|" th:classappend="${0 > profit} ? 'text-danger'"></td>
                         </tr>
@@ -97,7 +97,7 @@
             <tbody>
             <tr th:each="bet : ${bets}" th:with="date = ${bet.date}" th:attr="data-game-id=${bet.game.gameId},data-casino-id=${bet.casino.casinoId}">
                 <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
-                <td th:text="${bet.game.name}" th:class="font-weight-bold"></td>
+                <td th:text="${bet.game.name}" th:class="font-weight-bold" th:style="|color:${bet.game.color}|"></td>
                 <td th:text="${bet.casino.name}"></td>
                 <td th:text="|$${#numbers.formatDecimal(bet.wager,1,'COMMA',2,'POINT')}|" th:attr="data-wager=${bet.wager}"></td>
                 <td th:text="${bet.profit} >= 0 ? |$${#numbers.formatDecimal(bet.profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((bet.profit * -1),1,'COMMA',2,'POINT')}|" th:attr="data-profit=${bet.profit}" th:class="font-weight-bold" th:classappend="${0 > bet.profit} ? 'text-danger'"></td>

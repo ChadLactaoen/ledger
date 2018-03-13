@@ -7,18 +7,19 @@
     <resultMap id="Game" type="com.lactaoen.ledger.model.Game">
         <id property="gameId" column="game_id" />
         <result property="name" column="name" />
+        <result property="color" column="color" />
         <association property="parentGame" column="parent_id" select="GameMapper.getGameById" />
     </resultMap>
 
     <select id="getAllGames" resultMap="Game">
         SELECT /* GameMapper.getAllGames */
-            game_id, name, parent_id
+            game_id, name, parent_id, color
         FROM game
     </select>
 
     <select id="getPermissibleGames" resultMap="Game">
         SELECT /* GameMapper.getPermissibleGames */
-            g.game_id, IF(g.parent_id IS NULL, g.name, CONCAT(COALESCE(pg.name,''), ' > ', g.name)) AS name
+            g.game_id, g.color, IF(g.parent_id IS NULL, g.name, CONCAT(COALESCE(pg.name,''), ' > ', g.name)) AS name
         FROM game g
         LEFT JOIN game lg ON g.game_id = lg.parent_id
         LEFT JOIN game pg ON g.parent_id = pg.game_id
@@ -37,7 +38,7 @@
 
     <select id="getGameById" resultMap="Game">
         SELECT /* GameMapper.getGameById */
-            game_id, name, parent_id
+            game_id, name, parent_id, color
         FROM game
         WHERE game_id = #{id}
     </select>
@@ -45,10 +46,11 @@
     <insert id="createGame">
         INSERT INTO /* GameMapper.createGame */
             game
-        (name, parent_id)
+        (name, parent_id, color)
         VALUES (
             #{name},
-            #{parentId}
+            #{parentId},
+            #{color}
         )
     </insert>
 
@@ -57,7 +59,8 @@
             game
         SET
             name = #{name},
-            parent_id = #{parentId}
+            parent_id = #{parentId},
+            color = #{color}
         WHERE game_id = #{gameId}
     </update>
 

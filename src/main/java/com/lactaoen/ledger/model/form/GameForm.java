@@ -5,6 +5,7 @@ public class GameForm {
     private Integer gameId;
     private String name;
     private Integer parentId;
+    private String color;
 
     public GameForm() {
     }
@@ -31,5 +32,13 @@ public class GameForm {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

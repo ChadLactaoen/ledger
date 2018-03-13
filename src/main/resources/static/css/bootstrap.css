@@ -5,11 +5,11 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 :root {
-  --blue: #173a92;  /* Custom change for Heath */
+  --blue: #3c7ad6;  /* Custom change for Heath */
   --indigo: #6610f2;
-  --purple: #76468f;    /* Custom change for Heath */
+  --purple: #654ea6;    /* Custom change for Heath */
   --pink: #e83e8c;
-  --red: #fc4a1a;   /* Custom change for Heath */
+  --red: #d93327;   /* Custom change for Heath */
   --orange: #fd7e14;
   --yellow: #f7b733;    /* Custom change for Heath */
   --green: #28a745;
@@ -18,12 +18,12 @@
   --white: #fff;
   --gray: #868e96;
   --gray-dark: #343a40;
-  --primary: #173a92;   /* Custom change for Heath */
+  --primary: #3c7ad6;   /* Custom change for Heath */
   --secondary: #868e96;
   --success: #28a745;
   --info: #4abdac;  /* Custom change for Heath */
-  --warning: #f7b733;   /* Custom change for Heath */
-  --danger: #fc4a1a;    /* Custom change for Heath */
+  --warning: #ffc414;   /* Custom change for Heath */
+  --danger: #d93327;    /* Custom change for Heath */
   --text-color: #50514f;
   --light: #f8f9fa;
   --dark: #50514f;  /* Custom change for Heath */

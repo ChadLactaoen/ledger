@@ -87,24 +87,24 @@
                         type: 'bar',
                         data: {
                             datasets: [{
-                                data: data.sportsBetData,
-                                label: 'Sports Betting',
-                                backgroundColor: 'rgba(23, 58, 146, 0.9)'
-                            }, {
-                                data: data.pokerData,
-                                label: 'Poker',
-                                backgroundColor: 'rgba(247, 183, 51, 0.9)'
-                            }, {
-                                data: data.otherData,
-                                label: 'Other',
-                                backgroundColor: 'rgba(118, 70, 143, 0.9)'
-                            }, {
                                 type: 'line',
                                 data: data.overallData,
                                 fill: false,
                                 label: 'Profit',
                                 borderColor: 'rgba(74, 189, 172, 1)',
                                 pointBackgroundColor: 'rgba(74, 189, 172, 1)'
+                            }, {
+                                data: data.sportsBetData,
+                                label: 'Sports Betting',
+                                backgroundColor: 'rgba(61, 124, 212, 1)'
+                            }, {
+                                data: data.pokerData,
+                                label: 'Poker',
+                                backgroundColor: 'rgba(247, 183, 51, 1)'
+                            }, {
+                                data: data.otherData,
+                                label: 'Other',
+                                backgroundColor: 'rgba(100, 78, 166, 1)'
                             }],
                             labels: data.labels
                         },

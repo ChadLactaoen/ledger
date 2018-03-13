@@ -16,6 +16,7 @@
     <resultMap id="GameGamblingMapper" type="com.lactaoen.ledger.model.dashboard.GameGamblingMapper">
         <id property="id" column="id" />
         <result property="name" column="name" />
+        <result property="color" column="color" />
         <result property="wagered" column="wagered" />
         <result property="profit" column="profit" />
         <result property="sessions" column="sessions" />
@@ -92,7 +93,7 @@
 
     <select id="getGameGamblingByYearAndParentName" resultMap="GameGamblingMapper">
         SELECT
-            g.game_id AS id, g.name,
+            g.game_id AS id, g.name, g.color,
             COALESCE(dro.wagered, 0) AS wagered,
             COALESCE(dro.profit, 0) AS profit,
             COALESCE(dro.sessions, 0) AS sessions,
