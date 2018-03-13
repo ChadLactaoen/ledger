@@ -20,10 +20,13 @@
             </div>
             <div class="form-group">
                 <label>Casino</label>
-                <select th:field="*{casinoId}" th:required="true" class="form-control">
-                    <option th:value="''"></option>
-                    <option th:each="casino : ${casinos}" th:value="${casino.casinoId}" th:text="${casino.name}"></option>
-                </select>
+                <div class="input-group">
+                    <select th:field="*{casinoId}" th:required="true" class="form-control">
+                        <option th:value="''"></option>
+                        <option th:each="casino : ${casinos}" th:value="${casino.casinoId}" th:text="${casino.name}"></option>
+                    </select>
+                    <a href="/form/casino" class="btn btn-info" role="button" style="margin-left:5px">Add Casino</a>
+                </div>
             </div>
             <div class="form-group">
                 <label>Wager</label>
@@ -31,7 +34,12 @@
             </div>
             <div class="form-group">
                 <label>Profit</label>
-                <input th:field="*{profit}" type="number" step=".01" class="form-control" />
+                <div class="input-group mb-3">
+                    <input th:field="*{profit}" type="number" step=".01" class="form-control" />
+                    <div class="input-group-append">
+                        <button class="btn btn-info btn-group-btn negative-btn" type="button">-</button>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label>Memo</label>
@@ -41,11 +49,21 @@
                 <div class="row">
                     <div class="form-group col-md-6 col-sm-6 col-xs-6">
                         <label>Odds</label>
-                        <input th:field="*{odds}" type="number" step="1" class="form-control sports-bet-field" />
+                        <div class="input-group mb-3">
+                            <input th:field="*{odds}" type="number" step="1" class="form-control sports-bet-field" />
+                            <div class="input-group-append">
+                                <button class="btn btn-info btn-group-btn negative-btn" type="button">-</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group col-md-6 col-sm-6 col-xs-6">
                         <label>Line</label>
-                        <input th:field="*{line}" type="number" step="0.5" class="form-control sports-bet-field" />
+                        <div class="input-group mb-3">
+                            <input th:field="*{line}" type="number" step="0.5" class="form-control sports-bet-field" />
+                            <div class="input-group-append">
+                                <button class="btn btn-info btn-group-btn negative-btn" type="button">-</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -126,7 +144,15 @@
                 }
             });
 
+            $('.negative-btn').on('click', function(e) {
+                var input = $(this).parent().siblings('input').eq(0);
+                var inputVal = $(input).val();
 
+                if (!inputVal.startsWith('-')) {
+                    var newInputVal = '-' + $(input).val();
+                    $(input).text(newInputVal).val(newInputVal);
+                }
+            });
         });
     </script>
 </body>

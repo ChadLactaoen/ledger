@@ -155,7 +155,17 @@
 
             var roi = (profit / wagered).toFixed(3);
 
-            $('#bet-stat-descriptor').text('ROI: ' + roi + ', Tournaments Played: ' + played + ', Wagered: ' + wagered.toFixed(2) + ', Profit: ' + profit.toFixed(2));
+            var profitString = '';
+            if (0 > profit) {
+                profitString = '-$' + Number(Math.abs(profit.toFixed(2))).toLocaleString();
+            } else {
+                profitString = '$' + Number(profit.toFixed(2)).toLocaleString();
+            }
+
+            $('#bet-stat-descriptor').text('ROI: ' + roi +
+                ', Tournaments Played: ' + played +
+                ', Wagered: $' + Number(wagered.toFixed(2)).toLocaleString() +
+                ', Profit: ' + profitString);
         }
 
         function setBetHeader(casinoName, gameName) {

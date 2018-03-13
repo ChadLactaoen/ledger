@@ -46,6 +46,11 @@ svg, .editable-transaction {
     width: 120px;
 }
 
+.btn-group-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 @media (max-width: 1199px) {
     .chartable {
         min-height: 325px;
