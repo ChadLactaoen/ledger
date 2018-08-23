@@ -4,6 +4,7 @@ import com.lactaoen.ledger.mapper.BetMapper;
 import com.lactaoen.ledger.mapper.DashboardMapper;
 import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.mapper.TransactionMapper;
+import com.lactaoen.ledger.model.Allocation;
 import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.Transaction;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -25,6 +27,12 @@ import static java.util.stream.Collectors.toList;
 @Controller
 @RequestMapping("/")
 public class ViewController {
+
+    private static final Comparator<Allocation> BY_PARENT_CATEGORY = (a1, a2) ->
+            a1.getCategory().getParentCategory().getName().compareTo(a2.getCategory().getParentCategory().getName());
+
+    private static final Comparator<Allocation> BY_CATEGORY = (a1, a2) ->
+            a1.getCategory().getName().compareTo(a2.getCategory().getName());
 
     @Autowired
     private BetMapper betMapper;
@@ -53,6 +61,9 @@ public class ViewController {
             model.addAttribute("msgClass", "danger");
             model.addAttribute("msg", "You are viewing an out-of-date period. Please create a new period as soon as possible.");
         }
+
+        List<Allocation> sortedAllocations = period.getAllocationList().stream().sorted(BY_PARENT_CATEGORY.thenComparing(BY_CATEGORY)).collect(toList());
+        period.setAllocationList(sortedAllocations);
 
         model.addAttribute("period", period);
         model.addAttribute("periodMap", periodMapper.getAllPeriodsLight());
