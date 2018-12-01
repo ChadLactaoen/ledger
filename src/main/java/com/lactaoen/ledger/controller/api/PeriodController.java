@@ -53,8 +53,7 @@ public class PeriodController extends AbstractApiController {
 
                 period.setPeriodId(periodId);
                 List<AllocationForm> allocations = period.toAllocationForms();
-
-                allocations.forEach(allocationMapper::createAllocation);
+                allocations.stream().filter(allocation -> allocation.getTotal() >= 0).forEach(allocationMapper::createAllocation);
             }
 
             generateFlashAttributes(model, rowsInserted, "period", PostType.ADD);
@@ -101,7 +100,7 @@ public class PeriodController extends AbstractApiController {
 
     private boolean isValidAmounts(PeriodForm form) {
         double allocationSum = form.getAmounts().stream().filter(amount -> !amount.equals("-1")).mapToDouble(Double::parseDouble).sum();
-        return Math.floor(allocationSum * 100) == Math.floor(form.getTotal() * 100);
+        return Math.round(allocationSum * 100) == Math.floor(form.getTotal() * 100);
     }
 
     @Autowired
