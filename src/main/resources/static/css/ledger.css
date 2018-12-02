@@ -13,6 +13,10 @@
     background-color: var(--purple) !important;
 }
 
+.dropdown-item:active {
+    background-color: var(--purple);
+}
+
 .negative-button, .heath-button {
     color: #fff;
     background-color: var(--purple) !important;
