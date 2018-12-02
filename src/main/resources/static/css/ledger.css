@@ -1,3 +1,44 @@
+/* Theming for website */
+
+.heath-navbar, .heath-active {
+    background-color: var(--purple);
+}
+
+.heath-active {
+    color: white;
+}
+
+.heath-active:hover {
+    color: #fff;
+    background-color: var(--purple) !important;
+}
+
+.negative-button, .heath-button {
+    color: #fff;
+    background-color: var(--purple) !important;
+    border-color: var(--purple) !important;
+}
+
+.heath-secondary-button {
+    color: #111;
+    background-color: var(--warning) !important;
+    border-color: var(--warning);
+}
+
+.negative-button:hover, .heath-button:hover, a.heath-button:hover  {
+    opacity: 0.8;
+    cursor: pointer;
+    color: white !important;
+}
+
+.heath-secondary-button:hover {
+    opacity: 0.8;
+    cursor: pointer;
+    color: black;
+}
+
+/* End theming */
+
 .container, .container-fluid {
     padding-top: 75px;
 }

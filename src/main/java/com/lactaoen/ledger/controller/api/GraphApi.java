@@ -2,14 +2,18 @@ package com.lactaoen.ledger.controller.api;
 
 import com.lactaoen.ledger.mapper.BetMapper;
 import com.lactaoen.ledger.model.GraphCoordinate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -26,10 +30,13 @@ public class GraphApi {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
 
-    private BetMapper betMapper;
+    private final BetMapper betMapper;
 
-    @SuppressWarnings("all")
-    @RequestMapping(value = "/gambling/week")
+    public GraphApi(BetMapper betMapper) {
+        this.betMapper = betMapper;
+    }
+
+    @GetMapping("/gambling/week")
     public Map<String,Object> getGamblingGraphByWeekForYear(@RequestParam(name = "year", required = false) Integer year) {
         Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
@@ -37,7 +44,7 @@ public class GraphApi {
             year = currentYear;
         }
 
-        Integer weeksCount = year == currentYear ? betMapper.getCurrentWeekOfYear() : WEEKS_IN_A_YEAR;
+        Integer weeksCount = year.equals(currentYear) ? betMapper.getCurrentWeekOfYear() : WEEKS_IN_A_YEAR;
         Map<Integer, BigDecimal> data = betMapper.getBetDataPointsPerWeekByYear(year).stream()
                 .collect(toMap(GraphCoordinate::getX, GraphCoordinate::getY));
         List<BigDecimal> pokerData = getWeekProfitsByGameName(year, weeksCount, "Poker");
@@ -54,8 +61,7 @@ public class GraphApi {
         return returnMap;
     }
 
-    @SuppressWarnings("all")
-    @RequestMapping(value = "/gambling/month")
+    @GetMapping(value = "/gambling/month")
     public Map<String,Object> getGamblingGraphByMonthForYear(@RequestParam(name = "year", required = false) Integer year) {
         Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
@@ -63,7 +69,7 @@ public class GraphApi {
             year = currentYear;
         }
 
-        Integer monthCount = year == currentYear ? betMapper.getCurrentMonthOfYear() : MONTHS_IN_A_YEAR;
+        Integer monthCount = year.equals(currentYear) ? betMapper.getCurrentMonthOfYear() : MONTHS_IN_A_YEAR;
         Map<Integer, BigDecimal> data = betMapper.getBetDataPointsPerMonthByYear(year).stream()
                 .collect(toMap(GraphCoordinate::getX, GraphCoordinate::getY));
         List<BigDecimal> pokerData = getMonthProfitsByGameName(year, monthCount, "Poker");
@@ -121,10 +127,5 @@ public class GraphApi {
                 .collect(toMap(GraphCoordinate::getX, GraphCoordinate::getY));
 
         return IntStream.range(1, monthCount + 1).mapToObj(i -> gameData.getOrDefault(i, BigDecimal.ZERO)).collect(toList());
-    }
-
-    @Autowired
-    public void setBetMapper(BetMapper betMapper) {
-        this.betMapper = betMapper;
     }
 }

@@ -5,8 +5,13 @@ import com.lactaoen.ledger.mapper.PeriodMapper;
 import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.form.AllocationForm;
 import com.lactaoen.ledger.model.form.PeriodForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -18,31 +23,36 @@ import java.util.Map;
 @RequestMapping("/api/period")
 public class PeriodController extends AbstractApiController {
 
-    private AllocationMapper allocationMapper;
-    private PeriodMapper periodMapper;
+    private final AllocationMapper allocationMapper;
+    private final PeriodMapper periodMapper;
 
-    @RequestMapping(method = RequestMethod.GET)
+    public PeriodController(AllocationMapper allocationMapper, PeriodMapper periodMapper) {
+        this.allocationMapper = allocationMapper;
+        this.periodMapper = periodMapper;
+    }
+
+    @GetMapping
     public List<Period> getAllPeriods() {
         return periodMapper.getAllPeriods();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public Period getPeriod(@PathVariable("id") int id) {
         return periodMapper.getPeriodById(id);
     }
 
-    @RequestMapping(value = "/last", method = RequestMethod.GET)
+    @GetMapping("/last")
     public Period getLastPeriod() {
         Integer periodId = periodMapper.getLastPeriodId();
         return periodMapper.getPeriodById(periodId);
     }
 
-    @RequestMapping(value = "/current", method = RequestMethod.GET)
+    @GetMapping("/current")
     public Period getCurrentPeriod() {
         return periodMapper.getCurrentPeriod();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public RedirectView createPeriod(@ModelAttribute PeriodForm period, RedirectAttributes model) {
 
         if (isValidAmounts(period)) {
@@ -65,7 +75,7 @@ public class PeriodController extends AbstractApiController {
         return new RedirectView("/form/period");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @PostMapping("/{id}")
     public RedirectView updatePeriod(@PathVariable("id") int id, @ModelAttribute PeriodForm period, RedirectAttributes model) {
 
         if (isValidAmounts(period)) {
@@ -93,7 +103,7 @@ public class PeriodController extends AbstractApiController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public void deletePeriod(@PathVariable("id") int id) {
         periodMapper.deletePeriod(id);
     }
@@ -101,15 +111,5 @@ public class PeriodController extends AbstractApiController {
     private boolean isValidAmounts(PeriodForm form) {
         double allocationSum = form.getAmounts().stream().filter(amount -> !amount.equals("-1")).mapToDouble(Double::parseDouble).sum();
         return Math.round(allocationSum * 100) == Math.floor(form.getTotal() * 100);
-    }
-
-    @Autowired
-    public void setAllocationMapper(AllocationMapper allocationMapper) {
-        this.allocationMapper = allocationMapper;
-    }
-
-    @Autowired
-    public void setPeriodMapper(PeriodMapper periodMapper) {
-        this.periodMapper = periodMapper;
     }
 }

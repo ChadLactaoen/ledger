@@ -5,11 +5,11 @@ import com.lactaoen.ledger.model.GameType;
 import com.lactaoen.ledger.model.SportsBet;
 import com.lactaoen.ledger.model.form.BetForm;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 public class SportsBetMapper {
 
     private final SqlSession sqlSession;

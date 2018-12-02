@@ -5,8 +5,13 @@ import com.lactaoen.ledger.mapper.GameMapper;
 import com.lactaoen.ledger.mapper.SportsBetMapper;
 import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.form.BetForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -17,28 +22,32 @@ import java.util.List;
 @RequestMapping("/api/bet")
 public class BetController extends AbstractApiController {
 
-    private BetMapper betMapper;
+    private final BetMapper betMapper;
+    private final GameMapper gameMapper;
+    private final SportsBetMapper sportsBetMapper;
 
-    private GameMapper gameMapper;
+    public BetController(BetMapper betMapper, GameMapper gameMapper, SportsBetMapper sportsBetMapper) {
+        this.betMapper = betMapper;
+        this.gameMapper = gameMapper;
+        this.sportsBetMapper = sportsBetMapper;
+    }
 
-    private SportsBetMapper sportsBetMapper;
-
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<Bet> getAllBets() {
         return betMapper.getAllBets();
     }
 
-    @RequestMapping(value = "/unresolved", method = RequestMethod.GET)
+    @GetMapping("/unresolved")
     public List<Bet> getUnresolvedBets() {
         return betMapper.getUnresolvedBets();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public Bet getBet(@PathVariable("id") int id) {
         return betMapper.getById(id);
     }
 
-    @RequestMapping(value = "/win/{id}", method = RequestMethod.GET)
+    @GetMapping("/win/{id}")
     public RedirectView setBetAsWin(@PathVariable("id") int id, RedirectAttributes model) {
         Bet bet = betMapper.getById(id);
         if (bet.getGame().getParentGame() != null && bet.getGame().getParentGame().getName().equals("Sports Betting")) {
@@ -58,7 +67,7 @@ public class BetController extends AbstractApiController {
         return new RedirectView("/sports");
     }
 
-    @RequestMapping(value = "/loss/{id}", method = RequestMethod.GET)
+    @GetMapping("/loss/{id}")
     public RedirectView setBetAsLoss(@PathVariable("id") int id, RedirectAttributes model) {
         Bet bet = betMapper.getById(id);
         BigDecimal wager = new BigDecimal(bet.getWager());
@@ -68,7 +77,7 @@ public class BetController extends AbstractApiController {
         return new RedirectView("/sports");
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public RedirectView createBet(@ModelAttribute("bet") BetForm bet, RedirectAttributes model) {
         int rowsInserted = betMapper.createBet(bet);
 
@@ -80,7 +89,7 @@ public class BetController extends AbstractApiController {
         return new RedirectView("/form/bet");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @PostMapping("/{id}")
     public RedirectView updateBet(@PathVariable("id") int id, @ModelAttribute BetForm bet, RedirectAttributes model) {
         bet.setBetId(id);
 
@@ -98,27 +107,12 @@ public class BetController extends AbstractApiController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public void deleteBet(@PathVariable("id") int id) {
         betMapper.deleteBet(id);
     }
 
     private boolean isSportsBet(int gameId) {
         return gameMapper.isSportsBet(gameId);
-    }
-
-    @Autowired
-    public void setBetMapper(BetMapper betMapper) {
-        this.betMapper = betMapper;
-    }
-
-    @Autowired
-    public void setGameMapper(GameMapper gameMapper) {
-        this.gameMapper = gameMapper;
-    }
-
-    @Autowired
-    public void setSportsBetMapper(SportsBetMapper sportsBetMapper) {
-        this.sportsBetMapper = sportsBetMapper;
     }
 }

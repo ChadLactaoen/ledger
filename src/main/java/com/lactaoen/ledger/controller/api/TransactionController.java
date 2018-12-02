@@ -4,8 +4,13 @@ import com.lactaoen.ledger.mapper.AllocationMapper;
 import com.lactaoen.ledger.mapper.TransactionMapper;
 import com.lactaoen.ledger.model.Transaction;
 import com.lactaoen.ledger.model.form.TransactionForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -15,27 +20,31 @@ import java.util.List;
 @RequestMapping("/api/transaction")
 public class TransactionController extends AbstractApiController {
 
-    private AllocationMapper allocationMapper;
+    private final AllocationMapper allocationMapper;
+    private final TransactionMapper transactionMapper;
 
-    private TransactionMapper transactionMapper;
+    public TransactionController(AllocationMapper allocationMapper, TransactionMapper transactionMapper) {
+        this.allocationMapper = allocationMapper;
+        this.transactionMapper = transactionMapper;
+    }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<Transaction> getAllTransactions() {
         return transactionMapper.getAllTransactions();
     }
 
-    @RequestMapping(value = "/year/{year}", method = RequestMethod.GET)
+    @GetMapping("/year/{year}")
     public List<Transaction> getTransactionsByYear(@PathVariable("year") Integer year) {
         return transactionMapper.getTransactionsByYear(year);
     }
 
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public Transaction getTransaction(@PathVariable("id") int id) {
         return transactionMapper.getTransactionById(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public RedirectView createTransaction(@ModelAttribute("transaction") TransactionForm transaction, RedirectAttributes model) {
 
         // We shouldn't add a transaction for a category that wasn't allocated for the period
@@ -51,7 +60,7 @@ public class TransactionController extends AbstractApiController {
         return new RedirectView("/form/transaction");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @PostMapping("/{id}")
     public RedirectView updateTransaction(@PathVariable("id") int id, @ModelAttribute("transaction") TransactionForm transaction, RedirectAttributes model) {
 
         // We shouldn't update a transaction for a category that wasn't allocated for the period
@@ -68,18 +77,8 @@ public class TransactionController extends AbstractApiController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public void deleteTransaction(@PathVariable("id") int id) {
         transactionMapper.deleteTransaction(id);
-    }
-
-    @Autowired
-    public void setAllocationMapper(AllocationMapper allocationMapper) {
-        this.allocationMapper = allocationMapper;
-    }
-
-    @Autowired
-    public void setTransactionMapper(TransactionMapper transactionMapper) {
-        this.transactionMapper = transactionMapper;
     }
 }

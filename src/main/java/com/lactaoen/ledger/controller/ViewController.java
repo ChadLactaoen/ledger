@@ -9,17 +9,15 @@ import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.Transaction;
 import com.lactaoen.ledger.model.dashboard.GameGamblingMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -34,19 +32,19 @@ public class ViewController {
     private static final Comparator<Allocation> BY_CATEGORY = (a1, a2) ->
             a1.getCategory().getName().compareTo(a2.getCategory().getName());
 
-    @Autowired
-    private BetMapper betMapper;
+    private final BetMapper betMapper;
+    private final DashboardMapper dashboardMapper;
+    private final PeriodMapper periodMapper;
+    private final TransactionMapper transactionMapper;
 
-    @Autowired
-    private DashboardMapper dashboardMapper;
+    public ViewController(BetMapper betMapper, DashboardMapper dashboardMapper, PeriodMapper periodMapper, TransactionMapper transactionMapper) {
+        this.betMapper = betMapper;
+        this.dashboardMapper = dashboardMapper;
+        this.periodMapper = periodMapper;
+        this.transactionMapper = transactionMapper;
+    }
 
-    @Autowired
-    private PeriodMapper periodMapper;
-
-    @Autowired
-    private TransactionMapper transactionMapper;
-
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getPeriodDashboard(@RequestParam(value = "periodId", required = false) Integer periodId, Model model) {
         Period period;
 
@@ -70,7 +68,7 @@ public class ViewController {
         return "dashboard/period";
     }
 
-    @RequestMapping(value = "/gambling", method = RequestMethod.GET)
+    @GetMapping("/gambling")
     public String getGamblingDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
         if (year == null) {
             year = Calendar.getInstance().get(Calendar.YEAR);
@@ -84,7 +82,7 @@ public class ViewController {
         return "dashboard/gambling";
     }
 
-    @RequestMapping(value = "/sports", method = RequestMethod.GET)
+    @GetMapping(value = "/sports")
     public String getSportsBettingDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
         if (year == null) {
             year = Calendar.getInstance().get(Calendar.YEAR);
@@ -97,7 +95,7 @@ public class ViewController {
         return "dashboard/sports";
     }
 
-    @RequestMapping(value = "/poker", method = RequestMethod.GET)
+    @GetMapping("/poker")
     public String getPokerBettingDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
         if (year == null) {
             year = Calendar.getInstance().get(Calendar.YEAR);
@@ -117,7 +115,7 @@ public class ViewController {
         return "dashboard/poker";
     }
 
-    @RequestMapping(value = "/year", method = RequestMethod.GET)
+    @GetMapping("/year")
     public String getYearDashboard(@RequestParam(name = "year", required = false) Integer year, Model model) {
         if (year == null) {
             year = Calendar.getInstance().get(Calendar.YEAR);

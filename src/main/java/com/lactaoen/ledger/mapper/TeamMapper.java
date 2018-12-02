@@ -4,10 +4,11 @@ import com.lactaoen.ledger.model.Team;
 import com.lactaoen.ledger.model.form.TeamForm;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 public class TeamMapper {
 
     private final SqlSession sqlSession;

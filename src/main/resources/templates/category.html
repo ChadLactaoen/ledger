@@ -22,7 +22,7 @@
                 <option th:each="parentCategory : ${categories}" th:value="${parentCategory.categoryId}" th:text="${parentCategory.name}"></option>
             </select>
         </div>
-        <button type="submit" class="btn btn-lg btn-warning">Submit</button>
+        <button type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
     </form>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>

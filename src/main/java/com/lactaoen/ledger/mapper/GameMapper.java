@@ -3,11 +3,11 @@ package com.lactaoen.ledger.mapper;
 import com.lactaoen.ledger.model.Game;
 import com.lactaoen.ledger.model.form.GameForm;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 public class GameMapper {
 
     private final SqlSession sqlSession;

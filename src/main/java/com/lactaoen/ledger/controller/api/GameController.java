@@ -3,9 +3,13 @@ package com.lactaoen.ledger.controller.api;
 import com.lactaoen.ledger.mapper.GameMapper;
 import com.lactaoen.ledger.model.Game;
 import com.lactaoen.ledger.model.form.GameForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -15,43 +19,42 @@ import java.util.List;
 @RequestMapping("/api/game")
 public class GameController extends AbstractApiController {
 
-    private GameMapper gameMapper;
+    private final GameMapper gameMapper;
 
-    @RequestMapping(method = RequestMethod.GET)
+    public GameController(GameMapper gameMapper) {
+        this.gameMapper = gameMapper;
+    }
+
+    @GetMapping
     public List<Game> getAllGames() {
         return gameMapper.getAllGames();
     }
 
-    @RequestMapping(value = "/permissible", method = RequestMethod.GET)
+    @GetMapping("/permissible")
     public List<Game> getPermissibleGames() {
         return gameMapper.getPermissibleGames();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public Game getGame(@PathVariable("id") int id) {
         return gameMapper.getGameById(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public RedirectView createGame(@ModelAttribute("game") GameForm game, RedirectAttributes model) {
         generateFlashAttributes(model, gameMapper.createGame(game), "game", PostType.ADD);
         return new RedirectView("/form/game");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/{id}")
     public RedirectView updateGame(@PathVariable("id") int id, @ModelAttribute("game") GameForm game, RedirectAttributes model) {
         game.setGameId(id);
         generateFlashAttributes(model, gameMapper.updateGame(game), "game", PostType.UPDATE);
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public void deleteGame(@PathVariable("id") int id) {
         gameMapper.deleteGame(id);
-    }
-
-    @Autowired
-    public void setGameMapper(GameMapper gameMapper) {
-        this.gameMapper = gameMapper;
     }
 }

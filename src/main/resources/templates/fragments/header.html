@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-    <nav th:fragment="header" id="navbar" class="navbar navbar-expand-lg fixed-top navbar-dark bg-info">
+    <nav th:fragment="header" id="navbar" class="navbar navbar-expand-lg fixed-top navbar-dark heath-navbar">
         <a class="navbar-brand" href="/">
             <i class="fas fa-balance-scale"></i>
             Heath
@@ -18,12 +18,12 @@
                         Dashboards
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dashboard-dropdown">
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}" class="dropdown-item" href="/">Period Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/gambling' ? 'active':''}" class="dropdown-item" href="/gambling">Gambling Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/sports' ? 'active':''}" class="dropdown-item" href="/sports">Sports Bet Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/poker' ? 'active':''}" class="dropdown-item" href="/poker">Poker Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/year' ? 'active':''}" class="dropdown-item" href="/year">Year Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/misc' ? 'active':''}" class="dropdown-item" href="/misc">Misc Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'heath-active':''}" class="dropdown-item" href="/">Period Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/gambling' ? 'heath-active':''}" class="dropdown-item" href="/gambling">Gambling Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/sports' ? 'heath-active':''}" class="dropdown-item" href="/sports">Sports Bet Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/poker' ? 'heath-active':''}" class="dropdown-item" href="/poker">Poker Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/year' ? 'heath-active':''}" class="dropdown-item" href="/year">Year Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/misc' ? 'heath-active':''}" class="dropdown-item" href="/misc">Misc Dashboard</a>
                     </div>
                 </li>
                 <li class="nav-item">

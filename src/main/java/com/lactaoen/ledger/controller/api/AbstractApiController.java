@@ -18,8 +18,8 @@ public class AbstractApiController {
         ADD("added", "adding"),
         UPDATE("updated", "updating");
 
-        String pastTense;
-        String presentTense;
+        final String pastTense;
+        final String presentTense;
 
         PostType(String pastTense, String presentTense) {
             this.pastTense = pastTense;

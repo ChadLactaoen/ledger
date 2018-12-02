@@ -2,8 +2,10 @@ package com.lactaoen.ledger.controller.api;
 
 import com.lactaoen.ledger.mapper.AllocationMapper;
 import com.lactaoen.ledger.model.Allocation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -11,25 +13,14 @@ import java.util.List;
 @RequestMapping("/api/allocation")
 public class AllocationController extends AbstractApiController {
 
-    private AllocationMapper allocationMapper;
+    private final AllocationMapper allocationMapper;
 
-    @RequestMapping(value = "/period/{periodId}", method = RequestMethod.GET)
+    public AllocationController(AllocationMapper allocationMapper) {
+        this.allocationMapper = allocationMapper;
+    }
+
+    @GetMapping("/period/{periodId}")
     public List<Allocation> getAllocationsByPeriodId(@PathVariable("periodId") int periodId) {
         return allocationMapper.getAllocationsByPeriodId(periodId);
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public Integer createAllocation(@RequestBody Allocation allocation) {
-        return 1;
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public int updateAllocation(@PathVariable("id") int id, @RequestBody Allocation allocation) {
-        return 1;
-    }
-
-    @Autowired
-    public void setAllocationMapper(AllocationMapper allocationMapper) {
-        this.allocationMapper = allocationMapper;
     }
 }

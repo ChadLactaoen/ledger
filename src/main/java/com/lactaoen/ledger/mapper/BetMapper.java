@@ -4,14 +4,14 @@ import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.GraphCoordinate;
 import com.lactaoen.ledger.model.form.BetForm;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public class BetMapper {
 
     private final SqlSession sqlSession;

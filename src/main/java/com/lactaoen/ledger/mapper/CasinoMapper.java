@@ -2,11 +2,11 @@ package com.lactaoen.ledger.mapper;
 
 import com.lactaoen.ledger.model.Casino;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 public class CasinoMapper {
 
     private final SqlSession sqlSession;

@@ -21,8 +21,8 @@
         </div>
 
         <div class="sticky-top">
-            <button th:attrappend="disabled=${period.periodId == null}?disabled" type="submit" class="btn btn-lg btn-warning">Submit</button>
-            <button id="zero-btn" class="btn btn-lg btn-info">Populate</button>
+            <button th:attrappend="disabled=${period.periodId == null}?disabled" type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
+            <button id="zero-btn" class="btn btn-lg heath-button">Populate</button>
             <span class="font-weight-bold">Total Remaining: <span th:text="${period.periodId}?'$0'" id="remaining"></span></span>
         </div>
 
