@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<body>
+<div th:replace="fragments/libraryheader :: header"></div>
+<div class="container">
+    <div th:replace="fragments/flash :: flash"></div>
+    <h1>말</h1>
+    <form action="#" th:action="@{/library/word}" th:object="${word}" method="post">
+        <div class="form-group">
+            <input type="hidden" th:field="*{chapterId}" th:required="true" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>말들</label>
+            <textarea class="form-control" rows="20" th:field="*{words}" th:required="true"></textarea>
+        </div>
+        <button type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
+    </form>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+</body>
+</html>

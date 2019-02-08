@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/htmlHead :: htmlHead">
+    <title>도서관</title>
+</head>
+<body>
+<div th:replace="fragments/libraryheader :: header"></div>
+<div class="container">
+
+    <div th:replace="fragments/flash :: flash"></div>
+
+    <!-- Header -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1>도서관</h1>
+        </div>
+    </div>
+
+    <div class="book" th:each="book : ${books}">
+        <div data-toggle="collapse" th:href="'#book-' + ${book.bookId}" aria-expanded="false" style="cursor:pointer"><h3 th:inline="text"><i class="fas fa-angle-right"></i> [[${book.name}]]</h3></div>
+        <div th:id="'book-' + ${book.bookId}" class="collapse chapter-list">
+            <table class="table table-borderless table-hover table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Chapter</th>
+                    <th scope="col">Word Count</th>
+                    <th scope="col">Read?</th>
+                    <th scope="col">Ex. Done?</th>
+                    <th scope="col">Ex. Added?</th>
+                    <th scope="col">Todo?</th>
+                </tr>
+                </thead>
+                <tbody th:each="chapter : ${book.chapters}">
+                <tr>
+                    <th scope="row" th:text="${chapter.name}" data-toggle="collapse" th:href="'#chapter-' + ${chapter.chapterId}" aria-expanded="false" style="cursor:pointer"></th>
+                    <td><span class="badge badge-primary" th:if="${#lists.size(chapter.words)} > 0" th:text="${#lists.size(chapter.words)}"></span></td>
+                    <td><input class="form-check-input" type="checkbox" value=""></td>
+                    <td><input class="form-check-input" type="checkbox" value=""></td>
+                    <td><input class="form-check-input" type="checkbox" value=""></td>
+                    <td><input class="form-check-input" type="checkbox" value=""></td>
+                </tr>
+                <tr th:id="'chapter-' + ${chapter.chapterId}" class="collapse">
+                    <td colspan="5" style="padding-left:2em">
+                        <div th:each="word : ${chapter.words}" th:text="${word.value}"></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul class="collapse" data-parent="#book-list" th:id="'book-' + ${book.bookId}">
+            <li th:each="chapter : ${book.chapters}" th:text="${chapter.name}"></li>
+        </ul>
+    </div>
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<nav th:fragment="header" id="navbar" class="navbar navbar-expand-lg fixed-top navbar-dark heath-navbar">
+    <a class="navbar-brand" href="/library">
+        <i class="fas fa-book"></i>
+        도서관
+    </a>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/library' ? 'active':''}" href="/library">도서관</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/library/todochapter' ? 'active':''}" href="/library/todochapter">하다</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/library/unfinished' ? 'active':''}" href="/library/unfinished">말들</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/library/book' ? 'active':''}" href="/library/book">책</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

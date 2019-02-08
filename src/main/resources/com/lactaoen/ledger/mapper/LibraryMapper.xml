@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LibraryMapper">
+
+    <resultMap id="Book" type="com.lactaoen.ledger.model.library.Book">
+        <id property="bookId" column="book_id" />
+        <result property="name" column="name" />
+        <collection property="chapters" column="book_id" select="LibraryMapper.getChaptersByBookId" />
+    </resultMap>
+
+    <resultMap id="Chapter" type="com.lactaoen.ledger.model.library.Chapter">
+        <id property="chapterId" column="chapter_id" />
+        <result property="bookId" column="book_id" />
+        <result property="name" column="name" />
+        <collection property="words" column="chapter_id" select="LibraryMapper.getUnfinishedWordsByChapterId" />
+    </resultMap>
+
+    <resultMap id="Word" type="com.lactaoen.ledger.model.library.Word">
+        <id property="wordId" column="word_id" />
+        <result property="chapterId" column="chapter_id" />
+        <result property="value" column="value" />
+        <result property="isComplete" column="is_complete" />
+        <result property="dateAdded" column="date_added" />
+    </resultMap>
+
+    <select id="getAllBooks" resultMap="Book">
+        SELECT
+            book_id,
+            name
+        FROM
+            library.book
+        ORDER BY
+            name ASC
+    </select>
+
+    <select id="getChaptersByBookId" resultMap="Chapter">
+        SELECT
+            chapter_id,
+            book_id,
+            name
+        FROM
+            library.chapter
+        WHERE
+            book_id = #{id}
+    </select>
+
+    <select id="getTodoChapters" resultMap="Chapter">
+        SELECT
+            chapter_id,
+            book_id,
+            name
+        FROM
+            library.chapter
+        WHERE
+            is_todo = 1
+    </select>
+
+    <select id="getUnfinishedWordsByChapterId" resultMap="Word">
+        SELECT
+            word_id,
+            chapter_id,
+            value,
+            is_complete,
+            date_added
+        FROM
+            library.word
+        WHERE
+            chapter_id = #{id}
+        AND
+           is_complete = 0
+    </select>
+
+    <select id="getAllUnfinishedWords" resultMap="Word">
+        SELECT
+            word_id,
+            chapter_id,
+            value,
+            is_complete,
+            date_added
+        FROM
+            library.word
+        WHERE
+            is_complete = 0
+        ORDER BY
+            word_id ASC
+    </select>
+
+    <insert id="createBook" parameterType="com.lactaoen.ledger.model.library.Book" useGeneratedKeys="true" keyProperty="bookId">
+        INSERT INTO
+            library.book
+        SET
+            name = #{name}
+    </insert>
+
+    <insert id="createChapter" parameterType="com.lactaoen.ledger.model.library.Chapter">
+        INSERT INTO
+            library.chapter
+        SET
+            book_id = #{bookId},
+            name = #{name}
+    </insert>
+
+    <insert id="createWord" parameterType="com.lactaoen.ledger.model.library.Word">
+        INSERT INTO
+            library.word
+        SET
+            chapter_id = #{chapterId},
+            value = #{value}
+    </insert>
+
+    <update id="updateWord" parameterType="com.lactaoen.ledger.model.library.Word">
+        UPDATE
+            library.word
+        SET
+            is_complete = #{isComplete},
+            date_added = NOW()
+        WHERE
+            chapter_id = #{chapterId}
+    </update>
+
+</mapper>

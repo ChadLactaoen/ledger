@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/htmlHead :: htmlHead">
+    <title>도서관</title>
+</head>
+<body>
+<div th:replace="fragments/libraryheader :: header"></div>
+<div class="container">
+
+    <!-- Header -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1>말들</h1>
+        </div>
+    </div>
+
+    <div th:each="word : ${words}" th:text="${word.value}" style="font-size:1.5em;"></div>
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>
