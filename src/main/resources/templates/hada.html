@@ -12,20 +12,21 @@
     <!-- Header -->
     <div class="row">
         <div class="col-md-12">
-            <h1>도서관</h1>
+            <h1>하다</h1>
         </div>
     </div>
 
     <button id="done-btn" type="button" class="btn btn-info">Mark Checked As Done</button>
     <br />
-    <div th:replace="fragments/library :: bookList(${books['Reading']}, 'Reading')"></div>
-    <div th:replace="fragments/library :: bookList(${books['On the Shelf']}, 'On the Shelf')"></div>
-    <div th:replace="fragments/library :: bookList(${books['Done']}, 'Done')"></div>
+    <div th:replace="fragments/library :: bookListHada(${books})"></div>
 
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script>
+
+        $('.chapter-list').collapse('show');
+        $('.fa-angle-right').addClass('arrow-down');
 
         $('#done-btn').on('click', function() {
             var wordIds = $('[name="wordIds"]:checked');

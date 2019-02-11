@@ -7,6 +7,7 @@ public class Book {
 
     private int bookId;
     private String name;
+    private String status;
     private List<Chapter> chapters;
 
     public Book() {
@@ -28,12 +29,24 @@ public class Book {
         this.name = name;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public List<Chapter> getChapters() {
         return chapters;
     }
 
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
+    }
+
+    public long getUnfinishedWordCount() {
+        return chapters.stream().flatMap(chapter -> chapter.getWords().stream()).count();
     }
 
     @Override
@@ -43,12 +56,13 @@ public class Book {
         Book book = (Book) o;
         return bookId == book.bookId &&
                 Objects.equals(name, book.name) &&
+                Objects.equals(status, book.status) &&
                 Objects.equals(chapters, book.chapters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookId, name, chapters);
+        return Objects.hash(bookId, name, status, chapters);
     }
 
     @Override
@@ -56,6 +70,7 @@ public class Book {
         return "Book{" +
                 "bookId=" + bookId +
                 ", name='" + name + '\'' +
+                ", status='" + status + '\'' +
                 ", chapters=" + chapters +
                 '}';
     }

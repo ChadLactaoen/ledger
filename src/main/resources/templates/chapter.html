@@ -5,7 +5,7 @@
 <div th:replace="fragments/libraryheader :: header"></div>
 <div class="container">
     <div th:replace="fragments/flash :: flash"></div>
-    <h1>말</h1>
+    <h1 th:text="${chapterName}"></h1>
     <form action="#" th:action="@{/library/word}" th:object="${word}" method="post">
         <div class="form-group">
             <input type="hidden" th:field="*{chapterId}" th:required="true" class="form-control" />

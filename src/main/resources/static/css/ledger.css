@@ -61,6 +61,11 @@
     padding: .2rem;
 }
 
+
+.arrow-down {
+    transform: rotate(90deg);
+}
+
 #year-dashboard td[data-category-id]:hover,
 #period-dashboard td[data-category-id]:hover,
 tr[data-transaction-id]:hover,

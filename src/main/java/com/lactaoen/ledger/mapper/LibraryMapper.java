@@ -1,7 +1,9 @@
 package com.lactaoen.ledger.mapper;
 
+import com.lactaoen.ledger.model.form.ChapterUpdateForm;
 import com.lactaoen.ledger.model.library.Book;
 import com.lactaoen.ledger.model.library.Chapter;
+import com.lactaoen.ledger.model.library.UnfinishedWord;
 import com.lactaoen.ledger.model.library.Word;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,10 @@ public class LibraryMapper {
         this.sqlSession = sqlSession;
     }
 
+    public String getChapterNameById(int chapterId) {
+        return sqlSession.selectOne("LibraryMapper.getChapterNameById", chapterId);
+    }
+
     public List<Book> getAllBooks() {
         return sqlSession.selectList("LibraryMapper.getAllBooks");
     }
@@ -25,7 +31,7 @@ public class LibraryMapper {
         return sqlSession.selectList("LibraryMapper.getTodoChapters");
     }
 
-    public List<Word> getAllUnfinishedWords() {
+    public List<UnfinishedWord> getAllUnfinishedWords() {
         return sqlSession.selectList("LibraryMapper.getAllUnfinishedWords");
     }
 
@@ -41,7 +47,11 @@ public class LibraryMapper {
         return sqlSession.insert("LibraryMapper.createWord", word);
     }
 
-    public int updateWord(Word word) {
-        return sqlSession.update("LibraryMapper.updateWord", word);
+    public int updateChapter(ChapterUpdateForm chapterUpdateForm) {
+        return sqlSession.update("LibraryMapper.updateChapter", chapterUpdateForm);
+    }
+
+    public int updateWord(int wordId) {
+        return sqlSession.update("LibraryMapper.updateWord", wordId);
     }
 }
