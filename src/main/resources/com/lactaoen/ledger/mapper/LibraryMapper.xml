@@ -142,7 +142,7 @@
     </insert>
 
     <insert id="createWord" parameterType="com.lactaoen.ledger.model.library.Word">
-        INSERT INTO
+        INSERT IGNORE INTO
             library.word
         SET
             chapter_id = #{chapterId},
