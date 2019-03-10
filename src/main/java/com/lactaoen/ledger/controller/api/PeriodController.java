@@ -110,6 +110,6 @@ public class PeriodController extends AbstractApiController {
 
     private boolean isValidAmounts(PeriodForm form) {
         double allocationSum = form.getAmounts().stream().filter(amount -> !amount.equals("-1")).mapToDouble(Double::parseDouble).sum();
-        return Math.round(allocationSum * 100) == Math.floor(form.getTotal() * 100);
+        return Math.round(allocationSum * 100) == Math.round(form.getTotal() * 100);
     }
 }
