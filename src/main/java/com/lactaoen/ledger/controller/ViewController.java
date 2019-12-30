@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Calendar;
 import java.util.Comparator;
@@ -26,11 +27,8 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/")
 public class ViewController {
 
-    private static final Comparator<Allocation> BY_PARENT_CATEGORY = (a1, a2) ->
-            a1.getCategory().getParentCategory().getName().compareTo(a2.getCategory().getParentCategory().getName());
-
-    private static final Comparator<Allocation> BY_CATEGORY = (a1, a2) ->
-            a1.getCategory().getName().compareTo(a2.getCategory().getName());
+    private static final Comparator<Allocation> BY_PARENT_CATEGORY = Comparator.comparing(a -> a.getCategory().getParentCategory().getName());
+    private static final Comparator<Allocation> BY_CATEGORY = Comparator.comparing(a -> a.getCategory().getName());
 
     private final BetMapper betMapper;
     private final DashboardMapper dashboardMapper;
@@ -42,6 +40,12 @@ public class ViewController {
         this.dashboardMapper = dashboardMapper;
         this.periodMapper = periodMapper;
         this.transactionMapper = transactionMapper;
+    }
+
+    @ResponseBody
+    @GetMapping("/heartbeat")
+    public String heartbeat() {
+        return "App is up";
     }
 
     @GetMapping
