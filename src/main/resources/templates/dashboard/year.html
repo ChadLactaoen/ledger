@@ -69,7 +69,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="transaction : ${transactions}" th:with="date = ${transaction.date}" th:attr="data-category-id=${transaction.category.categoryId}">
+                <tr th:each="transaction : ${transactions}" th:with="date = ${transaction.date}" th:attr="data-category-id=${transaction.category.categoryId},data-subcategory-id=${transaction.subcategory?.categoryId}">
                     <td th:text="|${#dates.monthNameShort(date)} ${#dates.day(date)}|"></td>
                     <td th:text="${transaction.name}" th:attr="data-transaction-id=${transaction.transactionId}" class="editable-transaction"></td>
                     <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.parentCategory.color}|"></td>
@@ -98,6 +98,7 @@
                     $('#transaction-header').text($(this).text() + ' Transactions');
                     $('#transaction-dashboard tbody tr').hide();
                     $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
+                    $('#transaction-dashboard tr[data-subcategory-id="' + categoryId + '"]').show();
                 }
             });
 

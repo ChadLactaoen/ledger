@@ -9,6 +9,7 @@ import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.Period;
 import com.lactaoen.ledger.model.Transaction;
 import com.lactaoen.ledger.model.dashboard.GameGamblingMapper;
+import com.lactaoen.ledger.service.TransactionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +35,14 @@ public class ViewController {
     private final DashboardMapper dashboardMapper;
     private final PeriodMapper periodMapper;
     private final TransactionMapper transactionMapper;
+    private final TransactionService transactionService;
 
-    public ViewController(BetMapper betMapper, DashboardMapper dashboardMapper, PeriodMapper periodMapper, TransactionMapper transactionMapper) {
+    public ViewController(BetMapper betMapper, DashboardMapper dashboardMapper, PeriodMapper periodMapper, TransactionMapper transactionMapper, TransactionService transactionService) {
         this.betMapper = betMapper;
         this.dashboardMapper = dashboardMapper;
         this.periodMapper = periodMapper;
         this.transactionMapper = transactionMapper;
+        this.transactionService = transactionService;
     }
 
     @ResponseBody
@@ -127,10 +130,10 @@ public class ViewController {
 
         List<Transaction> transactions = transactionMapper.getTransactionsByYear(year);
 
-        model.addAttribute("categories", dashboardMapper.getCategoryExpensesByYear(year));
+        model.addAttribute("categories", transactionService.groupTransactionsByCategory(transactions));
         model.addAttribute("transactions", transactions);
         model.addAttribute("year", year);
-        model.addAttribute("totalSpent", transactions.stream().mapToDouble(Transaction::getPrice).sum());
+        model.addAttribute("totalSpent", transactions.stream().filter(transaction -> transaction.isReimbursement() || (transaction.getPrice() > 0 && !transaction.isReimbursement())).mapToDouble(transaction -> Math.abs(transaction.getPrice())).sum());
         return "dashboard/year";
     }
 
@@ -169,5 +172,4 @@ public class ViewController {
     private Predicate<Bet> filterPokerBets() {
         return bet -> bet.getGame().getParentGame() != null && bet.getGame().getParentGame().getName().equals("Poker");
     }
-
 }

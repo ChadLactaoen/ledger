@@ -18,7 +18,6 @@ public class Transaction {
     public Transaction() {
     }
 
-
     public Integer getTransactionId() {
         return transactionId;
     }
@@ -73,6 +72,22 @@ public class Transaction {
 
     public void setSubcategory(Category subcategory) {
         this.subcategory = subcategory;
+    }
+
+    public boolean isReimbursement() {
+        return memo.toLowerCase().contains("reimburse");
+    }
+
+    public Transaction copy() {
+        Transaction transaction = new Transaction();
+        transaction.setTransactionId(transactionId);
+        transaction.setDate(date);
+        transaction.setName(name);
+        transaction.setPrice(price);
+        transaction.setMemo(memo);
+        transaction.setCategory(category);
+        transaction.setSubcategory(subcategory);
+        return transaction;
     }
 
     @JsonIgnore

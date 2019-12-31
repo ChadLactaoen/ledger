@@ -3,6 +3,8 @@ package com.lactaoen.ledger.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lactaoen.ledger.model.form.CategoryForm;
 
+import java.util.Objects;
+
 public class Category {
 
     private Integer categoryId;
@@ -65,5 +67,21 @@ public class Category {
                 ", parentCategory=" + parentCategory +
                 ", color='" + color + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category)) return false;
+        Category category = (Category) o;
+        return Objects.equals(categoryId, category.categoryId) &&
+                Objects.equals(name, category.name) &&
+                Objects.equals(parentCategory, category.parentCategory) &&
+                Objects.equals(color, category.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(categoryId, name, parentCategory, color);
     }
 }

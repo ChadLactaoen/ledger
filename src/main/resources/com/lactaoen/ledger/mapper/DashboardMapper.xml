@@ -29,12 +29,13 @@
             c.category_id,
             c.name AS category_name,
             COUNT(t.transaction_id) AS transaction_count,
-            COALESCE(ROUND(SUM(t.price), 2), 0) AS total,
-            COALESCE(ROUND(AVG(t.price), 2), 0) AS average_spent,
+            COALESCE(ROUND(SUM(ABS(t.price)), 2), 0) AS total,
+            COALESCE(ROUND(AVG(ABS(t.price)), 2), 0) AS average_spent,
             c.parent_id
         FROM category c
         LEFT JOIN `transaction` t ON c.category_id = t.category_id AND YEAR(t.date) = #{id}
         WHERE c.parent_id IS NOT NULL
+        AND (t.memo LIKE 'Reimburse%' OR (t.price > 0 AND t.memo NOT LIKE 'Reimburse%'))
         GROUP BY c.category_id
         ORDER BY c.parent_id, c.category_id
     </select>
