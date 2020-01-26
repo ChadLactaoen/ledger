@@ -1,45 +1,33 @@
 package com.lactaoen.ledger.model.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lactaoen.ledger.model.Period;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PeriodForm {
 
-    private Integer periodId;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
     private Double total;
-    private List<String> categoryIds;
+    private List<String> categories;
     private List<String> amounts;
 
     public PeriodForm() {
     }
 
-    public Integer getPeriodId() {
-        return periodId;
-    }
-
-    public void setPeriodId(Integer periodId) {
-        this.periodId = periodId;
-    }
-
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
@@ -51,12 +39,12 @@ public class PeriodForm {
         this.total = total;
     }
 
-    public List<String> getCategoryIds() {
-        return categoryIds;
+    public List<String> getCategories() {
+        return categories;
     }
 
-    public void setCategoryIds(List<String> categoryIds) {
-        this.categoryIds = categoryIds;
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
     }
 
     public List<String> getAmounts() {
@@ -67,43 +55,11 @@ public class PeriodForm {
         this.amounts = amounts;
     }
 
-    @JsonIgnore
     public Period toPeriod() {
         Period period = new Period();
-        period.setPeriodId(periodId);
         period.setStartDate(startDate);
         period.setEndDate(endDate);
         period.setTotal(total);
         return period;
-    }
-
-    @JsonIgnore
-    public List<AllocationForm> toAllocationForms() {
-        List<AllocationForm> allocations = new ArrayList<>();
-
-        for (int i = 0; i < amounts.size(); i++) {
-            AllocationForm allocation = new AllocationForm();
-            Integer categoryId = Integer.parseInt(categoryIds.get(i));
-            Double amount = Double.parseDouble(amounts.get(i));
-
-            allocation.setPeriodId(periodId);
-            allocation.setCategoryId(categoryId);
-            allocation.setTotal(amount);
-            allocations.add(allocation);
-        }
-
-        return allocations;
-    }
-
-    @Override
-    public String toString() {
-        return "PeriodForm{" +
-                "periodId=" + periodId +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", total=" + total +
-                ", categoryIds=" + categoryIds +
-                ", amounts=" + amounts +
-                '}';
     }
 }

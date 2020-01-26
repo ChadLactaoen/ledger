@@ -1,48 +1,45 @@
 package com.lactaoen.ledger.model;
 
-import org.springframework.util.CollectionUtils;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.google.common.collect.ImmutableList;
+import com.lactaoen.ledger.model.form.PeriodForm;
 
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@DynamoDBTable(tableName = "Period")
 public class Period {
 
-    private Integer periodId;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
     private Double total;
-    private List<Allocation> allocationList;
-    private List<Transaction> transactionList;
+    private List<Allocation> allocations;
+    private List<Transaction> transactions;
 
     public Period() {
     }
 
-    public Integer getPeriodId() {
-        return periodId;
-    }
-
-    public void setPeriodId(Integer periodId) {
-        this.periodId = periodId;
-    }
-
-    public Date getStartDate() {
+    @DynamoDBHashKey
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    @DynamoDBAttribute
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
+    @DynamoDBAttribute
     public Double getTotal() {
         return total;
     }
@@ -51,39 +48,42 @@ public class Period {
         this.total = total;
     }
 
-    public List<Allocation> getAllocationList() {
-        return allocationList;
+    @DynamoDBAttribute
+    public List<Allocation> getAllocations() {
+        return allocations;
     }
 
-    public void setAllocationList(List<Allocation> allocationList) {
-        this.allocationList = allocationList;
+    public void setAllocations(List<Allocation> allocations) {
+        this.allocations = allocations;
     }
 
-    public List<Transaction> getTransactionList() {
-        return transactionList;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
-    public double getSpent() {
-        if (allocationList == null || allocationList.isEmpty()) {
-            return 0D;
-        }
-
-        return allocationList.stream().mapToDouble(Allocation::getSpent).sum();
+    @DynamoDBIgnore
+    public Double getRemaining() {
+        return total - transactions.stream().mapToDouble(Transaction::getPrice).sum();
     }
 
-    @Override
-    public String toString() {
-        return "Period{" +
-                "periodId=" + periodId +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", total=" + total +
-                ", allocationList=" + allocationList +
-                ", transactionList=" + transactionList +
-                '}';
+    @DynamoDBIgnore
+    public PeriodForm toForm() {
+        PeriodForm periodForm = new PeriodForm();
+        periodForm.setStartDate(startDate);
+        periodForm.setEndDate(endDate);
+        periodForm.setTotal(total);
+        ImmutableList.Builder<String> categoryListBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<String> amountListBuilder = new ImmutableList.Builder<>();
+        allocations.forEach(allocation -> {
+           categoryListBuilder.add(allocation.getCategory().getName());
+           amountListBuilder.add(String.valueOf(allocation.getTotal()));
+        });
+        periodForm.setCategories(categoryListBuilder.build());
+        periodForm.setAmounts(amountListBuilder.build());
+        return periodForm;
     }
 }

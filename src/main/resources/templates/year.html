@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid">
+
+  <div th:replace="fragments/flash :: flash"></div>
+
+  <!-- Header -->
+  <div class="row">
+    <div class="col-md-10">
+      <h1>Dashboard <small class="text-muted" th:text="${year}"></small></h1>
+      <input id="obfuscate-button" type="checkbox" data-toggle="toggle" data-on="Unhide" data-off="Hide" data-onstyle="purple" data-size="sm">
+    </div>
+    <div class="col-md-2">
+      <div th:replace="fragments/header :: yearDropdown"></div>
+    </div>
+  </div>
+
+  <!-- Period -->
+  <div id="year-dashboard">
+    <div class="row">
+      <div class="col-md-7 col-lg-6 col-xl-7">
+        <div class="table-responsive">
+          <table class="dashboard-table table table-sm table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Count</th>
+              <th scope="col">Spent</th>
+              <th scope="col">Average</th>
+              <th scope="col">%</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="allocation : ${period.allocations}" th:attr="data-parent-cat-id=${allocation.category.parent}">
+              <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.color}|" th:attr="data-category-id=${allocation.category.name}"></td>
+              <td th:text="${allocation.count}"></td>
+              <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+              <td th:text="|$${#numbers.formatDecimal((allocation.total / allocation.count),1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+              <td th:text="|${#numbers.formatDecimal((allocation.total / period.total) * 100,1,'COMMA',2,'POINT')}%|"></td>
+            </tr>
+            <tr class="font-weight-bold">
+              <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
+              <td th:text="${#lists.size(period.transactions)}"></td>
+              <td th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+              <td></td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-5 col-lg-6 col-xl-5">
+        <canvas id="pieChart" width="200px" height="200px"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transactions -->
+  <div id="transaction-dashboard">
+    <h3 id="transaction-header">All Transactions</h3>
+    <div class="table-responsive">
+      <table class="dashboard-table table table-sm table-hover">
+        <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Price</th>
+          <th scope="col">Memo</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${period.transactions}" th:attr="data-category-id=${transaction.category.name},data-subcategory-id=${transaction.subcategory?.name}">
+          <td th:text="${@dateConverterService.convertToMonthDayFormat(transaction.date)}"></td>
+          <td th:text="${transaction.name}" th:attr="data-transaction-id=${transaction.transactionId}" class="editable-transaction"></td>
+          <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
+          <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
+          <td th:text="${transaction.memo}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+
+    var graphData = [[${graphData}]];
+
+  /*]]>*/
+
+    $(document).ready(function() {
+
+        $('#obfuscate-button').change(function() {
+          obfuscateDollarValues($(this).prop('checked'));
+        });
+
+        $('#year-select').on('change', function(e) {
+          var periodId = $(this).find('option:selected').attr('data-period-id');
+          window.location = '?year=' + periodId;
+        });
+
+        // Click listener for filtering transactions by category
+        $('#year-dashboard td[data-category-id]').on('click', function(e) {
+            var categoryId = $(this).attr('data-category-id');
+
+            if (categoryId === '0') {
+                $('#transaction-header').text('All Transactions');
+                $('#transaction-dashboard tbody tr').show();
+            } else {
+                $('#transaction-header').text($(this).text() + ' Transactions');
+                $('#transaction-dashboard tbody tr').hide();
+                $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
+                $('#transaction-dashboard tr[data-subcategory-id="' + categoryId + '"]').show();
+            }
+        });
+
+        $('.editable-transaction').on('click', function(e) {
+            var transactionId = $(this).attr('data-transaction-id');
+            window.location = 'form/transaction/' + transactionId;
+        });
+
+        var year = new URLSearchParams(new URL(window.location.href).search).get('year');
+        var url = '/api/dashboard/year';
+
+        if (year !== null) {
+            url = url + '?year=' + year;
+        }
+    });
+
+    function obfuscateDollarValues(shouldObfuscate) {
+      var elements = document.getElementsByClassName('dollar-value');
+      for (var i = 0; i < elements.length; i++) {
+        if (!elements[i].hasAttribute('data-dollar-value')) {
+          elements[i].setAttribute('data-dollar-value', elements[i].innerText);
+        }
+
+        if (shouldObfuscate) {
+          var obfuscatedValue = elements[i].innerText.replace(/[0-9]/g, "X");
+          elements[i].innerText = obfuscatedValue;
+        } else {
+           elements[i].innerText = elements[i].getAttribute('data-dollar-value');
+        }
+      }
+    }
+
+    initializeDoughnut(graphData);
+
+    </script>
+</body>
+</html>

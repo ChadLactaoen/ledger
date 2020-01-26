@@ -2,158 +2,186 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/htmlHead :: htmlHead"></head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
-    <div class="container">
-        <div th:replace="fragments/flash :: flash"></div>
-        <h1 th:text="${bet.betId} ? 'Edit Bet' : 'Add Bet'"></h1>
-        <form action="#" th:action="${bet.betId} ? @{'/api/bet/' + ${bet.betId}} : @{/api/bet}" th:object="${bet}" method="post">
-            <div class="form-group">
-                <label>Date</label>
-                <input th:field="*{date}" th:required="true" type="date" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Game</label>
-                <select th:field="*{gameId}" th:required="true" class="form-control">
-                    <option th:value="''"></option>
-                    <option th:each="game : ${games}" th:value="${game.gameId}" th:text="${game.name}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Casino</label>
-                <div class="input-group">
-                    <select th:field="*{casinoId}" th:required="true" class="form-control">
-                        <option th:value="''"></option>
-                        <option th:each="casino : ${casinos}" th:value="${casino.casinoId}" th:text="${casino.name}"></option>
-                    </select>
-                    <a href="/form/casino" class="btn heath-button" role="button" style="margin-left:5px">Add Casino</a>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Wager</label>
-                <input th:field="*{wager}" th:required="true" type="number" step=".01" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Profit</label>
-                <div class="input-group mb-3">
-                    <input th:field="*{profit}" type="number" step=".01" class="form-control" />
-                    <div class="input-group-append">
-                        <button class="btn btn-group-btn negative-button" type="button">-</button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Memo</label>
-                <input th:field="*{memo}" type="text" class="form-control" />
-            </div>
-            <div th:attr="hidden=${isSport == false} ? 'hidden'" id="sports-fields">
-                <div class="row">
-                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
-                        <label>Odds</label>
-                        <div class="input-group mb-3">
-                            <input th:field="*{odds}" type="number" step="1" class="form-control sports-bet-field" />
-                            <div class="input-group-append">
-                                <button class="btn btn-group-btn negative-button" type="button">-</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
-                        <label>Line</label>
-                        <div class="input-group mb-3">
-                            <input th:field="*{line}" type="number" step="0.5" class="form-control sports-bet-field" />
-                            <div class="input-group-append">
-                                <button class="btn btn-group-btn negative-button" type="button">-</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>For Team</label>
-                        <select th:field="*{forTeamId}" class="form-control sports-bet-field">
-                            <option th:value="''"></option>
-                            <option th:each="team : ${teams}" th:value="${team.teamId}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Against Team</label>
-                        <select th:field="*{againstTeamId}" class="form-control sports-bet-field">
-                            <option th:value="''"></option>
-                            <option th:each="team : ${teams}" th:value="${team.teamId}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
-                        <label>Sports Bet Type</label>
-                        <select th:field="*{betTypeId}" th:required="${isSport}" class="form-control sports-bet-field">
-                            <option th:value="''"></option>
-                            <option th:each="betType : ${betTypes}" th:value="${betType.betTypeId}" th:text="${betType.name}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6 col-sm-6 col-xs-6">
-                        <label>Game Type</label>
-                        <select th:field="*{gameTypeId}" th:required="${isSport}" class="form-control sports-bet-field">
-                            <option th:value="''"></option>
-                            <option th:each="gameType : ${gameTypes}" th:value="${gameType.gameTypeId}" th:text="${gameType.name}"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input th:field="*{live}" class="form-check-input sports-bet-field" type="checkbox" />
-                    <label class="form-check-label">In-Game</label>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
-        </form>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+  <div th:replace="fragments/flash :: flash"></div>
+  <h1 th:text="${betForm.betId} ? 'Edit Bet' : 'Add Bet'"></h1>
+  <form action="#" th:action=" @{/bet}" th:object="${betForm}" method="post">
+    <div class="form-group">
+      <input th:field="*{betId}" type="hidden" class="form-control" />
     </div>
-    <div th:replace="fragments/scripts :: scripts"></div>
+    <div class="form-group">
+      <label>Date</label>
+      <input th:field="*{date}" th:required="true" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>Game</label>
+      <select th:field="*{gameName}" th:required="true" class="form-control">
+        <option th:value="''"></option>
+        <option th:each="game : ${games}" th:value="${game.name}" th:text="${game.parent == 'None'} ? ${game.name} : |${game.parent} > ${game.name}|"></option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Casino</label>
+        <select th:field="*{casino}" th:required="true" class="form-control">
+          <option value=""></option>
+          <option value="4 Queens">4 Queens</option>
+          <option value="Binion's">Binion's</option>
+          <option value="California">California</option>
+          <option value="Golden Nugget">Golden Nugget</option>
+          <option value="Horseshoe Casino">Horseshoe Casino</option>
+          <option value="Main Street Casino">Main Street Station</option>
+          <option value="Orleans">Orleans</option>
+          <option value="Planet Hollywood">Planet Hollywood</option>
+          <option value="Red Rock">Red Rock</option>
+          <option value="Rio">Rio</option>
+          <option value="Suncoast Casino">Suncoast Casino</option>
+          <option value="The Bicycle">The Bicycle</option>
+          <option value="Venetian">Venetian</option>
+          <option value="William Hill Mobile">William Hill Mobile</option>
+        </select>
+    </div>
+    <div class="form-group">
+      <label>Wager</label>
+      <input th:field="*{wager}" th:required="true" type="number" step=".01" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>Profit</label>
+      <div class="input-group mb-3">
+        <input th:field="*{profit}" type="number" step=".01" class="form-control" />
+        <div class="input-group-append">
+          <button class="btn btn-group-btn negative-button" type="button">-</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Memo</label>
+      <input th:field="*{memo}" type="text" class="form-control" />
+    </div>
+    <div th:attr="hidden=${isSport == false} ? 'hidden'" id="sports-fields">
+      <div class="row">
+        <div class="form-group col-md-6 col-sm-6 col-xs-6">
+          <label>Odds</label>
+          <div class="input-group mb-3">
+            <input th:field="*{odds}" type="number" step="1" class="form-control sports-bet-field" />
+            <div class="input-group-append">
+              <button class="btn btn-group-btn negative-button" type="button">-</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-6 col-sm-6 col-xs-6">
+          <label>Line</label>
+          <div class="input-group mb-3">
+            <input th:field="*{line}" type="number" step="0.5" class="form-control sports-bet-field" />
+            <div class="input-group-append">
+              <button class="btn btn-group-btn negative-button" type="button">-</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>For Team</label>
+          <select th:field="*{forTeamLocation}" class="form-control sports-bet-field">
+            <option th:value="''"></option>
+            <option th:each="team : ${teams}" th:value="${team.location}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Against Team</label>
+          <select th:field="*{againstTeamLocation}" class="form-control sports-bet-field">
+            <option th:value="''"></option>
+            <option th:each="team : ${teams}" th:value="${team.location}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6 col-sm-6 col-xs-6">
+          <label>Sports Bet Type</label>
+          <select th:field="*{betType}" th:required="${isSport}" class="form-control sports-bet-field">
+            <option value=""></option>
+            <option value="Points">Points</option>
+            <option value="Moneyline">Moneyline</option>
+            <option value="Over">Over</option>
+            <option value="Under">Under</option>
+            <option value="Prop">Prop</option>
+            <option value="Parlay">Parlay</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6 col-sm-6 col-xs-6">
+          <label>Game Type</label>
+          <select th:field="*{gameType}" th:required="${isSport}" class="form-control sports-bet-field">
+            <option value=""></option>
+            <option value="Full">Full</option>
+            <option value="Half">Half</option>
+            <option value="Quarter">Quarter</option>
+            <option value="Period">Period</option>
+            <option value="First 5 Innings">First 5 Innings</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <input th:field="*{live}" class="form-check-input sports-bet-field" type="checkbox" />
+        <label class="form-check-label">In-Game</label>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
+  </form>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
 
-    <script>
-        $(document).ready(function() {
-            $('#gameId').on('change', function(e) {
-                var game = $('#gameId option:selected').text();
-                var gameId = $('#gameId option:selected').val();
+<script th:inline="javascript">
+  /*<![CDATA[*/
 
-                if (game.startsWith('Sports Betting')) {
+    var contextRoot = /*[[@{/}]]*/ '';
 
-                    var fields = $('#forTeamId, #againstTeamId');
+  /*]]>*/
 
-                    $.ajax({
-                        url: '/api/team/game/' + gameId,
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
+  $(document).ready(function() {
+    $('#gameName').on('change', function(e) {
+      var game = $('#gameName option:selected').text();
+      var gameId = $('#gameName option:selected').val();
 
-                            $(fields).children('option').remove();
-                            $(fields).append('<option></option>');
+      if (game.startsWith('Sports Betting')) {
 
-                            $.each(data, function(index, team) {
-                                $(fields).append($('<option></option>', { value : team.teamId })
-                                    .text(team.abbreviation + ' - ' + team.location + ' ' + team.mascot));
-                            });
+        var fields = $('#forTeamLocation, #againstTeamLocation');
 
-                            $('.sports-bet-field').removeAttr('disabled');
-                            $('#sports-fields').removeAttr('hidden');
-                            $('#betTypeId, #odds').attr('required', 'required');
-                        }
-                    });
-                } else {
-                    $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
-                    $('#sports-fields').attr('hidden', 'hidden');
-                    $(fields).children('option').remove();
-                }
+        $.ajax({
+          url: contextRoot + 'team/list?game=' + gameId,
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+
+            $(fields).children('option').remove();
+            $(fields).append('<option></option>');
+
+            $.each(data, function(index, team) {
+              $(fields).append($('<option></option>', { value : team.location })
+                  .text(team.abbreviation + ' - ' + team.location + ' ' + team.mascot));
             });
 
-            $('.negative-button').on('click', function(e) {
-                var input = $(this).parent().siblings('input').eq(0);
-                var inputVal = $(input).val();
-
-                if (!inputVal.startsWith('-')) {
-                    var newInputVal = '-' + $(input).val();
-                    $(input).text(newInputVal).val(newInputVal);
-                }
-            });
+            $('.sports-bet-field').removeAttr('disabled');
+            $('#sports-fields').removeAttr('hidden');
+            $('#betType, #odds').attr('required', 'required');
+          }
         });
-    </script>
+      } else {
+        $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
+        $('#sports-fields').attr('hidden', 'hidden');
+        $(fields).children('option').remove();
+      }
+    });
+
+    $('.negative-button').on('click', function(e) {
+      var input = $(this).parent().siblings('input').eq(0);
+      var inputVal = $(input).val();
+
+      if (!inputVal.startsWith('-')) {
+        var newInputVal = '-' + $(input).val();
+        $(input).text(newInputVal).val(newInputVal);
+      }
+    });
+  });
+</script>
 </body>
 </html>

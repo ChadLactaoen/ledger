@@ -4,98 +4,125 @@
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
-    <div th:replace="fragments/flash :: flash"></div>
-    <h1 th:text="${period.periodId} ? 'Edit Period' : 'Add Period'"></h1>
-    <form action="#" th:action="${period.periodId} ? @{'/api/period/' + ${period.periodId}} : @{/api/period}" th:object="${period}" method="post">
-        <div class="form-group">
-            <label>Start Date</label>
-            <input th:field="*{startDate}" th:required="true" type="date" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>End Date</label>
-            <input th:field="*{endDate}" th:required="true" type="date" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Total</label>
-            <input th:field="*{total}" th:required="true" type="number" step=".01" class="form-control" />
-        </div>
+  <div th:replace="fragments/flash :: flash"></div>
+  <h1 th:text="${periodForm.startDate} ? 'Edit Period' : 'Add Period'"></h1>
+  <form action="#" th:action="@{/period}" th:object="${periodForm}" method="post">
+    <div class="form-group">
+      <label>Start Date</label>
+      <input th:field="*{startDate}" th:required="true" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>End Date</label>
+      <input th:field="*{endDate}" th:required="true" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>Total</label>
+      <input th:field="*{total}" th:required="true" type="number" step=".01" class="form-control" />
+    </div>
 
-        <div class="sticky-top">
-            <button th:attrappend="disabled=${period.periodId == null}?disabled" type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
-            <button id="zero-btn" class="btn btn-lg heath-button">Populate</button>
-            <span class="font-weight-bold">Total Remaining: <span th:text="${period.periodId}?'$0'" id="remaining"></span></span>
-        </div>
+    <div class="sticky-top">
+      <button th:attrappend="disabled=${periodForm.startDate == null}?disabled" type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
+      <button id="zero-btn" class="btn btn-lg heath-button">Populate</button>
+      <span class="font-weight-bold">Total Remaining: <span th:text="${periodForm.startDate}?'$0'" id="remaining"></span></span>
+    </div>
 
-        <table id="category-fields" class="table dashboard-table table-sm">
-            <thead>
-            <tr>
-                <th scope="col">Delete?</th>
-                <th scope="col">Category Name</th>
-                <th scope="col">Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:if="${period.periodId}" th:each="category,rowstat : ${categories}" th:attr="data-parent-cat-id=${category.parentCategory.categoryId}" th:style="*{amounts[__${rowstat.index}__]} == '-1' ? 'display:none' : ''">
-                <td><i class="fas fa-trash delete-category-btn"></i></td>
-                <td th:text="${category.name}" th:class="font-weight-bold" th:style="|color:${category.parentCategory.color}|"></td>
-                <td>
-                    <input th:name="|categoryIds[__${rowstat.index}__]|" th:value="${category.categoryId}" th:required="true" type="hidden" />
-                    <input th:name="|amounts[__${rowstat.index}__]|" th:value="*{amounts[__${rowstat.index}__]} ?: ''" th:required="true" type="number" step=".01" class="form-control form-control-sm amount" />
-                </td>
-            </tr>
-            <tr th:unless="${period.periodId}" th:each="category,rowstat : ${categories}" th:attr="data-parent-cat-id=${category.parentCategory.categoryId}">
-                <td><i class="fas fa-trash delete-category-btn"></i></td>
-                <td th:text="${category.name}" th:class="font-weight-bold" th:style="|color:${category.parentCategory.color}|"></td>
-                <td>
-                    <input th:name="|categoryIds[__${rowstat.index}__]|" th:value="${category.categoryId}" th:required="true" type="hidden" />
-                    <input th:field="*{amounts[__${rowstat.index}__]}" th:required="true" type="number" step=".01" class="form-control form-control-sm amount" />
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </form>
+    <table id="category-fields" class="table dashboard-table table-sm">
+      <thead>
+      <tr>
+        <th scope="col">Delete?</th>
+        <th scope="col">Category Name</th>
+        <th th:if="${periodForm.startDate}" scope="col">Spent</th>
+        <th scope="col">Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${periodForm.startDate}" th:each="category,rowstat : ${allCategories}" th:attr="data-parent-cat-id=${category.parent}" th:style="*{amounts[__${rowstat.index}__]} == '-1' ? 'display:none' : ''">
+        <td><i class="fas fa-trash delete-category-btn"></i></td>
+        <td th:text="${category.name}" th:class="font-weight-bold" th:style="|color:${category.color}|"></td>
+        <td class="align-middle" th:with="spend = ${#numbers.formatDecimal(spend[__${rowstat.index}__],1,'COMMA',2,'POINT')}" th:classappend="${spend} > *{amounts[__${rowstat.index}__]} ? 'text-danger'">
+          $[[${spend}]] <i class="adjust-allocation-button fas fa-arrow-circle-right" th:attr="data-spend-amount=${spend}, data-index=${rowstat.index}"></i>
+          <i th:if="${category.name == 'Other'}" th:attr="data-index=${rowstat.index}" id="downsize-other-button" class="fas fa-arrow-circle-down"></i>
+        </td>
+        <td>
+          <input th:name="|categories[__${rowstat.index}__]|" th:value="${category.name}" th:required="true" type="hidden" />
+          <input th:name="|amounts[__${rowstat.index}__]|" th:value="*{amounts[__${rowstat.index}__]} ?: ''" th:required="true" type="number" step=".01" class="form-control form-control-sm amount" />
+        </td>
+      </tr>
+      <tr th:unless="${periodForm.startDate}" th:each="category,rowstat : ${allCategories}" th:attr="data-parent-cat-id=${category.parent}">
+        <td><i class="fas fa-trash delete-category-btn"></i></td>
+        <td th:text="${category.name}" th:class="font-weight-bold" th:style="|color:${category.color}|"></td>
+        <td>
+          <input th:name="|categories[__${rowstat.index}__]|" th:value="${category.name}" th:required="true" type="hidden" />
+          <input th:field="*{amounts[__${rowstat.index}__]}" th:required="true" type="number" step=".01" class="form-control form-control-sm amount" />
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>
 <script>
     function recalculateRemaining() {
-        var total = $('#total').val();
-        var amounts = $('.amount');
+      var total = $('#total').val();
+      var amounts = $('.amount');
 
-        if (total === '') {
-            total = 0;
+      if (total === '') {
+        total = 0;
+      }
+
+      for (var i = 0; amounts.length > i; i++) {
+        var amount = amounts[i].value;
+        if (amount !== '') {
+          if (amount !== '-1') {
+            total -= amount;
+          }
         }
+      }
 
-        for (var i = 0; amounts.length > i; i++) {
-            var amount = amounts[i].value;
-            if (amount !== '') {
-                if (amount !== '-1') {
-                    total -= amount;
-                }
-            }
-        }
+      if (Math.round(total * 100) / 100 === 0) {
+        $('button[type="submit"]').prop('disabled', false);
+      } else {
+        $('button[type="submit"]').prop('disabled', true);
+      }
 
-        if (Math.round(total * 100) / 100 === 0) {
-            $('button[type="submit"]').prop('disabled', false);
-        } else {
-            $('button[type="submit"]').prop('disabled', true);
-        }
-
-        $('#remaining').text('$' + total.toLocaleString('EN-US'));
+      $('#remaining').text('$' + total.toLocaleString('EN-US'));
     }
 
     $(document).ready(function() {
-        $('input[type=number]').on('input', function(e) {
-            recalculateRemaining();
-        });
+      recalculateRemaining();
+      $('input[type=number]').on('input', function(e) {
+        recalculateRemaining();
+      });
 
-        $('.delete-category-btn').on('click', function(e) {
-            recalculateRemaining();
-        });
+      $('.delete-category-btn').on('click', function(e) {
+        recalculateRemaining();
+      });
 
-        $('#zero-btn').click(function(e) {
-            e.preventDefault();
-            $('input.amount').filter(function() { return this.value == '' }).attr('value', 0).val(0);
-        });
+      $('#zero-btn').click(function(e) {
+        e.preventDefault();
+        $('input.amount').filter(function() { return this.value == '' }).attr('value', 0).val(0);
+      });
+
+      $('.adjust-allocation-button').click(function(e) {
+        var index = this.getAttribute('data-index');
+        $('input[name="amounts[' + index + ']"]').val(this.getAttribute('data-spend-amount'));
+        recalculateRemaining();
+      });
+
+      $('#downsize-other-button').click(function(e) {
+        var currentRemaining = parseFloat(document.getElementById('remaining').innerText.substr(1));
+
+        if (currentRemaining > 0) {
+          return;
+        }
+
+        var index = this.getAttribute('data-index');
+        var otherField = $('input[name="amounts[' + index + ']"]');
+        var currOtherVal = parseFloat(otherField.val());
+
+        otherField.val(Math.round((currOtherVal + currentRemaining) * 100) / 100);
+        recalculateRemaining();
+      });
     });
 </script>
 </body>

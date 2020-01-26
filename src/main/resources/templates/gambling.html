@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid">
+
+  <div th:replace="fragments/flash :: flash"></div>
+
+  <!-- Header -->
+  <div class="row">
+    <div class="col-md-10">
+      <h1>Gambling <small class="text-muted" th:text="${year}"></small></h1>
+    </div>
+    <div class="col-md-2">
+      <div th:replace="fragments/header :: yearDropdown"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-lg-6 col-xl-6">
+      <div class="chartable">
+        <canvas id="weekGraph"></canvas>
+      </div>
+      <div class="chartable">
+        <canvas id="monthGraph"></canvas>
+      </div>
+    </div>
+    <div class="col-md-12 col-lg-6 col-xl-6">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" id="overall-tab" data-toggle="tab" href="#overall-tab-panel" role="tab">Overall</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="open-bets-tab" data-toggle="tab" href="#open-bets-tab-panel" role="tab">Open Bets <span class="badge badge-purple" th:text="${#lists.size(openBets)}"></span></a>
+        </li>
+      </ul>
+      <div class="tab-content" id="gambling-tab-content">
+        <div class="tab-pane fade show active" id="overall-tab-panel" role="tabpanel">
+          <div th:replace="fragments/gamblingChart :: chart(chart = ${overallEntries}, totalChart = ${totalEntry})"></div>
+          <div th:replace="fragments/gamblingChart :: chart(chart = ${sportsBettingEntries})"></div>
+          <div th:replace="fragments/gamblingChart :: chart(chart = ${pokerEntries})"></div>
+        </div>
+        <div class="tab-pane fade" id="open-bets-tab-panel" role="tabpanel">
+          <div th:replace="fragments/gamblingChart :: openBets"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+
+    var weekData = [[${weekData}]];
+    var monthData = [[${monthData}]];
+
+  /*]]>*/
+
+  $('document').ready(function() {
+    addTotalDivider();
+  });
+
+  function addTotalDivider() {
+      var totalRow = $('#totalRow');
+      $(totalRow).css('background-color', 'rgba(0,0,0,0.08)');
+      $(totalRow).find('td').css('border-top', '2px solid #e9ecef');
+  }
+
+  $('#year-select').on('change', function(e) {
+    var periodId = $(this).find('option:selected').attr('data-period-id');
+    window.location = '?year=' + periodId;
+  });
+</script>
+<script src="/js/gambling-charts.js"></script>
+</body>
+</html>

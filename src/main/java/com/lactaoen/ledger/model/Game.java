@@ -1,26 +1,24 @@
 package com.lactaoen.ledger.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lactaoen.ledger.model.form.GameForm;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
+import java.util.Objects;
+
+@DynamoDBTable(tableName = "Game")
+@DynamoDBDocument
 public class Game {
 
-    private Integer gameId;
     private String name;
-    private Game parentGame;
-    String color;
+    private String parent;
+    private String color;
 
     public Game() {
     }
 
-    public Integer getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(Integer gameId) {
-        this.gameId = gameId;
-    }
-
+    @DynamoDBHashKey
     public String getName() {
         return name;
     }
@@ -29,14 +27,16 @@ public class Game {
         this.name = name;
     }
 
-    public Game getParentGame() {
-        return parentGame;
+    @DynamoDBAttribute
+    public String getParent() {
+        return parent;
     }
 
-    public void setParentGame(Game parentGame) {
-        this.parentGame = parentGame;
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 
+    @DynamoDBAttribute
     public String getColor() {
         return color;
     }
@@ -45,24 +45,26 @@ public class Game {
         this.color = color;
     }
 
-    @JsonIgnore
-    public GameForm toGameForm() {
-        GameForm game = new GameForm();
-        game.setGameId(gameId);
-        game.setName(name);
-        game.setColor(color);
-        if (parentGame != null) {
-            game.setParentId(parentGame.getGameId());
-        }
-        return game;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Game)) return false;
+        Game game = (Game) o;
+        return Objects.equals(name, game.name) &&
+                Objects.equals(parent, game.parent) &&
+                Objects.equals(color, game.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, parent, color);
     }
 
     @Override
     public String toString() {
         return "Game{" +
-                "gameId=" + gameId +
-                ", name='" + name + '\'' +
-                ", parentGame=" + parentGame +
+                "name='" + name + '\'' +
+                ", parent='" + parent + '\'' +
                 ", color='" + color + '\'' +
                 '}';
     }

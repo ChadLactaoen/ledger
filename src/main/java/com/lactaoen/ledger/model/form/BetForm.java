@@ -1,62 +1,59 @@
 package com.lactaoen.ledger.model.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lactaoen.ledger.model.SportsBet;
-
-import java.sql.Date;
+import com.amazonaws.util.StringUtils;
+import com.lactaoen.ledger.model.Bet;
 
 public class BetForm {
 
-    private Integer betId;
-    private Date date;
-    private Integer gameId;
-    private Integer casinoId;
+    private String betId;
+    private String date;
+    private String gameName;
+    private String casino;
     private Double wager;
     private Double profit;
     private String memo;
 
-    /* Only for sports bets */
-    private Integer odds;
+    private String betType;
+    private String gameType;
+    private String forTeamLocation;
+    private String againstTeamLocation;
     private Double line;
-    private Integer forTeamId;
-    private Integer againstTeamId;
-    private Integer betTypeId;
-    private Integer gameTypeId;
-    private Boolean isLive;
+    private Integer odds;
+    private boolean live;
 
     public BetForm() {
     }
 
-    public Integer getBetId() {
+    public String getBetId() {
         return betId;
     }
 
-    public void setBetId(Integer betId) {
+    public void setBetId(String betId) {
         this.betId = betId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public Integer getGameId() {
-        return gameId;
+    public String getGameName() {
+        return gameName;
     }
 
-    public void setGameId(Integer gameId) {
-        this.gameId = gameId;
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
     }
 
-    public Integer getCasinoId() {
-        return casinoId;
+    public String getCasino() {
+        return casino;
     }
 
-    public void setCasinoId(Integer casinoId) {
-        this.casinoId = casinoId;
+    public void setCasino(String casino) {
+        this.casino = casino;
     }
 
     public Double getWager() {
@@ -83,12 +80,36 @@ public class BetForm {
         this.memo = memo;
     }
 
-    public Integer getOdds() {
-        return odds;
+    public String getBetType() {
+        return betType;
     }
 
-    public void setOdds(Integer odds) {
-        this.odds = odds;
+    public void setBetType(String betType) {
+        this.betType = betType;
+    }
+
+    public String getGameType() {
+        return gameType;
+    }
+
+    public void setGameType(String gameType) {
+        this.gameType = gameType;
+    }
+
+    public String getForTeamLocation() {
+        return forTeamLocation;
+    }
+
+    public void setForTeamLocation(String forTeamLocation) {
+        this.forTeamLocation = forTeamLocation;
+    }
+
+    public String getAgainstTeamLocation() {
+        return againstTeamLocation;
+    }
+
+    public void setAgainstTeamLocation(String againstTeamLocation) {
+        this.againstTeamLocation = againstTeamLocation;
     }
 
     public Double getLine() {
@@ -99,54 +120,36 @@ public class BetForm {
         this.line = line;
     }
 
-    public Integer getForTeamId() {
-        return forTeamId;
+    public Integer getOdds() {
+        return odds;
     }
 
-    public void setForTeamId(Integer forTeamId) {
-        this.forTeamId = forTeamId;
+    public void setOdds(Integer odds) {
+        this.odds = odds;
     }
 
-    public Integer getAgainstTeamId() {
-        return againstTeamId;
+    public boolean isLive() {
+        return live;
     }
 
-    public void setAgainstTeamId(Integer againstTeamId) {
-        this.againstTeamId = againstTeamId;
+    public void setLive(boolean live) {
+        this.live = live;
     }
 
-    public Integer getBetTypeId() {
-        return betTypeId;
-    }
+    public Bet toBet() {
+        Bet bet = new Bet();
+        bet.setBetId(StringUtils.isNullOrEmpty(betId) ? bet.getBetId() : betId);
+        bet.setDate(date);
+        bet.setCasino(casino);
+        bet.setWager(wager);
+        bet.setProfit(profit);
+        bet.setMemo(memo);
 
-    public void setBetTypeId(Integer betTypeId) {
-        this.betTypeId = betTypeId;
-    }
-
-    public Integer getGameTypeId() {
-        return gameTypeId;
-    }
-
-    public void setGameTypeId(Integer gameTypeId) {
-        this.gameTypeId = gameTypeId;
-    }
-
-    public Boolean getLive() {
-        return isLive;
-    }
-
-    public void setLive(Boolean live) {
-        isLive = live;
-    }
-
-    @JsonIgnore
-    public void addSportsBet(SportsBet bet) {
-        odds = bet.getOdds();
-        line = bet.getLine();
-        forTeamId = bet.getForTeam().getTeamId();
-        againstTeamId = bet.getAgainstTeam().getTeamId();
-        betTypeId = bet.getBetType().getBetTypeId();
-        gameTypeId = bet.getGameType().getGameTypeId();
-        isLive = bet.isLive();
+        bet.setBetType(betType);
+        bet.setGameType(gameType);
+        bet.setLine(line);
+        bet.setOdds(odds);
+        bet.setLive(live);
+        return bet;
     }
 }

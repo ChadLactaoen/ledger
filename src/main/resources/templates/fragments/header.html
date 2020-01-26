@@ -19,25 +19,28 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dashboard-dropdown">
                         <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'heath-active':''}" class="dropdown-item" href="/">Period Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/gambling' ? 'heath-active':''}" class="dropdown-item" href="/gambling">Gambling Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/sports' ? 'heath-active':''}" class="dropdown-item" href="/sports">Sports Bet Dashboard</a>
-                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/poker' ? 'heath-active':''}" class="dropdown-item" href="/poker">Poker Dashboard</a>
                         <a th:classappend="${#httpServletRequest.getRequestURI() == '/year' ? 'heath-active':''}" class="dropdown-item" href="/year">Year Dashboard</a>
+                        <a th:classappend="${#httpServletRequest.getRequestURI() == '/gambling' ? 'heath-active':''}" class="dropdown-item" href="/gambling">Gambling Dashboard</a>
                         <a th:classappend="${#httpServletRequest.getRequestURI() == '/misc' ? 'heath-active':''}" class="dropdown-item" href="/misc">Misc Dashboard</a>
-                        <a class="dropdown-item" href="/library">도서관</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/form/transaction' ? 'active':''}" href="/form/transaction">Add Transaction</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/transaction' ? 'active':''}" href="/transaction">Add Transaction</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/form/bet' ? 'active':''}" href="/form/bet">Add Bet</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/bet' ? 'active':''}" href="/bet">Add Bet</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/form/period' ? 'active':''}" href="/form/period">Add Period</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/period' ? 'active':''}" href="/period">Add Period</a>
                 </li>
             </ul>
         </div>
     </nav>
+
+    <div th:fragment="yearDropdown" class="float-right dropdown-sm">
+        <select id="year-select" class="form-control form-control-sm" th:with="currPeriodId = ${year}">
+            <option th:each="periodDate : ${yearsList}" th:text="${periodDate}" th:selected="${currPeriodId == periodDate}" th:attr="data-period-id=${periodDate}"></option>
+        </select>
+    </div>
 </body>
 </html>

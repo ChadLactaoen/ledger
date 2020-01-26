@@ -1,27 +1,24 @@
 package com.lactaoen.ledger.model;
 
-import java.math.BigDecimal;
-import java.util.List;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+@DynamoDBDocument
 public class Allocation {
 
-    private Integer allocationId;
     private Category category;
-    private Period period;
     private Double total;
-    private List<Transaction> transactionList;
+    private Double spent;
+    private int count;
 
     public Allocation() {
     }
 
-    public Integer getAllocationId() {
-        return allocationId;
-    }
-
-    public void setAllocationId(Integer allocationId) {
-        this.allocationId = allocationId;
-    }
-
+    @DynamoDBAttribute
     public Category getCategory() {
         return category;
     }
@@ -30,14 +27,7 @@ public class Allocation {
         this.category = category;
     }
 
-    public Period getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(Period period) {
-        this.period = period;
-    }
-
+    @DynamoDBAttribute
     public Double getTotal() {
         return total;
     }
@@ -46,34 +36,24 @@ public class Allocation {
         this.total = total;
     }
 
-    public List<Transaction> getTransactionList() {
-        return transactionList;
+    public Double getSpent() {
+        return spent;
     }
 
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
+    public void setSpent(Double spent) {
+        this.spent = spent;
     }
 
-    public double getSpent() {
-        if (transactionList == null || transactionList.isEmpty()) {
-            return 0D;
-        }
-
-        return transactionList.stream().mapToDouble(Transaction::getPrice).sum();
+    public int getCount() {
+        return count;
     }
 
-    public double getRemaining() {
-        return new BigDecimal(Math.round((total - getSpent()) * 100)).divide(new BigDecimal(100)).doubleValue();
+    public void setCount(int count) {
+        this.count = count;
     }
 
-    @Override
-    public String toString() {
-        return "Allocation{" +
-                "allocationId=" + allocationId +
-                ", category=" + category +
-                ", period=" + period +
-                ", total=" + total +
-                ", transactionList=" + transactionList +
-                '}';
+    @DynamoDBIgnore
+    public Double getRemaining() {
+        return new BigDecimal(total - spent).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

@@ -7,6 +7,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
         <script src="/js/bootstrap.min.js"></script>
         <script src="/js/chart.min.js"></script>
+        <script src="/js/bootstrap4-toggle.js"></script>
         <script>
             Date.prototype.toDateInputValue = (function() {
                 var local = new Date(this);
@@ -53,22 +54,18 @@
             function initializeDoughnut(map) {
                 var dataVals = [];
                 var dataNames = [];
+                var dataColors = [];
 
                 map.forEach(function(entry) {
                     dataVals.push(entry.total);
-                    dataNames.push(entry.name);
+                    dataNames.push(entry.category.name);
+                    dataColors.push(entry.category.color);
                 });
 
                 var data = {
                     datasets: [{
                         data: dataVals,
-                        backgroundColor: [
-                            '#654ea6',
-                            '#d93327',
-                            '#f7b733',
-                            '#4abdac',
-                            '#3c7ad6'
-                        ]
+                        backgroundColor: dataColors
                     }],
                     labels: dataNames
                 };

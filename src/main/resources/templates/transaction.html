@@ -2,44 +2,47 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/htmlHead :: htmlHead"></head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
-    <div class="container">
-        <div th:replace="fragments/flash :: flash"></div>
-        <h1 th:text="${transaction.transactionId} ? 'Edit Transaction' : 'Add Transaction'"></h1>
-        <form action="#" th:action="${transaction.transactionId} ? @{'/api/transaction/' + ${transaction.transactionId}} : @{/api/transaction}" th:object="${transaction}" method="post">
-            <div class="form-group">
-                <label>Date</label>
-                <input th:field="*{date}" th:required="true" type="date" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Name</label>
-                <input th:field="*{name}" th:required="true" type="text" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Category</label>
-                <select th:field="*{categoryId}" th:required="true" class="form-control">
-                    <option th:value="''"></option>
-                    <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="|${category.name} &gt; ${category.parentCategory.name}|"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Subcategory</label>
-                <select th:field="*{subcategoryId}" class="form-control">
-                    <option th:value="''"></option>
-                    <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="|${category.name} &gt; ${category.parentCategory.name}|"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Price</label>
-                <input th:field="*{price}" th:required="true" type="number" step=".01" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Memo</label>
-                <input th:field="*{memo}" type="text" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
-        </form>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+  <div th:replace="fragments/flash :: flash"></div>
+  <h1 th:text="${transactionForm.transactionId} ? 'Edit Transaction' : 'Add Transaction'"></h1>
+  <form action="#" th:action="@{/transaction}" th:object="${transactionForm}" method="post">
+    <div class="form-group">
+      <label>Date</label>
+      <input th:field="*{date}" th:required="true" type="date" class="form-control" />
     </div>
-    <div th:replace="fragments/scripts :: scripts"></div>
+    <div class="form-group">
+      <label>Name</label>
+      <input th:field="*{name}" th:required="true" type="text" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select th:field="*{category}" th:required="true" class="form-control">
+        <option th:value="''"></option>
+        <option th:each="category : ${categories}" th:value="${category.name}" th:text="|${category.name} &gt; ${category.parent}|"></option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Subcategory</label>
+      <select th:field="*{subcategory}" class="form-control">
+        <option th:value="''"></option>
+        <option th:each="category : ${categories}" th:value="${category.name}" th:text="|${category.name} &gt; ${category.parent}|"></option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Price</label>
+      <input th:field="*{price}" th:required="true" type="number" step=".01" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>Memo</label>
+      <input th:field="*{memo}" type="text" class="form-control" />
+    </div>
+    <div class="form-group">
+      <input th:field="*{transactionId}" type="hidden" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
+  </form>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
 </body>
 </html>

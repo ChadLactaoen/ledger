@@ -1,0 +1,66 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+  <div th:fragment="chart">
+    <div id="sports-chart">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="dashboard-table table table-sm table-hover">
+              <thead>
+              <tr>
+                <th scope="col">Game</th>
+                <th scope="col">Record</th>
+                <th scope="col">Win%</th>
+                <th scope="col">Wagered</th>
+                <th scope="col" title="Wagered per Session">W/S</th>
+                <th scope="col">Profit</th>
+                <th scope="col" title="Profit per Session">P/S</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="entry : ${chart}" th:attr="data-game-id=${entry.game.name}" th:with="sessions=${entry.totalPlayed > 0} ? ${entry.totalPlayed} : 1.0,profit=${entry.profit}?:0">
+                <td th:text="${entry.game.name}" th:class="font-weight-bold"></td>
+                <td th:text="|${entry.wins}-${entry.losses}-${entry.ties}|"></td>
+                <td th:text="|${#numbers.formatDecimal((entry.wins + (entry.ties / 2.0)) / sessions,0,'COMMA',3,'POINT')}|"></td>
+                <td th:text="|$${#numbers.formatDecimal(entry.wagered,1,'COMMA',2,'POINT')}|"></td>
+                <td th:text="|$${#numbers.formatDecimal(entry.wagered / sessions,1,'COMMA',2,'POINT')}|"></td>
+                <td th:text="${entry.profit >= 0} ? |$${#numbers.formatDecimal(entry.profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((entry.profit * -1),1,'COMMA',2,'POINT')}|" class="font-weight-bold" th:classappend="${0 > entry.profit} ? 'text-danger'"></td>
+                <td th:text="${entry.profit >= 0} ? |$${#numbers.formatDecimal(entry.profit / sessions,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((entry.profit / sessions * -1),1,'COMMA',2,'POINT')}|" th:classappend="${0 > entry.profit} ? 'text-danger'"></td>
+              </tr>
+              <tr id="totalRow" th:if="${totalChart}" th:each="entry : ${totalChart}" th:attr="data-game-id=${entry.game.name}" th:with="sessions=${entry.totalPlayed > 0} ? ${entry.totalPlayed} : 1.0,profit=${entry.profit}?:0">
+                <td th:text="${entry.game.name}" th:class="font-weight-bold"></td>
+                <td th:text="|${entry.wins}-${entry.losses}-${entry.ties}|" th:class="font-weight-bold"></td>
+                <td th:text="|${#numbers.formatDecimal((entry.wins + (entry.ties / 2.0)) / sessions,0,'COMMA',3,'POINT')}|" th:class="font-weight-bold"></td>
+                <td th:text="|$${#numbers.formatDecimal(entry.wagered,1,'COMMA',2,'POINT')}|" th:class="font-weight-bold"></td>
+                <td th:text="|$${#numbers.formatDecimal(entry.wagered / sessions,1,'COMMA',2,'POINT')}|" th:class="font-weight-bold"></td>
+                <td th:text="${entry.profit >= 0} ? |$${#numbers.formatDecimal(entry.profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((entry.profit * -1),1,'COMMA',2,'POINT')}|" class="font-weight-bold" th:classappend="${0 > entry.profit} ? 'text-danger'"></td>
+                <td th:text="${entry.profit >= 0} ? |$${#numbers.formatDecimal(entry.profit / sessions,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((entry.profit / sessions * -1),1,'COMMA',2,'POINT')}|" th:classappend="${0 > entry.profit} ? 'text-danger'" th:class="font-weight-bold"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:fragment="openBets">
+    <div th:each="bet : ${openBets}" class="card-deck">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 th:text="${@betDescriptionService.createMainDescriptor(bet)}" class="card-title"></h5>
+          <h6 class="card-subtitle mb-2 text-muted" th:text="${@betDescriptionService.createMatchDescriptor(bet)}"></h6>
+          <h6 class="card-subtitle mb-2 text-muted" th:text="|$${#numbers.formatDecimal(bet.wager,1,'COMMA',2,'POINT')}|"></h6>
+        </div>
+        <div class="card-footer">
+          <a th:href="@{'/bet/win/' + ${bet.betId}}" class="card-link">Win</a>
+          <a th:href="@{'/bet/loss/' + ${bet.betId}}" class="card-link">Loss</a>
+          <a th:href="@{'/bet?betId=' + ${bet.betId}}" class="card-link">Edit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

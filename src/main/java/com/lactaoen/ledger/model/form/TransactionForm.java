@@ -1,34 +1,43 @@
 package com.lactaoen.ledger.model.form;
 
-import java.sql.Date;
+import com.amazonaws.util.StringUtils;
+import com.lactaoen.ledger.model.Transaction;
 
 public class TransactionForm {
 
-    private Integer transactionId;
-    private Date date;
+    private String transactionId;
+    private String category;
+    private String subcategory;
     private String name;
     private Double price;
     private String memo;
-    private Integer categoryId;
-    private Integer subcategoryId;
+    private String date;
 
     public TransactionForm() {
     }
 
-    public Integer getTransactionId() {
+    public String getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(Integer transactionId) {
+    public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
 
-    public Date getDate() {
-        return date;
+    public String getCategory() {
+        return category;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(String subcategory) {
+        this.subcategory = subcategory;
     }
 
     public String getName() {
@@ -55,19 +64,21 @@ public class TransactionForm {
         this.memo = memo;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public String getDate() {
+        return date;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public Integer getSubcategoryId() {
-        return subcategoryId;
-    }
-
-    public void setSubcategoryId(Integer subcategoryId) {
-        this.subcategoryId = subcategoryId;
+    public Transaction toTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setTransactionId(StringUtils.isNullOrEmpty(transactionId) ? transaction.getTransactionId() : transactionId);
+        transaction.setName(name);
+        transaction.setPrice(price);
+        transaction.setDate(date);
+        transaction.setMemo(memo);
+        return transaction;
     }
 }

@@ -1,5 +1,11 @@
 /* Theming for website */
 
+.toggle-on.btn-purple {
+    background-color: var(--purple);
+    color: white;
+    border-color: var(--purple);
+}
+
 .heath-navbar, .heath-active {
     background-color: var(--purple);
 }
@@ -15,6 +21,23 @@
 
 .dropdown-item:active {
     background-color: var(--purple);
+}
+
+.badge-purple {
+    background-color: var(--purple);
+    color: white;
+}
+
+a.card-link, a.nav-link {
+    color: var(--purple);
+}
+
+a.card-link:hover, a.nav-link:hover {
+    color: #341b7c;
+}
+
+.toggle-on.btn-purple:hover {
+    background-color: #341b7c;
 }
 
 .negative-button, .heath-button {
@@ -60,7 +83,6 @@
     border-top: none;
     padding: .2rem;
 }
-
 
 .arrow-down {
     transform: rotate(90deg);
