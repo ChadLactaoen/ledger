@@ -2,7 +2,7 @@ package com.lactaoen.ledger.service;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
@@ -112,11 +112,11 @@ public class PeriodService {
     }
 
     public boolean periodNotExistsForDate(String date) {
-        DynamoDBQueryExpression expression = new DynamoDBQueryExpression()
+        DynamoDBScanExpression expression = new DynamoDBScanExpression()
                 .withFilterExpression("#startDate <= :date and #endDate >= :date")
                 .withExpressionAttributeNames(ImmutableMap.of("#startDate", "startDate", "#endDate", "endDate"))
                 .withExpressionAttributeValues(ImmutableMap.of(":date", new AttributeValue(date)));
-        return dynamoDBMapper.query(Period.class, expression).isEmpty();
+        return dynamoDBMapper.scan(Period.class, expression).isEmpty();
     }
 
     public void savePeriod(PeriodForm periodForm) {
@@ -124,7 +124,7 @@ public class PeriodService {
 
         List<String> categories = periodForm.getCategories();
         List<String> amounts = periodForm.getAmounts();
-        Map<String, List<Category>> categoryMap = categoryService.getAllChildCategories().stream().collect(groupingBy(Category::getName));
+        Map<String, List<Category>> categoryMap = categoryService.getAllChildCategories(CategoryService.SORT_BY_PARENT_THEN_NAME).stream().collect(groupingBy(Category::getName));
         ImmutableList.Builder<Allocation> allocationsBuilder = new ImmutableList.Builder<>();
 
         for (int i = 0; i < categories.size(); i++) {

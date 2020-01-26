@@ -42,7 +42,7 @@ public class TransactionController {
 
         ModelAndView mav = new ModelAndView("transaction");
         mav.addObject("transactionForm", transaction == null ? new TransactionForm() : transaction.toForm());
-        mav.addObject("categories", categoryService.getAllChildCategories());
+        mav.addObject("categories", categoryService.getAllChildCategories(CategoryService.BY_NAME));
 
         return mav;
     }

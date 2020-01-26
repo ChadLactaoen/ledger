@@ -17,7 +17,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class CategoryService {
 
     private static final Comparator<Category> BY_PARENT = Comparator.comparing(Category::getParent);
-    private static final Comparator<Category> BY_NAME = Comparator.comparing(Category::getName);
+    public static final Comparator<Category> BY_NAME = Comparator.comparing(Category::getName);
+    public static final Comparator<Category> SORT_BY_PARENT_THEN_NAME = BY_PARENT.thenComparing(BY_NAME);
 
     private final DynamoDBMapper dynamoDBMapper;
 
@@ -25,14 +26,14 @@ public class CategoryService {
         this.dynamoDBMapper = dynamoDBMapper;
     }
 
-    public List<Category> getAllChildCategories() {
+    public List<Category> getAllChildCategories(Comparator<Category> sortMethod) {
         DynamoDBScanExpression expression = new DynamoDBScanExpression()
                 .withFilterExpression("#parent <> :none")
                 .withExpressionAttributeNames(ImmutableMap.of("#parent", "parent"))
                 .withExpressionAttributeValues(ImmutableMap.of(":none", new AttributeValue("None")));
 
         List<Category> categories = dynamoDBMapper.scan(Category.class, expression);
-        return categories.stream().sorted(BY_PARENT.thenComparing(BY_NAME)).collect(toImmutableList());
+        return categories.stream().sorted(sortMethod).collect(toImmutableList());
     }
 
     public Category getCategoryByName(String name) {

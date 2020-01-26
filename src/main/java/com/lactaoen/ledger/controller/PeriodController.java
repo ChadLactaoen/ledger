@@ -45,7 +45,7 @@ public class PeriodController {
         if (startDate != null) {
             period = periodService.getPeriodByDate(startDate);
         }
-        List<Category> allCategories = categoryService.getAllChildCategories();
+        List<Category> allCategories = categoryService.getAllChildCategories(CategoryService.SORT_BY_PARENT_THEN_NAME);
 
         ModelAndView mav = new ModelAndView("period");
         mav.addObject("periodForm", period == null ? createPreFilledForm(allCategories) : period.toForm());
@@ -66,7 +66,7 @@ public class PeriodController {
         periodService.savePeriod(periodForm);
         flashAttributeService.generateFlashAttributes(redirectAttributes, true, "period", postType);
 
-        return new RedirectView("dashboard");
+        return new RedirectView("/");
     }
 
     private PeriodForm createPreFilledForm(List<Category> categories) {
