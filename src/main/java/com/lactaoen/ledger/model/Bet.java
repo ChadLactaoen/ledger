@@ -168,7 +168,9 @@ public class Bet {
         betForm.setBetType(betType);
         betForm.setGameType(gameType);
         betForm.setForTeamLocation(forTeam.getLocation());
+        betForm.setForTeamMascot(forTeam.getMascot());
         betForm.setAgainstTeamLocation(againstTeam.getLocation());
+        betForm.setAgainstTeamMascot(againstTeam.getMascot());
         betForm.setLine(line);
         betForm.setOdds(odds);
         betForm.setLive(live);

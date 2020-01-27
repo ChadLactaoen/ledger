@@ -47,8 +47,8 @@ public class BetService {
         bet.setGame(game);
 
         if (game.getParent().equals("Sports Betting")) {
-             bet.setForTeam(teamService.getTeamByLocationAndGame(betForm.getForTeamLocation(), game.getName()));
-             bet.setAgainstTeam(teamService.getTeamByLocationAndGame(betForm.getAgainstTeamLocation(), game.getName()));
+             bet.setForTeam(teamService.getTeamByLocationAndMascot(betForm.getForTeamLocation(), betForm.getForTeamMascot()));
+             bet.setAgainstTeam(teamService.getTeamByLocationAndMascot(betForm.getAgainstTeamLocation(), betForm.getAgainstTeamMascot()));
         }
 
         dynamoDBMapper.save(bet);

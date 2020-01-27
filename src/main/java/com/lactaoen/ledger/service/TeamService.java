@@ -23,8 +23,8 @@ public class TeamService {
         this.dynamoDBMapper = dynamoDBMapper;
     }
 
-    public Team getTeamByLocationAndGame(String location, String game) {
-        return dynamoDBMapper.load(Team.class, location, game);
+    public Team getTeamByLocationAndMascot(String location, String mascot) {
+        return dynamoDBMapper.load(Team.class, location, mascot);
     }
 
     public List<Team> getTeamsByGame(String game) {

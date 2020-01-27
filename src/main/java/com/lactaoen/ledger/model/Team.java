@@ -13,9 +13,9 @@ import java.util.Objects;
 public class Team {
 
     private String location;
+    private String mascot;
     private String game;
     private String abbreviation;
-    private String mascot;
 
     public Team() {
     }
@@ -30,6 +30,15 @@ public class Team {
     }
 
     @DynamoDBRangeKey
+    public String getMascot() {
+        return mascot;
+    }
+
+    public void setMascot(String mascot) {
+        this.mascot = mascot;
+    }
+
+    @DynamoDBAttribute
     public String getGame() {
         return game;
     }
@@ -47,28 +56,19 @@ public class Team {
         this.abbreviation = abbreviation;
     }
 
-    @DynamoDBAttribute
-    public String getMascot() {
-        return mascot;
-    }
-
-    public void setMascot(String mascot) {
-        this.mascot = mascot;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Team)) return false;
         Team team = (Team) o;
         return Objects.equals(location, team.location) &&
+                Objects.equals(mascot, team.mascot) &&
                 Objects.equals(game, team.game) &&
-                Objects.equals(abbreviation, team.abbreviation) &&
-                Objects.equals(mascot, team.mascot);
+                Objects.equals(abbreviation, team.abbreviation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, game, abbreviation, mascot);
+        return Objects.hash(location, mascot, game, abbreviation);
     }
 }

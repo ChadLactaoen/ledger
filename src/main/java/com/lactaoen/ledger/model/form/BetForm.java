@@ -16,7 +16,9 @@ public class BetForm {
     private String betType;
     private String gameType;
     private String forTeamLocation;
+    private String forTeamMascot;
     private String againstTeamLocation;
+    private String againstTeamMascot;
     private Double line;
     private Integer odds;
     private boolean live;
@@ -104,12 +106,28 @@ public class BetForm {
         this.forTeamLocation = forTeamLocation;
     }
 
+    public String getForTeamMascot() {
+        return forTeamMascot;
+    }
+
+    public void setForTeamMascot(String forTeamMascot) {
+        this.forTeamMascot = forTeamMascot;
+    }
+
     public String getAgainstTeamLocation() {
         return againstTeamLocation;
     }
 
     public void setAgainstTeamLocation(String againstTeamLocation) {
         this.againstTeamLocation = againstTeamLocation;
+    }
+
+    public String getAgainstTeamMascot() {
+        return againstTeamMascot;
+    }
+
+    public void setAgainstTeamMascot(String againstTeamMascot) {
+        this.againstTeamMascot = againstTeamMascot;
     }
 
     public Double getLine() {

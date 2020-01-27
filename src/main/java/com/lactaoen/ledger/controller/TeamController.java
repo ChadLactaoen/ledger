@@ -37,10 +37,10 @@ public class TeamController {
 
     @GetMapping
     public ModelAndView getTeamForm(@RequestParam(value = "location", required = false) String location,
-                                    @RequestParam(value = "game", required = false) String game) {
+                                    @RequestParam(value = "mascot", required = false) String mascot) {
         Team team = null;
-        if (location != null && game != null) {
-            team = teamService.getTeamByLocationAndGame(location, game);
+        if (location != null && mascot != null) {
+            team = teamService.getTeamByLocationAndMascot(location, mascot);
         }
 
         ModelAndView mav = new ModelAndView("team");
@@ -52,11 +52,11 @@ public class TeamController {
 
     @PostMapping
     public RedirectView postTeamForm(@ModelAttribute("team") Team team, RedirectAttributes redirectAttributes) {
-        boolean exists = teamService.getTeamByLocationAndGame(team.getLocation(), team.getGame()) != null;
+        boolean exists = teamService.getTeamByLocationAndMascot(team.getLocation(), team.getMascot()) != null;
 
         FlashAttributeService.PostType postType  = exists ? FlashAttributeService.PostType.UPDATE : FlashAttributeService.PostType.ADD;
         teamService.saveTeam(team);
-        boolean success = teamService.getTeamByLocationAndGame(team.getLocation(), team.getGame()).equals(team);
+        boolean success = teamService.getTeamByLocationAndMascot(team.getLocation(), team.getMascot()).equals(team);
         flashAttributeService.generateFlashAttributes(redirectAttributes, success, "team", postType);
 
         return new RedirectView("team");

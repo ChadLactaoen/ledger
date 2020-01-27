@@ -84,15 +84,17 @@
           <label>For Team</label>
           <select th:field="*{forTeamLocation}" class="form-control sports-bet-field">
             <option th:value="''"></option>
-            <option th:each="team : ${teams}" th:value="${team.location}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
+            <option th:each="team : ${teams}" th:value="${team.location}" th:attr="data-mascot=${team.mascot}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
           </select>
+          <input th:field="*{forTeamMascot}" type="hidden" class="form-control sports-bet-field" />
         </div>
         <div class="form-group col-md-6">
           <label>Against Team</label>
           <select th:field="*{againstTeamLocation}" class="form-control sports-bet-field">
             <option th:value="''"></option>
-            <option th:each="team : ${teams}" th:value="${team.location}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
+            <option th:each="team : ${teams}" th:value="${team.location}" th:attr="data-mascot=${team.mascot}" th:text="|${team.abbreviation} - ${team.location} ${team.mascot}|"></option>
           </select>
+          <input th:field="*{againstTeamMascot}" type="hidden" class="form-control sports-bet-field" />
         </div>
       </div>
       <div class="row">
@@ -138,6 +140,17 @@
   /*]]>*/
 
   $(document).ready(function() {
+
+    $('#againstTeamLocation').on('change', function() {
+      var mascot = $(this).children("option:selected").attr('data-mascot');
+      document.getElementById('againstTeamMascot').value = mascot;
+    });
+
+    $('#forTeamLocation').on('change', function() {
+      var mascot = $(this).children("option:selected").attr('data-mascot');
+      document.getElementById('forTeamMascot').value = mascot;
+    });
+
     $('#gameName').on('change', function(e) {
       var game = $('#gameName option:selected').text();
       var gameId = $('#gameName option:selected').val();
@@ -156,8 +169,12 @@
             $(fields).append('<option></option>');
 
             $.each(data, function(index, team) {
-              $(fields).append($('<option></option>', { value : team.location })
-                  .text(team.abbreviation + ' - ' + team.location + ' ' + team.mascot));
+              var teamOption = document.createElement('option');
+              teamOption.value = team.location;
+              teamOption.setAttribute('data-mascot', team.mascot);
+              teamOption.innerText = team.abbreviation + ' - ' + team.location + ' ' + team.mascot;
+
+              $(fields).append(teamOption);
             });
 
             $('.sports-bet-field').removeAttr('disabled');
