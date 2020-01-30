@@ -17,6 +17,8 @@ public class Transaction {
     private Double price;
     private String memo;
     private String date;
+    private String effectivePeriod;
+    private String effectiveYear;
 
     public Transaction() {
     }
@@ -85,6 +87,24 @@ public class Transaction {
         this.date = date;
     }
 
+    @DynamoDBAttribute
+    public String getEffectivePeriod() {
+        return effectivePeriod;
+    }
+
+    public void setEffectivePeriod(String effectivePeriod) {
+        this.effectivePeriod = effectivePeriod;
+    }
+
+    @DynamoDBAttribute
+    public String getEffectiveYear() {
+        return effectiveYear;
+    }
+
+    public void setEffectiveYear(String effectiveYear) {
+        this.effectiveYear = effectiveYear;
+    }
+
     @DynamoDBIgnore
     public boolean isReimbursement() {
         return memo != null && memo.toLowerCase().contains("reimburse");
@@ -107,7 +127,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "{" +
+        return "Transaction{" +
                 "transactionId='" + transactionId + '\'' +
                 ", category=" + category +
                 ", subcategory=" + subcategory +
@@ -115,6 +135,8 @@ public class Transaction {
                 ", price=" + price +
                 ", memo='" + memo + '\'' +
                 ", date='" + date + '\'' +
+                ", effectivePeriod='" + effectivePeriod + '\'' +
+                ", effectiveYear='" + effectiveYear + '\'' +
                 '}';
     }
 }

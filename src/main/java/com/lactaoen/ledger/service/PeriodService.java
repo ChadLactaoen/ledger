@@ -63,7 +63,7 @@ public class PeriodService {
         if (period == null) {
             return null;
         }
-        period.setTransactions(transactionService.getTransactionsForMonth(period.getStartDate(), period.getEndDate()));
+        period.setTransactions(transactionService.getTransactionsForMonth(period.getStartDate()));
 
         populateWithTransactions(period);
         populateSpendByCategory(period);

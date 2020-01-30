@@ -79,6 +79,11 @@ public class TransactionForm {
         transaction.setPrice(price);
         transaction.setDate(date);
         transaction.setMemo(memo);
+
+        String[] dateParts = date.split("-");
+        dateParts[2] = "01";
+        transaction.setEffectivePeriod(String.join("-", dateParts));
+        transaction.setEffectiveYear(dateParts[0]);
         return transaction;
     }
 }

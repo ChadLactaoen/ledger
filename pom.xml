@@ -6,7 +6,7 @@
 
     <groupId>com.lactaoen</groupId>
     <artifactId>ledger</artifactId>
-    <version>3.0.2</version>
+    <version>3.1.0</version>
     <packaging>war</packaging>
 
     <parent>
@@ -57,6 +57,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>
+                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+                    </jvmArguments>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>ledger</finalName>

@@ -7,8 +7,10 @@ import com.lactaoen.ledger.service.CategoryService;
 import com.lactaoen.ledger.service.TransactionService;
 import com.lactaoen.ledger.service.FlashAttributeService;
 import com.lactaoen.ledger.service.PeriodService;
+import com.lactaoen.ledger.service.prediction.TransactionPredictionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,12 +24,18 @@ import org.springframework.web.servlet.view.RedirectView;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final TransactionPredictionService transactionPredictionService;
     private final CategoryService categoryService;
     private final PeriodService periodService;
     private final FlashAttributeService flashAttributeService;
 
-    public TransactionController(TransactionService transactionService, CategoryService categoryService, PeriodService periodService, FlashAttributeService flashAttributeService) {
+    public TransactionController(TransactionService transactionService,
+                                 TransactionPredictionService transactionPredictionService,
+                                 CategoryService categoryService,
+                                 PeriodService periodService,
+                                 FlashAttributeService flashAttributeService) {
         this.transactionService = transactionService;
+        this.transactionPredictionService = transactionPredictionService;
         this.categoryService = categoryService;
         this.periodService = periodService;
         this.flashAttributeService = flashAttributeService;
@@ -45,6 +53,11 @@ public class TransactionController {
         mav.addObject("categories", categoryService.getAllChildCategories(CategoryService.BY_NAME));
 
         return mav;
+    }
+
+    @GetMapping("{name}")
+    public String getTransactionPrediction(@PathVariable("name") String name) {
+        return transactionPredictionService.predictCategory(name);
     }
 
     @PostMapping

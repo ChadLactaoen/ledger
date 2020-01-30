@@ -1,6 +1,7 @@
 package com.lactaoen.ledger.service;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.util.StringUtils;
@@ -9,7 +10,6 @@ import com.lactaoen.ledger.model.Transaction;
 import com.lactaoen.ledger.model.form.TransactionForm;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,14 +27,16 @@ public class TransactionService {
         return dynamoDBMapper.load(Transaction.class, transactionId);
     }
 
-    public List<Transaction> getTransactionsForMonth(String startDate, String endDate) {
-        return dynamoDBMapper.scan(Transaction.class, createScanExpression(startDate, endDate));
+    public List<Transaction> getAllTransactionByName(String name) {
+        return dynamoDBMapper.query(Transaction.class, createNameIndexQuery(name));
+    }
+
+    public List<Transaction> getTransactionsForMonth(String startDate) {
+        return dynamoDBMapper.query(Transaction.class, createEffectivePeriodIndexQuery(startDate));
     }
 
     public List<Transaction> getTransactionsByYear(int year) {
-        String startDate = LocalDate.of(year, 1, 1).toString();
-        String endDate = LocalDate.of(year, 12, 31).toString();
-        return dynamoDBMapper.scan(Transaction.class, createScanExpression(startDate, endDate));
+        return dynamoDBMapper.query(Transaction.class, createEffectiveYearIndexQuery(String.valueOf(year)));
     }
 
     public void saveTransaction(Transaction transaction) {
@@ -57,5 +59,31 @@ public class TransactionService {
                 .withFilterExpression("#date BETWEEN :startDate and :endDate")
                 .withExpressionAttributeNames(ImmutableMap.of("#date", "date"))
                 .withExpressionAttributeValues(ImmutableMap.of(":startDate", new AttributeValue(startDate), ":endDate", new AttributeValue(endDate)));
+    }
+
+    private DynamoDBQueryExpression<Transaction> createNameIndexQuery(String name) {
+        return new DynamoDBQueryExpression<Transaction>()
+                .withIndexName("name-date-index")
+                .withConsistentRead(false)
+                .withKeyConditionExpression("#name = :name")
+                .withExpressionAttributeNames(ImmutableMap.of("#name", "name"))
+                .withExpressionAttributeValues(ImmutableMap.of(":name", new AttributeValue(name)))
+                .withProjectionExpression("category");
+    }
+
+    private DynamoDBQueryExpression<Transaction> createEffectivePeriodIndexQuery(String year) {
+        return new DynamoDBQueryExpression<Transaction>()
+                .withIndexName("effectivePeriod-transactionId-index")
+                .withConsistentRead(false)
+                .withKeyConditionExpression("effectivePeriod = :year")
+                .withExpressionAttributeValues(ImmutableMap.of(":year", new AttributeValue(year)));
+    }
+
+    private DynamoDBQueryExpression<Transaction> createEffectiveYearIndexQuery(String year) {
+        return new DynamoDBQueryExpression<Transaction>()
+                .withIndexName("effectiveYear-transactionId-index")
+                .withConsistentRead(false)
+                .withKeyConditionExpression("effectiveYear = :year")
+                .withExpressionAttributeValues(ImmutableMap.of(":year", new AttributeValue(year)));
     }
 }
