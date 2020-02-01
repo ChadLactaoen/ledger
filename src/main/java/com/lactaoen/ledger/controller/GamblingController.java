@@ -1,10 +1,12 @@
 package com.lactaoen.ledger.controller;
 
+import com.google.common.collect.ImmutableList;
 import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.data.GamblingChartEntry;
 import com.lactaoen.ledger.service.BetService;
 import com.lactaoen.ledger.service.data.GamblingChartService;
 import com.lactaoen.ledger.service.data.GamblingGraphService;
+import com.lactaoen.ledger.service.data.GamblingStatsService;
 import com.lactaoen.ledger.util.DateConverterService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,19 +24,31 @@ public class GamblingController {
 
     private static final Predicate<Bet> SPORTS_BET_FILTER = bet -> bet.getGame().getParent().equals("Sports Betting");
     private static final Predicate<Bet> POKER_FILTER = bet -> bet.getGame().getParent().equals("Poker");
+    private static final List<String> SPORTS = new ImmutableList.Builder<String>()
+            .add("Baseball")
+            .add("Basketball")
+            .add("College Basketball")
+            .add("College Football")
+            .add("Football")
+            .add("Hockey")
+            .add("Soccer")
+            .build();
 
     private final BetService betService;
     private final GamblingChartService gamblingChartService;
     private final GamblingGraphService gamblingGraphService;
+    private final GamblingStatsService gamblingStatsService;
     private final DateConverterService dateConverterService;
 
     public GamblingController(BetService betService,
                               GamblingChartService gamblingChartService,
                               GamblingGraphService gamblingGraphService,
+                              GamblingStatsService gamblingStatsService,
                               DateConverterService dateConverterService) {
         this.betService = betService;
         this.gamblingChartService = gamblingChartService;
         this.gamblingGraphService = gamblingGraphService;
+        this.gamblingStatsService = gamblingStatsService;
         this.dateConverterService = dateConverterService;
     }
 
@@ -59,6 +73,21 @@ public class GamblingController {
         mav.addObject("pokerEntries", gamblingChartService.createChart(pokerBets, "Poker"));
         mav.addObject("weekData", gamblingGraphService.getGamblingGraphDataByWeek(bets, year));
         mav.addObject("monthData", gamblingGraphService.getGamblingGraphDataByMonth(bets, year));
+        return mav;
+    }
+
+    @GetMapping("sports")
+    public ModelAndView getSportStats(@RequestParam(value = "sport", defaultValue = "Basketball") String sportName,
+                                        @RequestParam(value = "year", required = false) Integer year) {
+        if (year == null) {
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
+
+        ModelAndView mav = new ModelAndView("sports");
+        mav.addObject("stats", gamblingStatsService.getTeamStatsByYearAndSport(year, sportName));
+        mav.addObject("sports", SPORTS);
+        mav.addObject("sport", sportName);
+        mav.addObject("year", year);
         return mav;
     }
 }

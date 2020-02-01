@@ -1,7 +1,7 @@
 package com.lactaoen.ledger.service;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.google.common.collect.ImmutableMap;
 import com.lactaoen.ledger.model.Bet;
@@ -10,7 +10,6 @@ import com.lactaoen.ledger.model.form.BetForm;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -30,14 +29,8 @@ public class BetService {
         return dynamoDBMapper.load(Bet.class, betId);
     }
 
-    public List<Bet> getOpenBets() {
-        return dynamoDBMapper.scan(Bet.class, new DynamoDBScanExpression().withFilterExpression("attribute_not_exists(profit)"));
-    }
-
     public List<Bet> getBetsByYear(int year) {
-        String startDate = LocalDate.of(year, 1, 1).toString();
-        String endDate = LocalDate.of(year, 12, 31).toString();
-        return dynamoDBMapper.scan(Bet.class, createScanExpression(startDate, endDate));
+        return dynamoDBMapper.query(Bet.class, createEffectiveYearIndexQuery(String.valueOf(year)));
     }
 
     public void saveBet(BetForm betForm) {
@@ -75,10 +68,18 @@ public class BetService {
         return wager.multiply(new BigDecimal(100)).divide(odds.abs()).doubleValue();
     }
 
-    private DynamoDBScanExpression createScanExpression(String startDate, String endDate) {
-        return new DynamoDBScanExpression()
-                .withFilterExpression("#date BETWEEN :startDate AND :endDate")
-                .withExpressionAttributeNames(ImmutableMap.of("#date", "date"))
-                .withExpressionAttributeValues(ImmutableMap.of(":startDate", new AttributeValue(startDate), ":endDate", new AttributeValue(endDate)));
+    private DynamoDBQueryExpression<Bet> createEffectiveYearIndexQuery(String year) {
+        return new DynamoDBQueryExpression<Bet>()
+                .withIndexName("effectiveYear-betId-index")
+                .withConsistentRead(false)
+                .withKeyConditionExpression("effectiveYear = :year")
+                .withExpressionAttributeValues(ImmutableMap.of(":year", new AttributeValue(year)));
+    }
+
+    private DynamoDBQueryExpression<Bet> createOpenBetIndexQuery() {
+        return new DynamoDBQueryExpression<Bet>()
+                .withIndexName("profit-betId-index")
+                .withConsistentRead(false)
+                .withKeyConditionExpression("profit");
     }
 }

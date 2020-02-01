@@ -16,6 +16,7 @@ public class Bet {
     private Double wager;
     private Double profit;
     private String memo;
+    private String effectiveYear;
 
     private String betType;
     private String gameType;
@@ -90,6 +91,15 @@ public class Bet {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    @DynamoDBAttribute
+    public String getEffectiveYear() {
+        return effectiveYear;
+    }
+
+    public void setEffectiveYear(String effectiveYear) {
+        this.effectiveYear = effectiveYear;
     }
 
     @DynamoDBAttribute

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="row">
+    <div class="col-md-10">
+      <h1>[[${sport}]] <small class="text-muted" th:text="${year}"></small></h1>
+    </div>
+    <div class="col-md-2">
+      <div class="float-right dropdown-sm">
+        <select id="sport-select" class="form-control form-control-sm" th:with="selectedSport = ${sport}">
+          <option th:each="sportOption : ${sports}" th:text="${sportOption}" th:selected="${sportOption == selectedSport}"></option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Period -->
+  <div id="sport-dashboard">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="dashboard-table table table-sm table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Team</th>
+              <th scope="col">Wagered</th>
+              <th scope="col">Profit</th>
+              <th scope="col">Bets For</th>
+              <th scope="col">Bets Against</th>
+              <th scope="col">For</th>
+              <th scope="col">Against</th>
+              <th scope="col">Over</th>
+              <th scope="col">Under</th>
+              <th scope="col">Moneyline</th>
+              <th scope="col">Points</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="stat : ${stats}">
+              <td th:text="|${stat.team.location} ${stat.team.mascot}|" th:class="font-weight-bold"></td>
+              <td th:text="|$${#numbers.formatDecimal(stat.wagered,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+              <td th:text="${stat.profit} >= 0 ? |$${#numbers.formatDecimal(stat.profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((stat.profit * -1),1,'COMMA',2,'POINT')}|" th:classappend="${stat.profit} >= 0 ? (${stat.profit} == 0 ? 'text-muted' : '') : 'text-danger'" class="font-weight-bold dollar-value"></td>
+              <td th:text="${stat.forBetCount}"></td>
+              <td th:text="${stat.againstBetCount}"></td>
+              <td th:text="|${stat.forStats.wins}-${stat.forStats.losses}-${stat.forStats.ties}|"></td>
+              <td th:text="|${stat.againstStats.wins}-${stat.againstStats.losses}-${stat.againstStats.ties}|"></td>
+              <td th:text="|${stat.overStats.wins}-${stat.overStats.losses}-${stat.overStats.ties}|"></td>
+              <td th:text="|${stat.underStats.wins}-${stat.underStats.losses}-${stat.underStats.ties}|"></td>
+              <td th:text="|${stat.moneylineStats.wins}-${stat.moneylineStats.losses}-${stat.moneylineStats.ties}|"></td>
+              <td th:text="|${stat.pointsStats.wins}-${stat.pointsStats.losses}-${stat.pointsStats.ties}|"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+
+    var contextRoot = /*[[@{/}]]*/ '';
+
+  /*]]>*/
+
+  $(document).ready(function() {
+
+    $('#sport-select').on('change', function(e) {
+      var sport = $(this).find('option:selected').val();
+      window.location = '?sport=' + sport;
+    });
+
+  });
+</script>
+</body>
+</html>

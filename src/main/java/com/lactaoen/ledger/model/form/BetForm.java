@@ -163,6 +163,10 @@ public class BetForm {
         bet.setProfit(profit);
         bet.setMemo(memo);
 
+        String[] dateParts = date.split("-");
+        dateParts[2] = "01";
+        bet.setEffectiveYear(dateParts[0]);
+
         bet.setBetType(betType);
         bet.setGameType(gameType);
         bet.setLine(line);

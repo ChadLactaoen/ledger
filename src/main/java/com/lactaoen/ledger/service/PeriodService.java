@@ -2,12 +2,9 @@ package com.lactaoen.ledger.service;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.lactaoen.ledger.model.Allocation;
 import com.lactaoen.ledger.model.Category;
 import com.lactaoen.ledger.model.Period;
@@ -112,11 +109,9 @@ public class PeriodService {
     }
 
     public boolean periodNotExistsForDate(String date) {
-        DynamoDBScanExpression expression = new DynamoDBScanExpression()
-                .withFilterExpression("#startDate <= :date and #endDate >= :date")
-                .withExpressionAttributeNames(ImmutableMap.of("#startDate", "startDate", "#endDate", "endDate"))
-                .withExpressionAttributeValues(ImmutableMap.of(":date", new AttributeValue(date)));
-        return dynamoDBMapper.scan(Period.class, expression).isEmpty();
+        String[] dateParts = date.split("-");
+        dateParts[2] = "01";
+        return dynamoDBMapper.load(Period.class, String.join("-", dateParts)) != null;
     }
 
     public void savePeriod(PeriodForm periodForm) {
