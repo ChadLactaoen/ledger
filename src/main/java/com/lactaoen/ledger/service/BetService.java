@@ -2,6 +2,7 @@ package com.lactaoen.ledger.service;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.google.common.collect.ImmutableMap;
 import com.lactaoen.ledger.model.Bet;
@@ -31,6 +32,10 @@ public class BetService {
 
     public List<Bet> getBetsByYear(int year) {
         return dynamoDBMapper.query(Bet.class, createEffectiveYearIndexQuery(String.valueOf(year)));
+    }
+
+    public List<Bet> getAllBets() {
+        return dynamoDBMapper.scan(Bet.class, new DynamoDBScanExpression());
     }
 
     public void saveBet(BetForm betForm) {

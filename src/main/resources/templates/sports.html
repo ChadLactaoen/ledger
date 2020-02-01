@@ -12,8 +12,8 @@
     </div>
     <div class="col-md-2">
       <div class="float-right dropdown-sm">
-        <select id="sport-select" class="form-control form-control-sm" th:with="selectedSport = ${sport}">
-          <option th:each="sportOption : ${sports}" th:text="${sportOption}" th:selected="${sportOption == selectedSport}"></option>
+        <select id="years-select" class="form-control form-control-sm" th:with="selectedYear = ${year}">
+          <option th:each="yearOption : ${yearsList}" th:text="${yearOption}" th:selected="${yearOption == selectedYear}"></option>
         </select>
       </div>
     </div>
@@ -24,20 +24,20 @@
     <div class="row">
       <div class="col-md-12">
         <div class="table-responsive">
-          <table class="dashboard-table table table-sm table-hover">
+          <table data-toggle="table" data-classes="dashboard-table table table-sm table-hover">
             <thead>
             <tr>
-              <th scope="col">Team</th>
-              <th scope="col">Wagered</th>
-              <th scope="col">Profit</th>
-              <th scope="col">Bets For</th>
-              <th scope="col">Bets Against</th>
-              <th scope="col">For</th>
-              <th scope="col">Against</th>
-              <th scope="col">Over</th>
-              <th scope="col">Under</th>
-              <th scope="col">Moneyline</th>
-              <th scope="col">Points</th>
+              <th data-sortable="true" scope="col">Team</th>
+              <th data-sortable="true" data-sorter="numericOnly" data-sort-order="desc" scope="col">Wagered</th>
+              <th data-sortable="true" data-sorter="numericOnlyWithNegatives" data-sort-order="desc" scope="col">Profit</th>
+              <th data-sortable="true" data-sort-order="desc" scope="col">Bets For</th>
+              <th data-sortable="true" data-sort-order="desc" scope="col">Bets Against</th>
+              <th data-sortable="true" data-sorter="winPercentage" data-sort-order="desc" scope="col">For</th>
+              <th data-sortable="true" data-sorter="winPercentage" data-sort-order="desc" scope="col">Against</th>
+              <th data-sortable="true" data-sorter="winPercentage" data-sort-order="desc" scope="col">Over</th>
+              <th data-sortable="true" data-sorter="winPercentage" data-sort-order="desc" scope="col">Under</th>
+              <th data-sortable="true" data-sorter="winPercentage" data-sort-order="desc" scope="col">Moneyline</th>
+              <th data-sortable="true" data-sorter="winPercentage" data-sort-order="desc" scope="col">Points</th>
             </tr>
             </thead>
             <tbody>
@@ -71,9 +71,10 @@
 
   $(document).ready(function() {
 
-    $('#sport-select').on('change', function(e) {
-      var sport = $(this).find('option:selected').val();
-      window.location = '?sport=' + sport;
+    $('#years-select').on('change', function(e) {
+      var year = $(this).find('option:selected').val();
+      var sport = new URLSearchParams(document.location.search.substring(1)).get('sport');
+      window.location = '?sport=' + sport + '&year=' + year;
     });
 
   });

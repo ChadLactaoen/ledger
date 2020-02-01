@@ -1,8 +1,8 @@
 package com.lactaoen.ledger.controller;
 
-import com.google.common.collect.ImmutableList;
 import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.data.GamblingChartEntry;
+import com.lactaoen.ledger.model.data.TeamStat;
 import com.lactaoen.ledger.service.BetService;
 import com.lactaoen.ledger.service.data.GamblingChartService;
 import com.lactaoen.ledger.service.data.GamblingGraphService;
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Calendar;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
@@ -24,15 +25,6 @@ public class GamblingController {
 
     private static final Predicate<Bet> SPORTS_BET_FILTER = bet -> bet.getGame().getParent().equals("Sports Betting");
     private static final Predicate<Bet> POKER_FILTER = bet -> bet.getGame().getParent().equals("Poker");
-    private static final List<String> SPORTS = new ImmutableList.Builder<String>()
-            .add("Baseball")
-            .add("Basketball")
-            .add("College Basketball")
-            .add("College Football")
-            .add("Football")
-            .add("Hockey")
-            .add("Soccer")
-            .build();
 
     private final BetService betService;
     private final GamblingChartService gamblingChartService;
@@ -78,14 +70,17 @@ public class GamblingController {
 
     @GetMapping("sports")
     public ModelAndView getSportStats(@RequestParam(value = "sport", defaultValue = "Basketball") String sportName,
-                                        @RequestParam(value = "year", required = false) Integer year) {
+                                      @RequestParam(value = "year", required = false) String year) {
         if (year == null) {
-            year = Calendar.getInstance().get(Calendar.YEAR);
+            year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
         }
 
+        List<TeamStat> stats = "All Time".equals(year) ? gamblingStatsService.getTeamStatsBySportAlTime(sportName) : gamblingStatsService.getTeamStatsByYearAndSport(Integer.parseInt(year), sportName);
+        Stream<String> years = dateConverterService.getYearsSinceStart().stream().map(String::valueOf);
+
         ModelAndView mav = new ModelAndView("sports");
-        mav.addObject("stats", gamblingStatsService.getTeamStatsByYearAndSport(year, sportName));
-        mav.addObject("sports", SPORTS);
+        mav.addObject("stats", stats);
+        mav.addObject("yearsList", Stream.concat(Stream.of("All Time"), years).map(String::valueOf).collect(toImmutableList()));
         mav.addObject("sport", sportName);
         mav.addObject("year", year);
         return mav;

@@ -37,9 +37,9 @@
       </ul>
       <div class="tab-content" id="gambling-tab-content">
         <div class="tab-pane fade show active" id="overall-tab-panel" role="tabpanel">
-          <div th:replace="fragments/gamblingChart :: chart(chart = ${overallEntries}, totalChart = ${totalEntry})"></div>
-          <div th:replace="fragments/gamblingChart :: chart(chart = ${sportsBettingEntries})"></div>
-          <div th:replace="fragments/gamblingChart :: chart(chart = ${pokerEntries})"></div>
+          <div th:replace="fragments/gamblingChart :: chart(chart = ${overallEntries}, totalChart = ${totalEntry}, chartName = 'overall-chart')"></div>
+          <div th:replace="fragments/gamblingChart :: chart(chart = ${sportsBettingEntries}, chartName = 'sports-chart')"></div>
+          <div th:replace="fragments/gamblingChart :: chart(chart = ${pokerEntries}, chartName = 'poker-chart')"></div>
         </div>
         <div class="tab-pane fade" id="open-bets-tab-panel" role="tabpanel">
           <div th:replace="fragments/gamblingChart :: openBets"></div>
@@ -70,6 +70,11 @@
   $('#year-select').on('change', function(e) {
     var periodId = $(this).find('option:selected').attr('data-period-id');
     window.location = '?year=' + periodId;
+  });
+
+  $('#sports-chart table td:first-child').on('click', function(e) {
+    var sport = this.innerText;
+    window.open('/sports?sport=' + sport, '_blank');
   });
 </script>
 <script src="/js/gambling-charts.js"></script>

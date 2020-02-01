@@ -34,8 +34,16 @@ public class GamblingStatsService {
         this.teamService = teamService;
     }
 
+    public List<TeamStat> getTeamStatsBySportAlTime(String sport) {
+        return getTeamStats(sport, betService.getAllBets());
+    }
+
     public List<TeamStat> getTeamStatsByYearAndSport(int year, String sport) {
-        Map<Team, List<Bet>> teamBetMap = betService.getBetsByYear(year).stream()
+       return getTeamStats(sport, betService.getBetsByYear(year));
+    }
+
+    private List<TeamStat> getTeamStats(String sport, List<Bet> bets) {
+        Map<Team, List<Bet>> teamBetMap = bets.stream()
                 .filter(bet -> sport.equals(bet.getGame().getName()))
                 .filter(NOT_PARLAY_AND_RESOLVED)
                 .collect(groupingBy(Bet::getForTeam));

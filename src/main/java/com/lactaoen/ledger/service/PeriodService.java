@@ -111,7 +111,7 @@ public class PeriodService {
     public boolean periodNotExistsForDate(String date) {
         String[] dateParts = date.split("-");
         dateParts[2] = "01";
-        return dynamoDBMapper.load(Period.class, String.join("-", dateParts)) != null;
+        return dynamoDBMapper.load(Period.class, String.join("-", dateParts)) == null;
     }
 
     public void savePeriod(PeriodForm periodForm) {
