@@ -123,9 +123,15 @@ public class PeriodService {
         ImmutableList.Builder<Allocation> allocationsBuilder = new ImmutableList.Builder<>();
 
         for (int i = 0; i < categories.size(); i++) {
+            double totalAllocated = Double.valueOf(amounts.get(i));
+
+            if (totalAllocated < 0) {
+                continue;
+            }
+
             Allocation allocation = new Allocation();
             allocation.setCategory(categoryMap.get(categories.get(i)).get(0));
-            allocation.setTotal(Double.valueOf(amounts.get(i)));
+            allocation.setTotal(totalAllocated);
             allocationsBuilder.add(allocation);
         }
 
