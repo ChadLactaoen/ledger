@@ -1,7 +1,6 @@
 package com.lactaoen.ledger.service;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.google.common.collect.ImmutableMap;
@@ -40,6 +39,11 @@ public class CategoryService {
         Category category = new Category();
         category.setName(name);
 
-        return dynamoDBMapper.query(Category.class, new DynamoDBQueryExpression<Category>().withHashKeyValues(category)).get(0);
+        DynamoDBScanExpression expression = new DynamoDBScanExpression()
+                .withFilterExpression("#name = :name AND #parent <> :none")
+                .withExpressionAttributeNames(ImmutableMap.of("#name", "name", "#parent", "parent"))
+                .withExpressionAttributeValues(ImmutableMap.of(":name", new AttributeValue().withS(name), ":none", new AttributeValue().withS("None")));
+
+        return dynamoDBMapper.scan(Category.class, expression).get(0);
     }
 }
