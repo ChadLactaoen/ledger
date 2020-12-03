@@ -122,7 +122,7 @@
 
         $('.editable-transaction').on('click', function(e) {
             var transactionId = $(this).attr('data-transaction-id');
-            window.location = 'form/transaction/' + transactionId;
+            window.location = 'transaction?transactionId=' + transactionId;
         });
 
         var year = new URLSearchParams(new URL(window.location.href).search).get('year');
