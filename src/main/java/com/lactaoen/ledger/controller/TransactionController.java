@@ -1,12 +1,15 @@
 package com.lactaoen.ledger.controller;
 
 import com.amazonaws.util.StringUtils;
+import com.lactaoen.ledger.model.Template;
 import com.lactaoen.ledger.model.Transaction;
 import com.lactaoen.ledger.model.form.TransactionForm;
+import com.lactaoen.ledger.model.template.Type;
 import com.lactaoen.ledger.service.CategoryService;
-import com.lactaoen.ledger.service.TransactionService;
 import com.lactaoen.ledger.service.FlashAttributeService;
 import com.lactaoen.ledger.service.PeriodService;
+import com.lactaoen.ledger.service.TemplateService;
+import com.lactaoen.ledger.service.TransactionService;
 import com.lactaoen.ledger.service.prediction.TransactionPredictionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +22,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Map;
+import java.util.function.Function;
+
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static java.util.Comparator.comparing;
+
 @RestController
 @RequestMapping("transaction")
 public class TransactionController {
@@ -28,17 +37,20 @@ public class TransactionController {
     private final CategoryService categoryService;
     private final PeriodService periodService;
     private final FlashAttributeService flashAttributeService;
+    private final TemplateService templateService;
 
     public TransactionController(TransactionService transactionService,
                                  TransactionPredictionService transactionPredictionService,
                                  CategoryService categoryService,
                                  PeriodService periodService,
-                                 FlashAttributeService flashAttributeService) {
+                                 FlashAttributeService flashAttributeService,
+                                 TemplateService templateService) {
         this.transactionService = transactionService;
         this.transactionPredictionService = transactionPredictionService;
         this.categoryService = categoryService;
         this.periodService = periodService;
         this.flashAttributeService = flashAttributeService;
+        this.templateService = templateService;
     }
 
     @GetMapping
@@ -48,9 +60,16 @@ public class TransactionController {
             transaction = transactionService.getTransactionById(transactionId);
         }
 
+        Map<String, Template> transactionTemplates = templateService.getTemplatesByType(Type.TRANSACTION)
+                .stream()
+                .sorted(comparing(Template::getTemplateName))
+                .collect(toImmutableMap(Template::getTemplateName, Function.identity()));
+
         ModelAndView mav = new ModelAndView("transaction");
         mav.addObject("transactionForm", transaction == null ? new TransactionForm() : transaction.toForm());
         mav.addObject("categories", categoryService.getAllChildCategories(CategoryService.BY_NAME));
+        mav.addObject("templateNames", transactionTemplates.keySet());
+        mav.addObject("templates", transactionTemplates);
 
         return mav;
     }

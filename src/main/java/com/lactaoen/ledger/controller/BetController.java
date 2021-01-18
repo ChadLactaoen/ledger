@@ -2,11 +2,14 @@ package com.lactaoen.ledger.controller;
 
 import com.amazonaws.util.StringUtils;
 import com.lactaoen.ledger.model.Bet;
+import com.lactaoen.ledger.model.Template;
 import com.lactaoen.ledger.model.form.BetForm;
+import com.lactaoen.ledger.model.template.Type;
 import com.lactaoen.ledger.service.BetService;
 import com.lactaoen.ledger.service.FlashAttributeService;
 import com.lactaoen.ledger.service.GameService;
 import com.lactaoen.ledger.service.TeamService;
+import com.lactaoen.ledger.service.TemplateService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Map;
+import java.util.function.Function;
+
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static java.util.Comparator.comparing;
+
 @RestController
 @RequestMapping("bet")
 public class BetController {
@@ -25,12 +34,18 @@ public class BetController {
     private final BetService betService;
     private final GameService gameService;
     private final TeamService teamService;
+    private final TemplateService templateService;
     private final FlashAttributeService flashAttributeService;
 
-    public BetController(BetService betService, GameService gameService, TeamService teamService, FlashAttributeService flashAttributeService) {
+    public BetController(BetService betService,
+                         GameService gameService,
+                         TeamService teamService,
+                         TemplateService templateService,
+                         FlashAttributeService flashAttributeService) {
         this.betService = betService;
         this.gameService = gameService;
         this.teamService = teamService;
+        this.templateService = templateService;
         this.flashAttributeService = flashAttributeService;
     }
 
@@ -43,10 +58,17 @@ public class BetController {
 
         boolean isSport = bet != null && bet.getGame().getParent().equals("Sports Betting");
 
+        Map<String, Template> transactionTemplates = templateService.getTemplatesByType(Type.BET)
+                .stream()
+                .sorted(comparing(Template::getTemplateName))
+                .collect(toImmutableMap(Template::getTemplateName, Function.identity()));
+
         ModelAndView mav = new ModelAndView("bet");
         mav.addObject("betForm", bet == null ? new BetForm() : bet.toForm());
         mav.addObject("games", gameService.getLowestLevelGames());
         mav.addObject("isSport", isSport);
+        mav.addObject("templateNames", transactionTemplates.keySet());
+        mav.addObject("templates", transactionTemplates);
         if (isSport) {
             mav.addObject("teams", teamService.getTeamsByGame(bet.getGame().getName()));
         }

@@ -6,6 +6,14 @@
 <div class="container">
   <div th:replace="fragments/flash :: flash"></div>
   <h1 th:text="${betForm.betId} ? 'Edit Bet' : 'Add Bet'"></h1>
+  <div class="form-group">
+    <label>Template</label>
+    <select id="template-select" class="form-control">
+      <option th:value="''"></option>
+      <option th:each="templateName : ${templateNames}" th:text="${templateName}" th:value="${templateName}"></option>
+    </select>
+  </div>
+  <hr/>
   <form action="#" th:action=" @{/bet}" th:object="${betForm}" method="post">
     <div class="form-group">
       <input th:field="*{betId}" type="hidden" class="form-control" />
@@ -136,6 +144,7 @@
   /*<![CDATA[*/
 
     var contextRoot = /*[[@{/}]]*/ '';
+    var templates = [[${templates}]];
 
   /*]]>*/
 
@@ -186,6 +195,37 @@
         $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
         $('#sports-fields').attr('hidden', 'hidden');
         $(fields).children('option').remove();
+      }
+    });
+
+    $('#template-select').on('change', function() {
+      var selectedTemplate = templates[this.value];
+      if (selectedTemplate.game) {
+        document.querySelector('#gameName option[value="' + selectedTemplate.game + '"]').selected = true
+      }
+      if (selectedTemplate.casino) {
+        document.querySelector('#casino option[value="' + selectedTemplate.casino + '"]').selected = true
+      }
+
+      var game = $('#gameName option:selected').text();
+      if (game.startsWith('Sports Betting')) {
+        $('.sports-bet-field').removeAttr('disabled');
+        $('#sports-fields').removeAttr('hidden');
+        $('#betType, #odds').attr('required', 'required');
+      } else {
+        $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
+        $('#sports-fields').attr('hidden', 'hidden');
+        $(fields).children('option').remove();
+      }
+
+      if (selectedTemplate.odds) {
+        document.getElementById('odds').value = selectedTemplate.odds;
+      }
+      if (selectedTemplate.sportsBetType) {
+        document.querySelector('#betType option[value="' + selectedTemplate.sportsBetType + '"]').selected = true
+      }
+      if (selectedTemplate.gameType) {
+        document.querySelector('#gameType option[value="' + selectedTemplate.gameType + '"]').selected = true
       }
     });
 
