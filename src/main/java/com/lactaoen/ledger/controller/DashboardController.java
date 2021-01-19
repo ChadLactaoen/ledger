@@ -1,6 +1,8 @@
 package com.lactaoen.ledger.controller;
 
 import com.lactaoen.ledger.model.Period;
+import com.lactaoen.ledger.model.Transaction;
+import com.lactaoen.ledger.model.TransactionSummary;
 import com.lactaoen.ledger.service.GraphService;
 import com.lactaoen.ledger.service.PeriodService;
 import com.lactaoen.ledger.util.DateConverterService;
@@ -11,6 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
 
 @RestController
 public class DashboardController {
@@ -50,12 +59,24 @@ public class DashboardController {
         }
 
         Period period = periodService.getPeriodByYear(year);
+        List<TransactionSummary> transactionSummary = period
+                .getTransactions()
+                .stream()
+                .collect(groupingBy(Transaction::getName, groupingBy(transaction -> transaction.getSubcategory() == null ? transaction.getCategory().getName() : transaction.getSubcategory().getName())))
+                .values()
+                .stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .map(TransactionSummary::new)
+                .sorted(comparing(TransactionSummary::getPrice).reversed())
+                .collect(toImmutableList());
 
         ModelAndView mav = new ModelAndView("year");
         mav.addObject("year", year);
         mav.addObject("yearsList", dateConverterService.getYearsSinceStart());
         mav.addObject("period", period);
         mav.addObject("graphData", graphService.getGraphData(period));
+        mav.addObject("transactionSummary", transactionSummary);
         return mav;
     }
 }
