@@ -70,13 +70,13 @@
     </ul>
     <div class="tab-content">
       <div id="chrono-table" role="tabpanel" class="table-responsive tab-pane fade show active">
-        <table class="dashboard-table table table-sm table-hover">
+        <table data-toggle="table" data-classes="dashboard-table table table-sm table-hover">
           <thead>
             <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Name</th>
-              <th scope="col">Category</th>
-              <th scope="col">Price</th>
+              <th data-sortable="true" data-sorter="datetime" scope="col">Date</th>
+              <th data-sortable="true" data-sorter="alphanumignorecase" data-sort-order="desc" scope="col">Name</th>
+              <th data-sortable="true" data-sorter="alphanum" data-sort-order="desc" scope="col">Category</th>
+              <th data-sortable="true" data-sorter="numericOnlyWithNegatives" scope="col">Price</th>
               <th scope="col">Memo</th>
             </tr>
           </thead>
@@ -107,7 +107,7 @@
             <th:block th:each="transaction : ${transactionSummary}">
               <tr th:attr="data-category-id=${transaction.category.name}" class="group-expandable">
                 <td></td>
-                <td th:text="${transaction.name}"></td>
+                <td th:text="${transaction.name}" th:class="font-weight-bold"></td>
                 <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
                 <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
                 <td th:text="${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|"></td>
@@ -116,13 +116,13 @@
               <tr th:attr="data-category-id=${transaction.category.name}" class="d-none group-unexpandable">
                 <td></td>
                 <td colspan="5">
-                  <table class="dashboard-table table table-sm table-hover">
+                  <table data-toggle="table" data-classes="dashboard-table table table-sm table-hover">
                     <thead>
                     <tr>
-                      <th scope="col">Date</th>
+                      <th data-sortable="true" data-sorter="datetime" scope="col">Date</th>
                       <th scope="col">Name</th>
                       <th scope="col">Category</th>
-                      <th scope="col">Price</th>
+                      <th data-sortable="true" data-sorter="numericOnlyWithNegatives" scope="col">Price</th>
                       <th scope="col">Memo</th>
                     </tr>
                     </thead>

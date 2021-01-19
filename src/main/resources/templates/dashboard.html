@@ -66,13 +66,13 @@
   <div id="transaction-dashboard">
     <h3 id="transaction-header">All Transactions</h3>
     <div class="table-responsive">
-      <table class="dashboard-table table table-sm table-hover">
+      <table data-toggle="table" data-classes="dashboard-table table table-sm table-hover">
         <thead>
         <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Name</th>
-          <th scope="col">Category</th>
-          <th scope="col">Price</th>
+          <th data-sortable="true" data-sorter="datetime" scope="col">Date</th>
+          <th data-sortable="true" data-sorter="alphanumignorecase" data-sort-order="desc" scope="col">Name</th>
+          <th data-sortable="true" data-sorter="alphanum" data-sort-order="desc" scope="col">Category</th>
+          <th data-sortable="true" data-sorter="numericOnlyWithNegatives" scope="col">Price</th>
           <th scope="col">Memo</th>
         </tr>
         </thead>
@@ -119,11 +119,11 @@
 
       if (categoryId === '0') {
         $('#transaction-header').text('All Transactions');
-        $('#transaction-dashboard tbody tr').show();
+        $('#transaction-dashboard tbody tr').removeClass('d-none');
       } else {
         $('#transaction-header').text($(this).text() + ' Transactions');
-        $('#transaction-dashboard tbody tr').hide();
-        $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
+        $('#transaction-dashboard tbody tr').addClass('d-none');
+        $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').removeClass('d-none');
       }
     });
 
