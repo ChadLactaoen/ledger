@@ -58,30 +58,90 @@
     </div>
   </div>
 
-  <!-- Transactions -->
   <div id="transaction-dashboard">
     <h3 id="transaction-header">All Transactions</h3>
-    <div class="table-responsive">
-      <table class="dashboard-table table table-sm table-hover">
-        <thead>
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Name</th>
-          <th scope="col">Category</th>
-          <th scope="col">Price</th>
-          <th scope="col">Memo</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="transaction : ${period.transactions}" th:attr="data-category-id=${transaction.category.name},data-subcategory-id=${transaction.subcategory?.name}">
-          <td th:text="${@dateConverterService.convertToMonthDayFormat(transaction.date)}"></td>
-          <td th:text="${transaction.name}" th:attr="data-transaction-id=${transaction.transactionId}" class="editable-transaction"></td>
-          <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
-          <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
-          <td th:text="${transaction.memo}"></td>
-        </tr>
-        </tbody>
-      </table>
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" role="tab" href="#chrono-table">Chronological</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" role="tab" href="#group-table">Grouped</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div id="chrono-table" role="tabpanel" class="table-responsive tab-pane fade show active">
+        <table class="dashboard-table table table-sm table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Name</th>
+              <th scope="col">Category</th>
+              <th scope="col">Price</th>
+              <th scope="col">Memo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="transaction : ${period.transactions}" th:attr="data-category-id=${transaction.category.name},data-subcategory-id=${transaction.subcategory?.name}" class="group-expandable">
+              <td th:text="${@dateConverterService.convertToMonthDayFormat(transaction.date)}"></td>
+              <td th:text="${transaction.name}" th:attr="data-transaction-id=${transaction.transactionId}" class="editable-transaction"></td>
+              <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
+              <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
+              <td th:text="${transaction.memo}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="group-table" role="tabpanel" class="table-responsive tab-pane fade">
+        <table class="dashboard-table table table-sm table-hover">
+          <thead>
+          <tr>
+            <th copr="col"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Average</th>
+            <th scope="col">Count</th>
+          </tr>
+          </thead>
+          <tbody>
+            <th:block th:each="transaction : ${transactionSummary}">
+              <tr th:attr="data-category-id=${transaction.category.name}" class="group-expandable">
+                <td></td>
+                <td th:text="${transaction.name}"></td>
+                <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
+                <td th:text="${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
+                <td th:text="${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|"></td>
+                <td th:text="${transaction.count}"></td>
+              </tr>
+              <tr th:attr="data-category-id=${transaction.category.name}" class="d-none group-unexpandable">
+                <td></td>
+                <td colspan="5">
+                  <table class="dashboard-table table table-sm table-hover">
+                    <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Memo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="categoryTransaction : ${transaction.transactions}">
+                      <td th:text="${@dateConverterService.convertToMonthDayFormat(categoryTransaction.date)}"></td>
+                      <td th:text="${categoryTransaction.name}" th:attr="data-transaction-id=${categoryTransaction.transactionId}" class="editable-transaction"></td>
+                      <td th:text="${categoryTransaction.category.name}" th:class="font-weight-bold" th:style="|color:${categoryTransaction.category.color}|"></td>
+                      <td th:text="${categoryTransaction.price} >= 0 ? |$${#numbers.formatDecimal(categoryTransaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((categoryTransaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
+                      <td th:text="${categoryTransaction.memo}"></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </th:block>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -96,41 +156,53 @@
 
     $(document).ready(function() {
 
-        $('#obfuscate-button').change(function() {
-          obfuscateDollarValues($(this).prop('checked'));
-        });
+      $('.group-expandable').on('click', function(e) {
+        var nextTr = $(this).next();
 
-        $('#year-select').on('change', function(e) {
-          var periodId = $(this).find('option:selected').attr('data-period-id');
-          window.location = '?year=' + periodId;
-        });
-
-        // Click listener for filtering transactions by category
-        $('#year-dashboard td[data-category-id]').on('click', function(e) {
-            var categoryId = $(this).attr('data-category-id');
-
-            if (categoryId === '0') {
-                $('#transaction-header').text('All Transactions');
-                $('#transaction-dashboard tbody tr').show();
-            } else {
-                $('#transaction-header').text($(this).text() + ' Transactions');
-                $('#transaction-dashboard tbody tr').hide();
-                $('#transaction-dashboard tr[data-category-id="' + categoryId + '"]').show();
-                $('#transaction-dashboard tr[data-subcategory-id="' + categoryId + '"]').show();
-            }
-        });
-
-        $('.editable-transaction').on('click', function(e) {
-            var transactionId = $(this).attr('data-transaction-id');
-            window.location = 'transaction?transactionId=' + transactionId;
-        });
-
-        var year = new URLSearchParams(new URL(window.location.href).search).get('year');
-        var url = '/api/dashboard/year';
-
-        if (year !== null) {
-            url = url + '?year=' + year;
+        if (nextTr.hasClass('d-none')) {
+          nextTr.removeClass('d-none');
+        } else {
+          nextTr.addClass('d-none');
         }
+      });
+
+      $('#obfuscate-button').change(function() {
+        obfuscateDollarValues($(this).prop('checked'));
+      });
+
+      $('#year-select').on('change', function(e) {
+        var periodId = $(this).find('option:selected').attr('data-period-id');
+        window.location = '?year=' + periodId;
+      });
+
+      // Click listener for filtering transactions by category
+      $('#year-dashboard td[data-category-id]').on('click', function(e) {
+          var categoryId = $(this).attr('data-category-id');
+
+          $('tr.group-unexpandable').addClass('d-none');
+
+          if (categoryId === '0') {
+            $('#transaction-header').text('All Transactions');
+            $('tr.group-expandable').removeClass('d-none');
+          } else {
+            $('#transaction-header').text($(this).text() + ' Transactions');
+            $('tr.group-expandable').addClass('d-none');
+            $('tr.group-expandable[data-category-id="' + categoryId + '"]').removeClass('d-none');
+            $('tr.group-expandable[data-subcategory-id="' + categoryId + '"]').removeClass('d-none');
+          }
+      });
+
+      $('.editable-transaction').on('click', function(e) {
+        var transactionId = $(this).attr('data-transaction-id');
+        window.location = 'transaction?transactionId=' + transactionId;
+      });
+
+      var year = new URLSearchParams(new URL(window.location.href).search).get('year');
+      var url = '/api/dashboard/year';
+
+      if (year !== null) {
+          url = url + '?year=' + year;
+      }
     });
 
     function obfuscateDollarValues(shouldObfuscate) {

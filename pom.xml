@@ -6,7 +6,7 @@
 
     <groupId>com.lactaoen</groupId>
     <artifactId>ledger</artifactId>
-    <version>3.2.6</version>
+    <version>3.2.7</version>
     <packaging>war</packaging>
 
     <parent>
@@ -20,6 +20,7 @@
         <dynamo.version>1.11.704</dynamo.version>
         <google.guava.version>28.2-jre</google.guava.version>
         <jasypt.version>1.17</jasypt.version>
+        <apache.poi.version>4.1.2</apache.poi.version>
     </properties>
 
     <dependencies>
@@ -50,6 +51,17 @@
             <artifactId>guava</artifactId>
             <version>${google.guava.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
