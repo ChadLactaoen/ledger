@@ -102,6 +102,48 @@ function numericOnly(a, b) {
  return stripNonNumber(a) - stripNonNumber(b);
 }
 
+function sortWithDropdownName(valA, valB, rowA, rowB) {
+    var aVal = valA.startsWith('<') ? rowA._data['name'] : valA;
+    var bVal = valB.startsWith('<') ? rowB._data['name'] : valB;
+    var evalVal = alphanumignorecase(aVal, bVal);
+    return evalVal !== 0 && evalEqualValues(rowA, rowB, evalVal);
+}
+
+function sortWithDropdownCategory(valA, valB, rowA, rowB) {
+    var aVal = valA === undefined ? rowA._data.category : valA;
+    var bVal = valB === undefined ? rowB._data.category : valB;
+    var evalVal = alphanumignorecase(aVal, bVal);
+    return evalVal !== 0 && evalEqualValues(rowA, rowB, evalVal);
+}
+
+function sortWithDropdownPrice(valA, valB, rowA, rowB) {
+    var aVal = valA === undefined ? rowA._data.price : valA;
+    var bVal = valB === undefined ? rowB._data.price : valB;
+    var evalVal = numericOnlyWithNegatives(aVal, bVal);
+    return evalVal !== 0 && evalEqualValues(rowA, rowB, evalVal);
+}
+
+function sortWithDropdownAverage(valA, valB, rowA, rowB) {
+    var aVal = valA === undefined ? rowA._data.average : valA;
+    var bVal = valB === undefined ? rowB._data.average : valB;
+    var evalVal = numericOnlyWithNegatives(aVal, bVal);
+    return evalVal !== 0 && evalEqualValues(rowA, rowB, evalVal);
+}
+
+function sortWithDropdownCount(valA, valB, rowA, rowB) {
+    var aVal = valA === undefined ? rowA._data['transaction-count'].toString(10) : valA;
+    var bVal = valB === undefined ? rowB._data['transaction-count'].toString(10) : valB;
+    var evalVal = numericOnly(aVal, bVal);
+    return evalVal !== 0 && evalEqualValues(rowA, rowB, evalVal);
+}
+
+function evalEqualValues(rowA, rowB, evalVal) {
+    if (rowA._data.name === rowB._data.name && rowA._data.category === rowB._data.category) {
+        return numericOnly(rowA._data['preferred-order'].toString(10), rowB._data['preferred-order'].toString(10));
+    }
+    return evalVal;
+}
+
 function numericOnlyWithNegatives(a, b) {
  function stripNonNumber(s) {
    s = s.replace(new RegExp(/[^0-9\-]/g), "");

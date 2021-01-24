@@ -92,20 +92,20 @@
         </table>
       </div>
       <div id="group-table" role="tabpanel" class="table-responsive tab-pane fade">
-        <table class="dashboard-table table table-sm table-hover">
+        <table data-toggle="table" data-classes="dashboard-table table table-sm table-hover">
           <thead>
           <tr>
-            <th copr="col"></th>
-            <th scope="col">Name</th>
-            <th scope="col">Category</th>
-            <th scope="col">Price</th>
-            <th scope="col">Average</th>
-            <th scope="col">Count</th>
+            <th scope="col"></th>
+            <th data-sortable="true" data-sorter="sortWithDropdownName" data-sort-order="desc" scope="col">Name</th>
+            <th data-sortable="true" data-sorter="sortWithDropdownCategory" scope="col">Category</th>
+            <th data-sortable="true" data-sorter="sortWithDropdownPrice" scope="col">Price</th>
+            <th data-sortable="true" data-sorter="sortWithDropdownAverage" scope="col">Average</th>
+            <th data-sortable="true" data-sorter="sortWithDropdownCount" scope="col">Count</th>
           </tr>
           </thead>
           <tbody>
             <th:block th:each="transaction : ${transactionSummary}">
-              <tr th:attr="data-category-id=${transaction.category.name}" class="group-expandable">
+              <tr th:attr="data-preferred-order=1,data-category=${transaction.category.name},data-name=${transaction.name}" class="group-expandable">
                 <td></td>
                 <td th:text="${transaction.name}" th:class="font-weight-bold"></td>
                 <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
@@ -113,29 +113,31 @@
                 <td th:text="${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|"></td>
                 <td th:text="${transaction.count}"></td>
               </tr>
-              <tr th:attr="data-category-id=${transaction.category.name}" class="d-none group-unexpandable">
+              <tr th:attr="data-preferred-order=2,data-name=${transaction.name},data-category=${transaction.category.name},data-price=${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|,data-average=${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|,data-transaction-count=${transaction.count}" class="d-none group-unexpandable">
                 <td></td>
                 <td colspan="5">
-                  <table data-toggle="table" data-classes="dashboard-table table table-sm table-hover">
-                    <thead>
-                    <tr>
-                      <th data-sortable="true" data-sorter="datetime" scope="col">Date</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Category</th>
-                      <th data-sortable="true" data-sorter="numericOnlyWithNegatives" scope="col">Price</th>
-                      <th scope="col">Memo</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="categoryTransaction : ${transaction.transactions}">
-                      <td th:text="${@dateConverterService.convertToMonthDayFormat(categoryTransaction.date)}"></td>
-                      <td th:text="${categoryTransaction.name}" th:attr="data-transaction-id=${categoryTransaction.transactionId}" class="editable-transaction"></td>
-                      <td th:text="${categoryTransaction.category.name}" th:class="font-weight-bold" th:style="|color:${categoryTransaction.category.color}|"></td>
-                      <td th:text="${categoryTransaction.price} >= 0 ? |$${#numbers.formatDecimal(categoryTransaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((categoryTransaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
-                      <td th:text="${categoryTransaction.memo}"></td>
-                    </tr>
-                    </tbody>
-                  </table>
+                  <div class="table-responsive">
+                    <table class="dashboard-table table table-sm table-hover">
+                      <thead>
+                      <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Memo</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr th:each="categoryTransaction : ${transaction.transactions}">
+                        <td th:text="${@dateConverterService.convertToMonthDayFormat(categoryTransaction.date)}"></td>
+                        <td th:text="${categoryTransaction.name}" th:attr="data-transaction-id=${categoryTransaction.transactionId}" class="editable-transaction"></td>
+                        <td th:text="${categoryTransaction.category.name}" th:class="font-weight-bold" th:style="|color:${categoryTransaction.category.color}|"></td>
+                        <td th:text="${categoryTransaction.price} >= 0 ? |$${#numbers.formatDecimal(categoryTransaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((categoryTransaction.price * -1),1,'COMMA',2,'POINT')}|"></td>
+                        <td th:text="${categoryTransaction.memo}"></td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </td>
               </tr>
             </th:block>
@@ -156,7 +158,7 @@
 
     $(document).ready(function() {
 
-      $('.group-expandable').on('click', function(e) {
+      $('#group-table').on('click', '.group-expandable', function(e) {
         var nextTr = $(this).next();
 
         if (nextTr.hasClass('d-none')) {
