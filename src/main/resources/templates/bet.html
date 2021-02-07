@@ -148,6 +148,44 @@
 
   /*]]>*/
 
+  function expandIfSportsBetting() {
+    var game = $('#gameName option:selected').text();
+    var gameId = $('#gameName option:selected').val();
+
+    if (game.startsWith('Sports Betting')) {
+
+      var fields = $('#forTeamLocation, #againstTeamLocation');
+
+      $.ajax({
+        url: contextRoot + 'team/list?game=' + gameId,
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+
+          $(fields).children('option').remove();
+          $(fields).append('<option></option>');
+
+          $.each(data, function(index, team) {
+            var teamOption = document.createElement('option');
+            teamOption.value = team.location;
+            teamOption.setAttribute('data-mascot', team.mascot);
+            teamOption.innerText = team.abbreviation + ' - ' + team.location + ' ' + team.mascot;
+
+            $(fields).append(teamOption);
+          });
+
+          $('.sports-bet-field').removeAttr('disabled');
+          $('#sports-fields').removeAttr('hidden');
+          $('#betType, #odds').attr('required', 'required');
+        }
+      });
+    } else {
+      $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
+      $('#sports-fields').attr('hidden', 'hidden');
+      $(fields).children('option').remove();
+    }
+  }
+
   $(document).ready(function() {
 
     $('#againstTeamLocation').on('change', function() {
@@ -160,43 +198,7 @@
       document.getElementById('forTeamMascot').value = mascot;
     });
 
-    $('#gameName').on('change', function(e) {
-      var game = $('#gameName option:selected').text();
-      var gameId = $('#gameName option:selected').val();
-
-      if (game.startsWith('Sports Betting')) {
-
-        var fields = $('#forTeamLocation, #againstTeamLocation');
-
-        $.ajax({
-          url: contextRoot + 'team/list?game=' + gameId,
-          method: 'GET',
-          dataType: 'json',
-          success: function(data) {
-
-            $(fields).children('option').remove();
-            $(fields).append('<option></option>');
-
-            $.each(data, function(index, team) {
-              var teamOption = document.createElement('option');
-              teamOption.value = team.location;
-              teamOption.setAttribute('data-mascot', team.mascot);
-              teamOption.innerText = team.abbreviation + ' - ' + team.location + ' ' + team.mascot;
-
-              $(fields).append(teamOption);
-            });
-
-            $('.sports-bet-field').removeAttr('disabled');
-            $('#sports-fields').removeAttr('hidden');
-            $('#betType, #odds').attr('required', 'required');
-          }
-        });
-      } else {
-        $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
-        $('#sports-fields').attr('hidden', 'hidden');
-        $(fields).children('option').remove();
-      }
-    });
+    $('#gameName').on('change', expandIfSportsBetting);
 
     $('#template-select').on('change', function() {
       var selectedTemplate = templates[this.value];
@@ -207,16 +209,7 @@
         document.querySelector('#casino option[value="' + selectedTemplate.casino + '"]').selected = true
       }
 
-      var game = $('#gameName option:selected').text();
-      if (game.startsWith('Sports Betting')) {
-        $('.sports-bet-field').removeAttr('disabled');
-        $('#sports-fields').removeAttr('hidden');
-        $('#betType, #odds').attr('required', 'required');
-      } else {
-        $('.sports-bet-field').removeAttr('required').attr('disabled','disabled');
-        $('#sports-fields').attr('hidden', 'hidden');
-        $(fields).children('option').remove();
-      }
+      expandIfSportsBetting();
 
       if (selectedTemplate.odds) {
         document.getElementById('odds').value = selectedTemplate.odds;
