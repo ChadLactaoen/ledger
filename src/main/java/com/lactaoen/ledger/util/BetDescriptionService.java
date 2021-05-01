@@ -3,6 +3,7 @@ package com.lactaoen.ledger.util;
 import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.Team;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 public class BetDescriptionService {
@@ -14,6 +15,23 @@ public class BetDescriptionService {
             return descriptor;
         }
 
+        String parentGame = bet.getGame().getParent();
+
+        if (parentGame.equals("Sports Betting")) {
+            return createSportsBetDescriptor(bet, descriptor);
+        }
+
+        return StringUtils.isEmpty(bet.getMemo()) ? descriptor : bet.getMemo();
+    }
+
+    public String createMatchDescriptor(Bet bet) {
+        Team forTeam = bet.getForTeam();
+        Team againstTeam = bet.getAgainstTeam();
+
+        return createTeamDescriptor(forTeam) + " vs " + createTeamDescriptor(againstTeam);
+    }
+
+    private String createSportsBetDescriptor(Bet bet, String descriptor) {
         // Odds
         if (bet.getOdds() == 100) {
             descriptor += "EVEN";
@@ -48,13 +66,6 @@ public class BetDescriptionService {
         }
 
         return descriptor;
-    }
-
-    public String createMatchDescriptor(Bet bet) {
-        Team forTeam = bet.getForTeam();
-        Team againstTeam = bet.getAgainstTeam();
-
-        return createTeamDescriptor(forTeam) + " vs " + createTeamDescriptor(againstTeam);
     }
 
     private String createTeamDescriptor(Team team) {

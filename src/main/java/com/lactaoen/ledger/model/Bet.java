@@ -175,15 +175,17 @@ public class Bet {
         betForm.setProfit(profit);
         betForm.setMemo(memo);
 
-        betForm.setBetType(betType);
-        betForm.setGameType(gameType);
-        betForm.setForTeamLocation(forTeam.getLocation());
-        betForm.setForTeamMascot(forTeam.getMascot());
-        betForm.setAgainstTeamLocation(againstTeam.getLocation());
-        betForm.setAgainstTeamMascot(againstTeam.getMascot());
-        betForm.setLine(line);
-        betForm.setOdds(odds);
-        betForm.setLive(live);
+        if (game.getName().equals("Sports Betting")) {
+            betForm.setBetType(betType);
+            betForm.setGameType(gameType);
+            betForm.setForTeamLocation(forTeam.getLocation());
+            betForm.setForTeamMascot(forTeam.getMascot());
+            betForm.setAgainstTeamLocation(againstTeam.getLocation());
+            betForm.setAgainstTeamMascot(againstTeam.getMascot());
+            betForm.setLine(line);
+            betForm.setOdds(odds);
+            betForm.setLive(live);
+        }
         return betForm;
     }
 }

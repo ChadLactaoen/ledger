@@ -34,6 +34,9 @@
         <li class="nav-item">
           <a class="nav-link" id="open-bets-tab" data-toggle="tab" href="#open-bets-tab-panel" role="tab">Open Bets <span class="badge badge-purple" th:text="${#lists.size(openBets)}"></span></a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" id="all-bets-tab" data-toggle="tab" href="#all-bets-tab-panel" role="tab">History</span></a>
+        </li>
       </ul>
       <div class="tab-content" id="gambling-tab-content">
         <div class="tab-pane fade show active" id="overall-tab-panel" role="tabpanel">
@@ -44,6 +47,9 @@
         <div class="tab-pane fade" id="open-bets-tab-panel" role="tabpanel">
           <div th:replace="fragments/gamblingChart :: openBets"></div>
         </div>
+        <div class="tab-pane fade" id="all-bets-tab-panel" role="tabpanel">
+          <div th:replace="fragments/gambling :: history"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -52,6 +58,7 @@
 <script th:inline="javascript">
   /*<![CDATA[*/
 
+    var contextRoot = /*[[@{/}]]*/ '';
     var weekData = [[${weekData}]];
     var monthData = [[${monthData}]];
 
@@ -59,6 +66,11 @@
 
   $('document').ready(function() {
     addTotalDivider();
+
+    $('.editable-transaction').on('click', function(e) {
+      var betId = $(this).attr('data-transaction-id');
+      window.location = contextRoot + 'bet?betId=' + betId;
+    });
   });
 
   function addTotalDivider() {
@@ -75,6 +87,23 @@
   $('#sports-chart table td:first-child').on('click', function(e) {
     var sport = this.innerText;
     window.open('/sports?sport=' + sport, '_blank');
+  });
+
+
+  $('#filter-game-dropdown').on('change', function(e) {
+    var selectedOption = $(this).find('option:selected').val();
+    if (selectedOption === 'everything') {
+      $('#history-table tbody tr').removeClass('d-none');
+    } else if (selectedOption === 'sports-only') {
+      $('#history-table tbody tr').addClass('d-none');
+      $('#history-table tbody tr[data-parent-game="Sports Betting"]').removeClass('d-none');
+    } else if (selectedOption === 'poker-only') {
+      $('#history-table tbody tr').addClass('d-none');
+      $('#history-table tbody tr[data-parent-game="Poker"]').removeClass('d-none');
+    } else {
+      $('#history-table tbody tr').removeClass('d-none');
+      $('#history-table tbody tr[data-parent-game="Poker"], #history-table tr[data-parent-game="Sports Betting"]').addClass('d-none');
+    }
   });
 </script>
 <script src="/js/gambling-charts.js"></script>

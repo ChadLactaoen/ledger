@@ -1,0 +1,39 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <div th:fragment="history">
+    <div class="float-right dropdown-md">
+      <select id="filter-game-dropdown" class="form-control form-control-sm">
+        <option value="everything" selected>Show Everything</option>
+        <option value="sports-only">Sports Bets Only</option>
+        <option value="poker-only">Poker Only</option>
+        <option value="non-poker-sports">Non-Poker, Non-Sports</option>
+      </select>
+    </div>
+    <div id="history-table" class="table-responsive">
+      <table data-toggle="table" data-classes="dashboard-table table table-sm table-hover">
+        <thead>
+        <tr>
+          <th data-sortable="true" data-sorter="datetime" scope="col">Date</th>
+          <th data-sortable="true" data-sorter="alphanumignorecase" data-sort-order="desc" scope="col">Game</th>
+          <th scope="col">Memo</th>
+          <th data-sortable="true" data-sorter="alphanumignorecase" data-sort-order="desc" scope="col">Casino</th>
+          <th data-sortable="true" data-sorter="alphanum" data-sort-order="desc" scope="col">Wager</th>
+          <th data-sortable="true" data-sorter="numericOnlyWithNegatives" scope="col">Profit</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bet : ${history}" th:attr="data-parent-game=${bet.game.parent}">
+          <td th:text="${@dateConverterService.convertToMonthDayFormat(bet.date)}"></td>
+          <td th:text="${bet.game.name}" th:attr="data-transaction-id=${bet.betId}" th:style="|color:${bet.game.color}|" class="font-weight-bold editable-transaction"></td>
+          <td th:text="${@betDescriptionService.createMainDescriptor(bet)}"></td>
+          <td th:text="${bet.casino}"></td>
+          <td th:text="|$${#numbers.formatDecimal(bet.wager,1,'COMMA',2,'POINT')}|"></td>
+          <td th:text="${bet.profit} >= 0 ? |$${#numbers.formatDecimal(bet.profit,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((bet.profit * -1),1,'COMMA',2,'POINT')}|" th:classappend="${0 > bet.profit} ? 'text-danger'" class="font-weight-bold"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

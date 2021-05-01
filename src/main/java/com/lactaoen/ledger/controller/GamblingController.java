@@ -1,5 +1,7 @@
 package com.lactaoen.ledger.controller;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.lactaoen.ledger.model.Bet;
 import com.lactaoen.ledger.model.data.GamblingChartEntry;
 import com.lactaoen.ledger.model.data.TeamStat;
@@ -14,17 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.groupingBy;
 
 @RestController
 public class GamblingController {
 
     private static final Predicate<Bet> SPORTS_BET_FILTER = bet -> bet.getGame().getParent().equals("Sports Betting");
     private static final Predicate<Bet> POKER_FILTER = bet -> bet.getGame().getParent().equals("Poker");
+    private static final Comparator<Bet> BY_NEWEST = Comparator.comparing(Bet::getDate).reversed();
 
     private final BetService betService;
     private final GamblingChartService gamblingChartService;
@@ -54,17 +61,21 @@ public class GamblingController {
         List<Bet> sportsBets = bets.stream().filter(SPORTS_BET_FILTER).collect(toImmutableList());
         List<Bet> pokerBets = bets.stream().filter(POKER_FILTER).collect(toImmutableList());
         List<GamblingChartEntry> overallEntries = gamblingChartService.createChart(bets, "None");
+        Map<Boolean, List<Bet>> betsByStatus = bets
+                .stream()
+                .collect(collectingAndThen(groupingBy(bet -> bet.getProfit() == null), ImmutableMap::copyOf));
 
         ModelAndView mav = new ModelAndView("gambling");
         mav.addObject("year", year);
         mav.addObject("yearsList", dateConverterService.getYearsSinceStart());
-        mav.addObject("openBets", bets.stream().filter(bet -> bet.getProfit() == null).collect(toImmutableList()));
+        mav.addObject("openBets", betsByStatus.get(true) == null ? ImmutableList.of() : sortBetsByDateDesc(betsByStatus.get(true)));
         mav.addObject("overallEntries", overallEntries);
         mav.addObject("totalEntry", gamblingChartService.createTotalEntry(overallEntries));
         mav.addObject("sportsBettingEntries", gamblingChartService.createChart(sportsBets, "Sports Betting"));
         mav.addObject("pokerEntries", gamblingChartService.createChart(pokerBets, "Poker"));
         mav.addObject("weekData", gamblingGraphService.getGamblingGraphDataByWeek(bets, year));
         mav.addObject("monthData", gamblingGraphService.getGamblingGraphDataByMonth(bets, year));
+        mav.addObject("history", betsByStatus.get(false) == null ? ImmutableList.of() : sortBetsByDateDesc(betsByStatus.get(false)));
         return mav;
     }
 
@@ -84,5 +95,9 @@ public class GamblingController {
         mav.addObject("sport", sportName);
         mav.addObject("year", year);
         return mav;
+    }
+
+    private List<Bet> sortBetsByDateDesc(List<Bet> bets) {
+        return bets.stream().sorted(BY_NEWEST).collect(toImmutableList());
     }
 }
