@@ -175,7 +175,7 @@ public class Bet {
         betForm.setProfit(profit);
         betForm.setMemo(memo);
 
-        if (game.getName().equals("Sports Betting")) {
+        if (game.getParent().equals("Sports Betting")) {
             betForm.setBetType(betType);
             betForm.setGameType(gameType);
             betForm.setForTeamLocation(forTeam.getLocation());
