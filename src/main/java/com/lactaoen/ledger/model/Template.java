@@ -19,6 +19,7 @@ public class Template {
     private String casino;
     private Double wager;
     private Integer odds;
+    private Double line;
     private String sportsBetType;
     private String gameType;
 
@@ -107,6 +108,15 @@ public class Template {
     }
 
     @DynamoDBAttribute
+    public Double getLine() {
+        return line;
+    }
+
+    public void setLine(Double line) {
+        this.line = line;
+    }
+
+    @DynamoDBAttribute
     public String getSportsBetType() {
         return sportsBetType;
     }
@@ -136,6 +146,7 @@ public class Template {
                 ", casino='" + casino + '\'' +
                 ", wager=" + wager +
                 ", odds=" + odds +
+                ", line=" + line +
                 ", sportsBetType='" + sportsBetType + '\'' +
                 ", gameType='" + gameType + '\'' +
                 '}';

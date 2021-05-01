@@ -221,6 +221,9 @@
       if (selectedTemplate.gameType) {
         document.querySelector('#gameType option[value="' + selectedTemplate.gameType + '"]').selected = true
       }
+      if (selectedTemplate.line) {
+        document.getElementById('line').value = selectedTemplate.line;
+      }
     });
 
     $('.negative-button').on('click', function(e) {
