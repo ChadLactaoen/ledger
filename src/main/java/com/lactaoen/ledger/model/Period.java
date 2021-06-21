@@ -15,6 +15,7 @@ public class Period {
     private String startDate;
     private String endDate;
     private Double total;
+    private String notes;
     private List<Allocation> allocations;
     private List<Transaction> transactions;
 
@@ -49,6 +50,15 @@ public class Period {
     }
 
     @DynamoDBAttribute
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    @DynamoDBAttribute
     public List<Allocation> getAllocations() {
         return allocations;
     }
@@ -76,6 +86,7 @@ public class Period {
         periodForm.setStartDate(startDate);
         periodForm.setEndDate(endDate);
         periodForm.setTotal(total);
+        periodForm.setNotes(notes);
         ImmutableList.Builder<String> categoryListBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<String> amountListBuilder = new ImmutableList.Builder<>();
         allocations.forEach(allocation -> {

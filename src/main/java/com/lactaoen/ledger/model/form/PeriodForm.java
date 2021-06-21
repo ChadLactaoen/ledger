@@ -9,6 +9,7 @@ public class PeriodForm {
     private String startDate;
     private String endDate;
     private Double total;
+    private String notes;
     private List<String> categories;
     private List<String> amounts;
 
@@ -39,6 +40,14 @@ public class PeriodForm {
         this.total = total;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public List<String> getCategories() {
         return categories;
     }
@@ -60,6 +69,7 @@ public class PeriodForm {
         period.setStartDate(startDate);
         period.setEndDate(endDate);
         period.setTotal(total);
+        period.setNotes(notes);
         return period;
     }
 }

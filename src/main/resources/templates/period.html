@@ -19,6 +19,10 @@
       <label>Total</label>
       <input th:field="*{total}" th:required="true" type="number" step=".01" class="form-control" />
     </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <input th:field="*{notes}" th:required="false" type="text" class="form-control" />
+    </div>
 
     <div class="sticky-top">
       <button th:attrappend="disabled=${periodForm.startDate == null}?disabled" type="submit" class="btn btn-lg heath-secondary-button">Submit</button>
