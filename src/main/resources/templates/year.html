@@ -105,7 +105,7 @@
           </thead>
           <tbody>
             <th:block th:each="transaction : ${transactionSummary}">
-              <tr th:attr="data-preferred-order=1,data-category=${transaction.category.name},data-name=${transaction.name}" class="group-expandable">
+              <tr th:attr="data-preferred-order=1,data-category-id=${transaction.category.name},data-name=${transaction.name}" class="group-expandable">
                 <td></td>
                 <td th:text="${transaction.name}" th:class="font-weight-bold"></td>
                 <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
@@ -113,7 +113,7 @@
                 <td th:text="${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|"></td>
                 <td th:text="${transaction.count}"></td>
               </tr>
-              <tr th:attr="data-preferred-order=2,data-name=${transaction.name},data-category=${transaction.category.name},data-price=${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|,data-average=${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|,data-transaction-count=${transaction.count}" class="d-none group-unexpandable">
+              <tr th:attr="data-preferred-order=2,data-name=${transaction.name},data-category-id=${transaction.category.name},data-price=${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|,data-average=${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|,data-transaction-count=${transaction.count}" class="d-none group-unexpandable">
                 <td></td>
                 <td colspan="5">
                   <div class="table-responsive">
