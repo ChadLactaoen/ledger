@@ -184,10 +184,10 @@
           $('tr.group-unexpandable').addClass('d-none');
 
           if (categoryId === '0') {
-            $('#transaction-header').text('All Transactions');
+            $('#transaction-header').text('All Transactions').attr('data-transaction-name', 'All');
             $('tr.group-expandable').removeClass('d-none');
           } else {
-            $('#transaction-header').text($(this).text() + ' Transactions');
+            $('#transaction-header').text($(this).text() + ' Transactions').attr('data-transaction-name', $(this).text());
             $('tr.group-expandable').addClass('d-none');
             $('tr.group-expandable[data-category-id="' + categoryId + '"]').removeClass('d-none');
             $('tr.group-expandable[data-subcategory-id="' + categoryId + '"]').removeClass('d-none');
