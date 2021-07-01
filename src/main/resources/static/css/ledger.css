@@ -46,13 +46,19 @@ a.card-link:hover, a.nav-link:hover {
     border-color: var(--purple) !important;
 }
 
+#get-wrecked-button {
+    color: #fff;
+    background-color: var(--warning) !important;
+    border-color: var(--warning) !important;
+}
+
 .heath-secondary-button {
     color: #111;
     background-color: var(--warning) !important;
     border-color: var(--warning);
 }
 
-.negative-button:hover, .heath-button:hover, a.heath-button:hover  {
+#get-wrecked-buttonLhover, .negative-button:hover, .heath-button:hover, a.heath-button:hover  {
     opacity: 0.8;
     cursor: pointer;
     color: white !important;
@@ -100,7 +106,7 @@ tr[data-transaction-id]:hover,
     cursor: pointer;
 }
 
-#period-dashboard {
+#period-dashboard, #year-dashboard {
     margin-top: 1rem;
 }
 

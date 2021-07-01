@@ -49,6 +49,12 @@ public class DashboardController {
         mav.addObject("periodDates", periodService.getPeriodDates());
         mav.addObject("graphData", graphService.getGraphData(period));
 
+        Period parentPeriod = new Period();
+        parentPeriod.setAllocations(period.getAllocationsByParentCategory());
+        parentPeriod.setTotal(period.getTotal());
+        parentPeriod.setTransactions(period.getTransactions());
+        mav.addObject("parentPeriod", parentPeriod);
+
         return mav;
     }
 
@@ -77,6 +83,12 @@ public class DashboardController {
         mav.addObject("period", period);
         mav.addObject("graphData", graphService.getGraphData(period));
         mav.addObject("transactionSummary", transactionSummary);
+
+        Period parentPeriod = new Period();
+        parentPeriod.setAllocations(period.getAllocationsByParentCategory());
+        parentPeriod.setTotal(period.getTotal());
+        parentPeriod.setTransactions(period.getTransactions());
+        mav.addObject("parentPeriod", parentPeriod);
         return mav;
     }
 }

@@ -59,7 +59,8 @@
       <div class="input-group mb-3">
         <input th:field="*{profit}" type="number" step=".01" class="form-control" />
         <div class="input-group-append">
-          <button class="btn btn-group-btn negative-button" type="button">-</button>
+          <button id="negative-button" class="btn btn-group-btn negative-button" type="button">-</button>
+          <button id="get-wrecked-button" class="btn btn-group-btn" type="button">Loss</button>
         </div>
       </div>
     </div>
@@ -226,7 +227,7 @@
       }
     });
 
-    $('.negative-button').on('click', function(e) {
+    $('#negative-button').on('click', function(e) {
       var input = $(this).parent().siblings('input').eq(0);
       var inputVal = $(input).val();
 
@@ -234,6 +235,13 @@
         var newInputVal = '-' + $(input).val();
         $(input).text(newInputVal).val(newInputVal);
       }
+    });
+
+    $('#get-wrecked-button').on('click', function(e) {
+      var wager = document.getElementById('wager').value;
+      var input = $(this).parent().siblings('input').eq(0);
+      var newInputVal = '-' + wager;
+      $(input).text(newInputVal).val(newInputVal);
     });
   });
 </script>

@@ -22,34 +22,78 @@
   <div id="year-dashboard">
     <div class="row">
       <div class="col-md-7 col-lg-6 col-xl-7">
-        <div class="table-responsive">
-          <table class="dashboard-table table table-sm table-hover">
-            <thead>
-            <tr>
-              <th scope="col">Category</th>
-              <th scope="col">Count</th>
-              <th scope="col">Spent</th>
-              <th scope="col">Average</th>
-              <th scope="col">%</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="allocation : ${period.allocations}" th:attr="data-parent-cat-id=${allocation.category.parent}">
-              <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.color}|" th:attr="data-category-id=${allocation.category.name}"></td>
-              <td th:text="${allocation.count}"></td>
-              <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
-              <td th:text="|$${#numbers.formatDecimal((allocation.total / allocation.count),1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
-              <td th:text="|${#numbers.formatDecimal((allocation.total / period.total) * 100,1,'COMMA',2,'POINT')}%|"></td>
-            </tr>
-            <tr class="font-weight-bold">
-              <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
-              <td th:text="${#lists.size(period.transactions)}"></td>
-              <td th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
-              <td></td>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
+
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#category-table" role="tab">By Category</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#parent-category-table" role="tab">By Parent</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Year Table by Category -->
+          <div id="category-table" class="tab-pane fade show active table-responsive" role="tabpanel">
+            <table class="dashboard-table table table-sm table-hover">
+              <thead>
+              <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Count</th>
+                <th scope="col">Spent</th>
+                <th scope="col">Average</th>
+                <th scope="col">%</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="allocation : ${period.allocations}" th:attr="data-parent-cat-id=${allocation.category.parent}">
+                <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.color}|" th:attr="data-category-id=${allocation.category.name}"></td>
+                <td th:text="${allocation.count}"></td>
+                <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+                <td th:text="|$${#numbers.formatDecimal((allocation.total / allocation.count),1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+                <td th:text="|${#numbers.formatDecimal((allocation.total / period.total) * 100,1,'COMMA',2,'POINT')}%|"></td>
+              </tr>
+              <tr class="font-weight-bold">
+                <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
+                <td th:text="${#lists.size(period.transactions)}"></td>
+                <td th:text="|$${#numbers.formatDecimal(period.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+                <td></td>
+                <td></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Year Table by Parent Category -->
+          <div id="parent-category-table" class="tab-pane fade table-responsive" role="tabpanel">
+            <table class="dashboard-table table table-sm table-hover">
+              <thead>
+              <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Count</th>
+                <th scope="col">Spent</th>
+                <th scope="col">Average</th>
+                <th scope="col">%</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="allocation : ${parentPeriod.allocations}" th:attr="data-parent-cat-id=${allocation.category.parent}">
+                <td th:text="${allocation.category.name}" th:class="font-weight-bold" th:style="|color:${allocation.category.color}|" th:attr="data-category-id=${allocation.category.name}"></td>
+                <td th:text="${allocation.count}"></td>
+                <td th:text="|$${#numbers.formatDecimal(allocation.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+                <td th:text="|$${#numbers.formatDecimal((allocation.total / allocation.count),1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+                <td th:text="|${#numbers.formatDecimal((allocation.total / parentPeriod.total) * 100,1,'COMMA',2,'POINT')}%|"></td>
+              </tr>
+              <tr class="font-weight-bold">
+                <td th:class="text-dark" th:attr="data-category-id=0">Total</td>
+                <td th:text="${#lists.size(parentPeriod.transactions)}"></td>
+                <td th:text="|$${#numbers.formatDecimal(parentPeriod.total,1,'COMMA',2,'POINT')}|" class="dollar-value"></td>
+                <td></td>
+                <td></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="col-md-5 col-lg-6 col-xl-5">
@@ -81,7 +125,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr th:each="transaction : ${period.transactions}" th:attr="data-category-id=${transaction.category.name},data-subcategory-id=${transaction.subcategory?.name}" class="group-expandable">
+            <tr th:each="transaction : ${period.transactions}" th:attr="data-category-id=${transaction.category.name},data-subcategory-id=${transaction.subcategory?.name},data-category-parent-id=${transaction.category.parent}" class="group-expandable">
               <td th:text="${@dateConverterService.convertToMonthDayFormat(transaction.date)}"></td>
               <td th:text="${transaction.name}" th:attr="data-transaction-id=${transaction.transactionId}" class="editable-transaction"></td>
               <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
@@ -105,7 +149,7 @@
           </thead>
           <tbody>
             <th:block th:each="transaction : ${transactionSummary}">
-              <tr th:attr="data-preferred-order=1,data-category-id=${transaction.category.name},data-name=${transaction.name}" class="group-expandable">
+              <tr th:attr="data-preferred-order=1,data-category-id=${transaction.category.name},data-category-parent-id=${transaction.category.parent},data-name=${transaction.name}" class="group-expandable">
                 <td></td>
                 <td th:text="${transaction.name}" th:class="font-weight-bold"></td>
                 <td th:text="${transaction.category.name}" th:class="font-weight-bold" th:style="|color:${transaction.category.color}|"></td>
@@ -113,7 +157,7 @@
                 <td th:text="${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|"></td>
                 <td th:text="${transaction.count}"></td>
               </tr>
-              <tr th:attr="data-preferred-order=2,data-name=${transaction.name},data-category-id=${transaction.category.name},data-price=${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|,data-average=${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|,data-transaction-count=${transaction.count}" class="d-none group-unexpandable">
+              <tr th:attr="data-preferred-order=2,data-name=${transaction.name},data-category-id=${transaction.category.name},data-category-parent-id=${transaction.category.parent},data-price=${transaction.price} >= 0 ? |$${#numbers.formatDecimal(transaction.price,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.price * -1),1,'COMMA',2,'POINT')}|,data-average=${transaction.average} >= 0 ? |$${#numbers.formatDecimal(transaction.average,1,'COMMA',2,'POINT')}| : |-$${#numbers.formatDecimal((transaction.average * -1),1,'COMMA',2,'POINT')}|,data-transaction-count=${transaction.count}" class="d-none group-unexpandable">
                 <td></td>
                 <td colspan="5">
                   <div class="table-responsive">
@@ -178,7 +222,7 @@
       });
 
       // Click listener for filtering transactions by category
-      $('#year-dashboard td[data-category-id]').on('click', function(e) {
+      $('#category-table td[data-category-id]').on('click', function(e) {
           var categoryId = $(this).attr('data-category-id');
 
           $('tr.group-unexpandable').addClass('d-none');
@@ -190,6 +234,22 @@
             $('#transaction-header').text($(this).text() + ' Transactions').attr('data-transaction-name', $(this).text());
             $('tr.group-expandable').addClass('d-none');
             $('tr.group-expandable[data-category-id="' + categoryId + '"]').removeClass('d-none');
+            $('tr.group-expandable[data-subcategory-id="' + categoryId + '"]').removeClass('d-none');
+          }
+      });
+
+      $('#parent-category-table td[data-category-id]').on('click', function(e) {
+          var categoryId = $(this).attr('data-category-id');
+
+          $('tr.group-unexpandable').addClass('d-none');
+
+          if (categoryId === '0') {
+            $('#transaction-header').text('All Transactions').attr('data-transaction-name', 'All');
+            $('tr.group-expandable').removeClass('d-none');
+          } else {
+            $('#transaction-header').text($(this).text() + ' Transactions').attr('data-transaction-name', $(this).text());
+            $('tr.group-expandable').addClass('d-none');
+            $('tr.group-expandable[data-category-parent-id="' + categoryId + '"]').removeClass('d-none');
             $('tr.group-expandable[data-subcategory-id="' + categoryId + '"]').removeClass('d-none');
           }
       });

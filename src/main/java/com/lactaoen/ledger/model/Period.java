@@ -7,7 +7,12 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.google.common.collect.ImmutableList;
 import com.lactaoen.ledger.model.form.PeriodForm;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.groupingBy;
 
 @DynamoDBTable(tableName = "Period")
 public class Period {
@@ -96,5 +101,45 @@ public class Period {
         periodForm.setCategories(categoryListBuilder.build());
         periodForm.setAmounts(amountListBuilder.build());
         return periodForm;
+    }
+
+    @DynamoDBIgnore
+    public List<Allocation> getAllocationsByParentCategory() {
+        Map<String, List<Allocation>> parentAllocations = allocations
+                .stream()
+                .collect(groupingBy(allocation -> allocation.getCategory().getParent()));
+
+        return parentAllocations
+                .entrySet()
+                .stream()
+                .map(this::toParentAllocation)
+                .sorted(Comparator.comparing(allocation -> allocation.getCategory().getName()))
+                .collect(toImmutableList());
+
+    }
+
+    private Allocation toParentAllocation(Map.Entry<String, List<Allocation>> entry) {
+        List<Allocation> subAllocations = entry.getValue();
+
+        int count = 0;
+        Double spent = 0d;
+        Double total = 0d;
+
+        for (Allocation subAllocation : subAllocations) {
+            count += subAllocation.getCount();
+            spent += subAllocation.getSpent() != null ? subAllocation.getSpent() : 0;
+            total += subAllocation.getTotal() != null ? subAllocation.getTotal() : 0;
+        }
+
+        Allocation allocation = new Allocation();
+        allocation.setCount(count);
+        allocation.setTotal(total);
+        allocation.setSpent(spent);
+
+        Category category = new Category();
+        category.setName(entry.getKey());
+        category.setColor(subAllocations.get(0).getCategory().getColor());
+        allocation.setCategory(category);
+        return allocation;
     }
 }
