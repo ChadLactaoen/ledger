@@ -47,7 +47,7 @@ a.card-link:hover, a.nav-link:hover {
 }
 
 #get-wrecked-button {
-    color: #fff;
+    color: #000;
     background-color: var(--warning) !important;
     border-color: var(--warning) !important;
 }

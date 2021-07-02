@@ -110,8 +110,8 @@ function sortWithDropdownName(valA, valB, rowA, rowB) {
 }
 
 function sortWithDropdownCategory(valA, valB, rowA, rowB) {
-    var aVal = valA === undefined ? rowA._data.category : valA;
-    var bVal = valB === undefined ? rowB._data.category : valB;
+    var aVal = valA === undefined ? rowA._data["category-id"] : valA;
+    var bVal = valB === undefined ? rowB._data["category-id"] : valB;
     var evalVal = alphanumignorecase(aVal, bVal);
     return evalVal !== 0 && evalEqualValues(rowA, rowB, evalVal);
 }
