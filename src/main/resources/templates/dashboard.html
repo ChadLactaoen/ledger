@@ -187,7 +187,7 @@
       }
     });
 
-    $('.editable-transaction').on('click', function(e) {
+    $('#transaction-dashboard').on('click', '.editable-transaction', function(e) {
       var transactionId = $(this).attr('data-transaction-id');
       window.location = contextRoot + 'transaction?transactionId=' + transactionId;
     });
