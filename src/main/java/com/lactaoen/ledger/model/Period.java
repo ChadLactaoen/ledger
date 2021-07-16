@@ -82,7 +82,12 @@ public class Period {
 
     @DynamoDBIgnore
     public Double getRemaining() {
-        return total - transactions.stream().mapToDouble(Transaction::getPrice).sum();
+        return total
+                - transactions
+                        .stream()
+                        .filter(t -> !("Rainy Day".equals(t.getCategory().getName()) && t.getPrice() < 0))
+                        .mapToDouble(Transaction::getPrice)
+                        .sum();
     }
 
     @DynamoDBIgnore

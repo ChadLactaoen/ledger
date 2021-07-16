@@ -73,15 +73,18 @@ public class PeriodService {
         List<Transaction> transactions = transactionService.getTransactionsByYear(year).stream().sorted(BY_NEWEST).collect(toImmutableList());
         Map<Category, List<Transaction>> transactionMap = transactions.stream()
                     .collect(groupingBy(Transaction::getCategory));
-        List<Allocation> allocations = convertToAllocations(transactionMap);
+        Map<Category, List<Transaction>> subcategoryTransactionMap = transactions
+                .stream()
+                .filter(transaction -> transaction.getSubcategory() != null)
+                .collect(groupingBy(Transaction::getSubcategory));
+        List<Allocation> allocations = convertToAllocations(transactionMap, subcategoryTransactionMap);
 
         Period period = new Period();
-        period.setTotal(transactions.stream().mapToDouble(Transaction::getPrice).sum());
+        period.setTotal(allocations.stream().mapToDouble(Allocation::getTotal).sum());
         period.setStartDate(year + "-01-01");
         period.setEndDate(year + "-12-31");
         period.setAllocations(allocations);
         period.setTransactions(transactions);
-        period.setTotal(calculateYearSpend(transactions));
 
         sortAllocations(period);
         populateWithTransactions(period);
@@ -153,28 +156,36 @@ public class PeriodService {
         Map<String, List<Transaction>> transactionMap = period.getTransactions().stream().collect(groupingBy(transaction -> transaction.getCategory().getName()));
         period.getAllocations().forEach(allocation -> {
             List<Transaction> categoryTransactions = transactionMap.getOrDefault(allocation.getCategory().getName(), ImmutableList.of());
-            allocation.setSpent(categoryTransactions.stream().mapToDouble(Transaction::getPrice).sum());
+            boolean isRainyDay = "Rainy Day".equals(allocation.getCategory().getName());
+            allocation.setSpent(categoryTransactions
+                    .stream()
+                    .mapToDouble(t -> isRainyDay && t.getPrice() < 0 ? 0D : t.getPrice())
+                    .sum());
             allocation.setCount(categoryTransactions.size());
         });
     }
 
-    private List<Allocation> convertToAllocations(Map<Category, List<Transaction>> categoryTransactions) {
-        return categoryTransactions.entrySet().stream().map(this::convertToAllocation).collect(toImmutableList());
+    private List<Allocation> convertToAllocations(Map<Category, List<Transaction>> categoryTransactions,
+                                                  Map<Category, List<Transaction>> subcategoryTransactions) {
+        return categoryTransactions
+                .entrySet()
+                .stream()
+                .map(transactions -> convertToAllocation(transactions, subcategoryTransactions))
+                .collect(toImmutableList());
     }
 
-    private Allocation convertToAllocation(Map.Entry<Category, List<Transaction>> entry) {
+    private Allocation convertToAllocation(Map.Entry<Category, List<Transaction>> entry,
+                                           Map<Category, List<Transaction>> subcategoryTransactionMap) {
+        Category category = entry.getKey();
         List<Transaction> transactions = entry.getValue();
+        List<Transaction> subcategoryTransactions = subcategoryTransactionMap.containsKey(category)
+                ? subcategoryTransactionMap.get(category) : ImmutableList.of();
         Allocation allocation = new Allocation();
-        allocation.setCategory(entry.getKey());
-        allocation.setTotal(transactions.stream().mapToDouble(Transaction::getPrice).sum());
-        allocation.setCount(transactions.size());
+        allocation.setCategory(category);
+        allocation.setTotal(
+                transactions.stream().mapToDouble(Transaction::getPrice).sum()
+                        + subcategoryTransactions.stream().mapToDouble(t -> Math.abs(t.getPrice())).sum());
+        allocation.setCount(transactions.size() + subcategoryTransactions.size());
         return allocation;
-    }
-
-    private double calculateYearSpend(List<Transaction> transactions) {
-        return transactions.stream()
-                           .filter(transaction -> transaction.isReimbursement() || (transaction.getPrice() > 0 && !transaction.isReimbursement()))
-                           .mapToDouble(transaction -> Math.abs(transaction.getPrice()))
-                           .sum();
     }
 }
