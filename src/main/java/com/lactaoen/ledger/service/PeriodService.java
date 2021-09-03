@@ -167,6 +167,12 @@ public class PeriodService {
 
     private List<Allocation> convertToAllocations(Map<Category, List<Transaction>> categoryTransactions,
                                                   Map<Category, List<Transaction>> subcategoryTransactions) {
+        subcategoryTransactions.forEach((key, value) -> {
+            if (!categoryTransactions.containsKey(key)) {
+                categoryTransactions.put(key, ImmutableList.of());
+            }
+        });
+
         return categoryTransactions
                 .entrySet()
                 .stream()
