@@ -21,7 +21,7 @@
         <google.guava.version>31.0.1-jre</google.guava.version>
         <jasypt.version>1.17</jasypt.version>
         <apache.poi.version>4.1.2</apache.poi.version>
-        <log4j.version>2.16.0</log4j.version>
+        <log4j.version>2.17.0</log4j.version>
     </properties>
 
     <dependencies>
