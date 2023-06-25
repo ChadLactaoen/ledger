@@ -17,6 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +30,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 @RestController
 @RequestMapping("period")
-public class PeriodController {
+public class PeriodController extends BaseController {
 
     private final CategoryService categoryService;
     private final FlashAttributeService flashAttributeService;

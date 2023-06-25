@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("game")
-public class GameController {
+public class GameController extends BaseController {
 
     private final GameService gameService;
     private final FlashAttributeService flashAttributeService;

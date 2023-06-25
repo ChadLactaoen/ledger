@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<head th:replace="~{fragments/htmlHead :: htmlHead}"></head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="container-fluid">
 
-  <div th:replace="fragments/flash :: flash"></div>
+  <div th:replace="~{fragments/flash :: flash}"></div>
 
   <!-- Header -->
   <div class="row">
@@ -13,7 +13,7 @@
       <h1>Gambling <small class="text-muted" th:text="${year}"></small></h1>
     </div>
     <div class="col-md-2">
-      <div th:replace="fragments/header :: yearDropdown"></div>
+      <div th:replace="~{fragments/header :: yearDropdown}"></div>
     </div>
   </div>
 
@@ -40,21 +40,21 @@
       </ul>
       <div class="tab-content" id="gambling-tab-content">
         <div class="tab-pane fade show active" id="overall-tab-panel" role="tabpanel">
-          <div th:replace="fragments/gamblingChart :: chart(chart = ${overallEntries}, totalChart = ${totalEntry}, chartName = 'overall-chart')"></div>
-          <div th:replace="fragments/gamblingChart :: chart(chart = ${sportsBettingEntries}, chartName = 'sports-chart')"></div>
-          <div th:replace="fragments/gamblingChart :: chart(chart = ${pokerEntries}, chartName = 'poker-chart')"></div>
+          <div th:replace="~{fragments/gamblingChart :: chart(chart = ${overallEntries}, totalChart = ${totalEntry}, chartName = 'overall-chart')}"></div>
+          <div th:replace="~{fragments/gamblingChart :: chart(chart = ${sportsBettingEntries}, chartName = 'sports-chart')}"></div>
+          <div th:replace="~{fragments/gamblingChart :: chart(chart = ${pokerEntries}, chartName = 'poker-chart')}"></div>
         </div>
         <div class="tab-pane fade" id="open-bets-tab-panel" role="tabpanel">
-          <div th:replace="fragments/gamblingChart :: openBets"></div>
+          <div th:replace="~{fragments/gamblingChart :: openBets}"></div>
         </div>
         <div class="tab-pane fade" id="all-bets-tab-panel" role="tabpanel">
-          <div th:replace="fragments/gambling :: history"></div>
+          <div th:replace="~{fragments/gambling :: history}"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div th:replace="fragments/scripts :: scripts"></div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
 <script th:inline="javascript">
   /*<![CDATA[*/
 

@@ -30,7 +30,7 @@ import static java.util.Comparator.comparing;
 
 @RestController
 @RequestMapping("transaction")
-public class TransactionController {
+public class TransactionController extends BaseController {
 
     private final TransactionService transactionService;
     private final TransactionPredictionService transactionPredictionService;

@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.function.Predicate.not;
 
 @Service
 public class CategoryService {
@@ -32,7 +33,10 @@ public class CategoryService {
                 .withExpressionAttributeValues(ImmutableMap.of(":none", new AttributeValue("None")));
 
         List<Category> categories = dynamoDBMapper.scan(Category.class, expression);
-        return categories.stream().sorted(sortMethod).collect(toImmutableList());
+        return categories.stream()
+                .filter(cat -> cat.isDeprecated() == null || !cat.isDeprecated())
+                .sorted(sortMethod)
+                .collect(toImmutableList());
     }
 
     public Category getCategoryByName(String name) {

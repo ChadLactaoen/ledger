@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +35,7 @@ public class PeriodService {
     private static final Comparator<Allocation> BY_PARENT_CATEGORY = Comparator.comparing(allocation -> allocation.getCategory().getParent());
     private static final Comparator<Allocation> BY_CATEGORY_NAME = Comparator.comparing(allocation -> allocation.getCategory().getName());
     private static final Comparator<Transaction> BY_NEWEST = Comparator.comparing(Transaction::getDate).reversed();
-    private static final SimpleDateFormat DYNAMO_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DYNAMO_FORMAT = new SimpleDateFormat("yyyy-MM");
     private static final Function<String, Date> BY_DATE_ASC = date -> {
         try {
             return DYNAMO_FORMAT.parse(date);
@@ -81,8 +83,7 @@ public class PeriodService {
 
         Period period = new Period();
         period.setTotal(allocations.stream().mapToDouble(Allocation::getTotal).sum());
-        period.setStartDate(year + "-01-01");
-        period.setEndDate(year + "-12-31");
+        period.setStartDate(year + "-01");
         period.setAllocations(allocations);
         period.setTransactions(transactions);
 
@@ -93,28 +94,29 @@ public class PeriodService {
     }
 
     public Period getLatestPeriod() {
-        LocalDate localDate = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().withDayOfMonth(1);
-        Period period = getPeriodByDate(localDate.toString());
+        YearMonth now = YearMonth.now(ZoneId.systemDefault());
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM");
+
+        Period period = getPeriodByDate(fmt.format(now));
         while (period == null) {
-            localDate = localDate.minusMonths(1);
-            period = getPeriodByDate(localDate.toString());
+            now = now.minusMonths(1);
+            period = getPeriodByDate(fmt.format(now));
         }
         return period;
     }
 
-    public Set<String> getPeriodDates() {
+    public String getMaxPeriodDate() {
         ScanResult scanResult = amazonDynamoDB.scan(new ScanRequest().withTableName("Period").withAttributesToGet("startDate"));
         List<Period> periods = dynamoDBMapper.marshallIntoObjects(Period.class, scanResult.getItems());
         return periods.stream()
                       .map(Period::getStartDate)
-                      .sorted(Comparator.comparing(BY_DATE_ASC))
-                      .collect(toImmutableSet());
+                      .max(Comparator.comparing(BY_DATE_ASC))
+                      .orElse("2050-01");
     }
 
     public boolean periodNotExistsForDate(String date) {
         String[] dateParts = date.split("-");
-        dateParts[2] = "01";
-        return dynamoDBMapper.load(Period.class, String.join("-", dateParts)) == null;
+        return dynamoDBMapper.load(Period.class, dateParts[0] + "-" + dateParts[1]) == null;
     }
 
     public void savePeriod(PeriodForm periodForm) {

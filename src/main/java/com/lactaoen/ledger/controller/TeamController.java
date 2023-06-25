@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("team")
-public class TeamController {
+public class TeamController extends BaseController {
 
     private final GameService gameService;
     private final TeamService teamService;

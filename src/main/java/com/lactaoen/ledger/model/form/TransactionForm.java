@@ -81,8 +81,7 @@ public class TransactionForm {
         transaction.setMemo(memo);
 
         String[] dateParts = date.split("-");
-        dateParts[2] = "01";
-        transaction.setEffectivePeriod(String.join("-", dateParts));
+        transaction.setEffectivePeriod(dateParts[0] + "-" + dateParts[1]);
         transaction.setEffectiveYear(dateParts[0]);
         return transaction;
     }

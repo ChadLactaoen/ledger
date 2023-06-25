@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
 
 @RestController
-public class GamblingController {
+public class GamblingController extends BaseController {
 
     private static final Predicate<Bet> SPORTS_BET_FILTER = bet -> bet.getGame().getParent().equals("Sports Betting");
     private static final Predicate<Bet> POKER_FILTER = bet -> bet.getGame().getParent().equals("Poker");

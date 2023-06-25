@@ -18,7 +18,6 @@ import static java.util.stream.Collectors.groupingBy;
 public class Period {
 
     private String startDate;
-    private String endDate;
     private Double total;
     private String notes;
     private List<Allocation> allocations;
@@ -34,15 +33,6 @@ public class Period {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
-    }
-
-    @DynamoDBAttribute
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 
     @DynamoDBAttribute
@@ -94,7 +84,6 @@ public class Period {
     public PeriodForm toForm() {
         PeriodForm periodForm = new PeriodForm();
         periodForm.setStartDate(startDate);
-        periodForm.setEndDate(endDate);
         periodForm.setTotal(total);
         periodForm.setNotes(notes);
         ImmutableList.Builder<String> categoryListBuilder = new ImmutableList.Builder<>();

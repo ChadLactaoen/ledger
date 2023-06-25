@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<head th:replace="~{fragments/htmlHead :: htmlHead}"></head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="container-fluid">
 
-  <div th:replace="fragments/flash :: flash"></div>
+  <div th:replace="~{fragments/flash :: flash}"></div>
 
   <!-- Header -->
   <div class="row">
@@ -14,7 +14,7 @@
       <input id="obfuscate-button" type="checkbox" data-toggle="toggle" data-on="Unhide" data-off="Hide" data-onstyle="purple" data-size="sm">
     </div>
     <div class="col-md-2">
-      <div th:replace="fragments/header :: yearDropdown"></div>
+      <div th:replace="~{fragments/header :: yearDropdown}"></div>
     </div>
   </div>
 
@@ -192,7 +192,7 @@
   </div>
 
 </div>
-<div th:replace="fragments/scripts :: scripts"></div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
 <script th:inline="javascript">
   /*<![CDATA[*/
 
