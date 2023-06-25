@@ -15,6 +15,7 @@ public class Category {
     private String name;
     private String parent;
     private String color;
+    private Boolean deprecated;
 
     public Category() {
     }
@@ -46,27 +47,35 @@ public class Category {
         this.color = color;
     }
 
+    @DynamoDBAttribute
+    public Boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(Boolean deprecated) {
+        this.deprecated = deprecated;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Category)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(name, category.name) &&
-                Objects.equals(parent, category.parent) &&
-                Objects.equals(color, category.color);
+        return Objects.equals(name, category.name) && Objects.equals(parent, category.parent) && Objects.equals(color, category.color) && Objects.equals(deprecated, category.deprecated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, parent, color);
+        return Objects.hash(name, parent, color, deprecated);
     }
 
     @Override
     public String toString() {
-        return "{" +
+        return "Category{" +
                 "name='" + name + '\'' +
                 ", parent='" + parent + '\'' +
                 ", color='" + color + '\'' +
+                ", deprecated=" + deprecated +
                 '}';
     }
 }

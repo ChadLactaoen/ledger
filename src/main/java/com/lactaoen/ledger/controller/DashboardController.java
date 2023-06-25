@@ -22,7 +22,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 
 @RestController
-public class DashboardController {
+public class DashboardController extends BaseController {
 
     private final PeriodService periodService;
     private final GraphService graphService;
@@ -34,7 +34,7 @@ public class DashboardController {
         this.dateConverterService = dateConverterService;
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ModelAndView getPeriodDashboard(@RequestParam(value = "startDate", required = false) String startDate) throws ParseException {
         Period period;
         ModelAndView mav = new ModelAndView("dashboard");
@@ -46,7 +46,7 @@ public class DashboardController {
         }
 
         mav.addObject("period", period);
-        mav.addObject("periodDates", periodService.getPeriodDates());
+        mav.addObject("maxPeriodDate", periodService.getMaxPeriodDate());
         mav.addObject("graphData", graphService.getGraphData(period));
 
         Period parentPeriod = new Period();

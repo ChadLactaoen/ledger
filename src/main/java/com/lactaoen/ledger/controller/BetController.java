@@ -29,7 +29,7 @@ import static java.util.Comparator.comparing;
 
 @RestController
 @RequestMapping("bet")
-public class BetController {
+public class BetController extends BaseController {
 
     private final BetService betService;
     private final GameService gameService;

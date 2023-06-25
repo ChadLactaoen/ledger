@@ -1,23 +1,22 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<head th:replace="~{fragments/htmlHead :: htmlHead}"></head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="container-fluid" th:attr="data-period-id=${period.startDate}">
 
-  <div th:replace="fragments/flash :: flash"></div>
+  <div th:replace="~{fragments/flash :: flash}"></div>
 
   <!-- Header -->
   <div class="row">
     <div class="col-md-10">
-      <h1>Dashboard <small class="text-muted" th:text="|${@dateConverterService.convertToMonthDayFormat(period.startDate)} - ${@dateConverterService.convertToMonthDayFormat(period.endDate)}|"></small> <button th:attr="data-period-id=${period.startDate}" id="edit-period-btn" type="button" class="btn heath-secondary-button">Edit</button></h1>
+      <h1>Dashboard <small class="text-muted" th:text="${@dateConverterService.convertToMonthYearFormat(period.startDate)}"></small> <button th:attr="data-period-id=${period.startDate}" id="edit-period-btn" type="button" class="btn heath-secondary-button">Edit</button></h1>
       <input id="obfuscate-button" type="checkbox" data-toggle="toggle" data-on="Unhide" data-off="Hide" data-onstyle="purple" data-size="sm">
     </div>
     <div class="col-md-2">
       <div class="float-right dropdown-sm">
-        <select id="period-select" class="form-control form-control-sm" th:with="currPeriodId = ${period.startDate}">
-          <option th:each="periodDate : ${periodDates}" th:text="${@dateConverterService.convertToMonthYearFormat(periodDate)}" th:selected="${currPeriodId == periodDate}" th:attr="data-period-id=${periodDate}"></option>
-        </select>
+        <!-- TODO Set default, min, max -->
+        <input id="period-select" type="month" class="form-control form-control-sm" th:value="${period.startDate}" min="2018-01" th:max="${maxPeriodDate}" />
       </div>
     </div>
   </div>
@@ -134,7 +133,7 @@
     </div>
   </div>
 </div>
-<div th:replace="fragments/scripts :: scripts"></div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
 <script th:inline="javascript">
   /*<![CDATA[*/
 
@@ -154,7 +153,7 @@
     });
 
     $('#period-select').on('change', function(e) {
-      var periodId = $(this).find('option:selected').attr('data-period-id');
+      const periodId = $(this).val();
       window.location = '/?startDate=' + periodId;
     });
 

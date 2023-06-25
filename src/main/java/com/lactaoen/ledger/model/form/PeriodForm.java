@@ -7,7 +7,6 @@ import java.util.List;
 public class PeriodForm {
 
     private String startDate;
-    private String endDate;
     private Double total;
     private String notes;
     private List<String> categories;
@@ -22,14 +21,6 @@ public class PeriodForm {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 
     public Double getTotal() {
@@ -67,7 +58,6 @@ public class PeriodForm {
     public Period toPeriod() {
         Period period = new Period();
         period.setStartDate(startDate);
-        period.setEndDate(endDate);
         period.setTotal(total);
         period.setNotes(notes);
         return period;

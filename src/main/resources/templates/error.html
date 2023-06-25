@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/htmlHead :: htmlHead"></head>
+<head th:replace="~{fragments/htmlHead :: htmlHead}"></head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="container">
     <h1>Oops! Something went wrong</h1>
     <h3 th:text="|HTTP Status ${status} - ${error}|"></h3>
     <div th:text="${message}"></div>
 </div>
-<div th:replace="fragments/scripts :: scripts"></div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
 </body>
 </html>

@@ -15,6 +15,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class DateConverterService {
 
     private static final SimpleDateFormat DYNAMO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DYNAMO_PERIOD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM");
     private static final SimpleDateFormat MONTH_DAY_FORMAT = new SimpleDateFormat("MMM d");
     private static final SimpleDateFormat MONTH_YEAR_FORMAT = new SimpleDateFormat("MMM yyyy");
     private static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
@@ -28,7 +29,7 @@ public class DateConverterService {
     }
 
     public String convertToMonthYearFormat(String date) throws ParseException {
-        return MONTH_YEAR_FORMAT.format(DYNAMO_DATE_FORMAT.parse(date));
+        return MONTH_YEAR_FORMAT.format(DYNAMO_PERIOD_DATE_FORMAT.parse(date));
     }
 
     public String convertToYearFormat(String date) throws ParseException {
